@@ -30,9 +30,9 @@ static char *alloc_line(char *line, size_t *buffer_len, size_t line_len)
 char *get_line(int fd, char *line, size_t *line_len, size_t *buffer_len)
 {
     ssize_t read_len = 1;
-    ssize_t new_line_idx = find_newline(line);
+    char *new_line_ptr = strchr(line, '\n');
 
-    while (line && new_line_idx == -1 && read_len != 0) {
+    while (line && new_line_ptr && read_len != 0) {
         read_len = read(fd, &line[*line_len], BUFF_SIZE);
         if (read_len == -1) {
             perror("read");
@@ -40,8 +40,8 @@ char *get_line(int fd, char *line, size_t *line_len, size_t *buffer_len)
         }
         (*line_len) += read_len;
         line[*line_len] = '\0';
-        new_line_idx = find_newline(line);
-        if (new_line_idx == -1)
+        new_line_ptr = strchr(line, '\n');
+        if (new_line_ptr == NULL)
             line = alloc_line(line, buffer_len, (*line_len));
     }
     return line;
@@ -73,26 +73,24 @@ static char *format_and_check_line(char *line, ssize_t new_line_idx)
     return line;
 }
 
-char *socket_getline(socket_t *sock, char **buffer_ptr, bool *empty)
+char *fd_getline(int fd, char **buffer_ptr, bool *empty)
 {
     size_t line_len = (!(*buffer_ptr)) ? 0 : strlen(*buffer_ptr);
     size_t buffer_len = 0;
     char *line = alloc_line((*buffer_ptr), &buffer_len, line_len);
     ssize_t new_line_idx;
+    char *new_line_ptr;
 
     if (!line)
         return NULL;
-    line = get_line(sock->fd, line, &line_len, &buffer_len);
+    line = get_line(fd, line, &line_len, &buffer_len);
     if (!line)
         return NULL;
-    new_line_idx = find_newline(line);
+    new_line_ptr = strchr(line, '\n');
+    new_line_idx = !new_line_idx ? -1 : (new_line_ptr - line);
     update_buffer(buffer_ptr, line, new_line_idx);
     line = format_and_check_line(line, new_line_idx);
     if (line_len == 0)
         *empty = true;
-    #ifdef DEBUG
-    fprintf(stderr, "line: (%s)\n", line ? line : "null");
-    fprintf(stderr, "received: %lu bytes\n", line_len);
-    #endif
     return line;
 }
