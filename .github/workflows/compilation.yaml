@@ -1,0 +1,46 @@
+name: Check compilation
+
+on:
+  push:
+    branches:
+      - master
+
+
+jobs:
+  client:
+    runs-on: ubuntu-20.04
+    container: epitechcontent/epitest-docker
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Run
+      - name: Run make
+        run: make client &> /tmp/client_compilation
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: client_compilation_output
+          path: /tmp/client_compilation
+
+  server:
+    runs-on: ubuntu-20.04
+    container: epitechcontent/epitest-docker
+    steps:
+    # Checkout code
+    - name: Checkout code
+        uses: actions/checkout@v2
+
+    # Run
+    - name: Run make
+        run: make server &> /tmp/server_compilation
+
+    - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+        name: server_compilation_output
+        path: /tmp/server_compilation
