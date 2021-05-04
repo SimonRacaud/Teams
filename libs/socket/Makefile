@@ -10,11 +10,11 @@ DSRC	= ./src/
 SRC_FILES = socket_client_hostname_connect.c	\
 			socket_client_ip_connect.c			\
 			socket_close.c						\
-			socket_getline.c					\
+			fd_getline.c						\
 			socket_send.c						\
 			socket_server_connect.c				\
 			socket_server_create.c				\
-			socket_server_select.c				\
+			fd_select.c							\
 			utility/find_newline.c				\
 			utility/is_empty.c					\
 

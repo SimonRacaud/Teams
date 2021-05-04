@@ -1,96 +1,68 @@
 /*
 ** EPITECH PROJECT, 2021
-** B-NWP-400-REN-4-1-myftp-simon.racaud
+** B-NWP-400-REN-4-1-myteams-simon.racaud
 ** File description:
-** 15/04/2021 socket_receive.c
+** 04/05/2021 fd_getline2.c
 */
 
-#include "socket.h"
-#include "utility.h"
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdio.h>
 
-static const size_t BUFF_SIZE = 42;
+static const size_t READ_SIZE = 42;
 
-static char *alloc_line(char *line, size_t *buffer_len, size_t line_len)
+static char *allocator(char *previous, size_t inc)
 {
-    char *new = NULL;
+    size_t size;
+    char *res;
 
-    if (!line) {
-        *buffer_len += (BUFF_SIZE + 1);
-        return calloc(1, sizeof(char) * (BUFF_SIZE + 1));
+    if (!previous) {
+        res = malloc(sizeof(char) * inc);
+        res[0] = '\0';
+        return res;
     } else {
-        if (line_len + BUFF_SIZE < *buffer_len) {
-            return line;
-        }
-        new = realloc(line, (*buffer_len) + BUFF_SIZE);
-        *buffer_len += BUFF_SIZE;
+        size = strlen(previous) + 1;
+        return realloc(previous, sizeof(char) * (inc + size));
     }
-    return new;
 }
 
-char *get_line(int fd, char *line, size_t *line_len, size_t *buffer_len)
+static char *read_line(int fd, char *buffer)
 {
-    ssize_t read_len = 1;
-    char *new_line_ptr = strchr(line, '\n');
+    char *new_line_ptr = strchr(buffer, '\n');
+    ssize_t read_len = READ_SIZE;
+    size_t end = strlen(buffer);
 
-    while (line && new_line_ptr && read_len != 0) {
-        read_len = read(fd, &line[*line_len], BUFF_SIZE);
+    while (!new_line_ptr && (size_t)read_len == READ_SIZE) {
+        read_len = read(fd, &buffer[end], READ_SIZE);
         if (read_len == -1) {
             perror("read");
             return NULL;
         }
-        (*line_len) += read_len;
-        line[*line_len] = '\0';
-        new_line_ptr = strchr(line, '\n');
-        if (new_line_ptr == NULL)
-            line = alloc_line(line, buffer_len, (*line_len));
+        buffer[end + read_len] = '\0';
+        end += read_len;
+        new_line_ptr = strchr(buffer, '\n');
+        if (!new_line_ptr)
+            buffer = allocator(buffer, READ_SIZE);
     }
-    return line;
+    return buffer;
 }
 
-static void update_buffer(char **buffer_ptr, char *line, ssize_t eof_idx)
+char *fd_getline(int fd, char **buffer_ptr)
 {
-    if (eof_idx != -1) {
-        line = &line[eof_idx + 1];
-    }
-    if (!is_empty(line)) {
-        *buffer_ptr = strdup(line);
-    } else {
-        *buffer_ptr = NULL;
-    }
-}
-
-static char *format_and_check_line(char *line, ssize_t new_line_idx)
-{
-    if (new_line_idx != -1) {
-        if (new_line_idx > 0 && line[new_line_idx - 1] == '\r')
-            line[new_line_idx - 1] = '\0';
-        else
-            line[new_line_idx] = '\0';
-    } else {
-        free(line);
-        return NULL;
-    }
-    return line;
-}
-
-char *fd_getline(int fd, char **buffer_ptr, bool *empty)
-{
-    size_t line_len = (!(*buffer_ptr)) ? 0 : strlen(*buffer_ptr);
-    size_t buffer_len = 0;
-    char *line = alloc_line((*buffer_ptr), &buffer_len, line_len);
-    ssize_t new_line_idx;
+    char *buffer = allocator(*buffer_ptr, READ_SIZE);
     char *new_line_ptr;
 
-    if (!line)
+    buffer = read_line(fd, buffer);
+    if (!buffer)
         return NULL;
-    line = get_line(fd, line, &line_len, &buffer_len);
-    if (!line)
+    new_line_ptr = strchr(buffer, '\n');
+    if (!new_line_ptr) {
+        *buffer_ptr = buffer;
         return NULL;
-    new_line_ptr = strchr(line, '\n');
-    new_line_idx = !new_line_idx ? -1 : (new_line_ptr - line);
-    update_buffer(buffer_ptr, line, new_line_idx);
-    line = format_and_check_line(line, new_line_idx);
-    if (line_len == 0)
-        *empty = true;
-    return line;
+    } else if (strlen(new_line_ptr) > 0) {
+        *buffer_ptr = strdup(new_line_ptr);
+    }
+    *new_line_ptr = '\0';
+    return buffer;
 }
