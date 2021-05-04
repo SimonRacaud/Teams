@@ -60,8 +60,8 @@ char *fd_getline(int fd, char **buffer_ptr)
     if (!new_line_ptr) {
         *buffer_ptr = buffer;
         return NULL;
-    } else if (strlen(new_line_ptr) > 0) {
-        *buffer_ptr = strdup(new_line_ptr);
+    } else if (strlen(new_line_ptr + 1) > 0) {
+        *buffer_ptr = strdup(new_line_ptr + 1);
     }
     *new_line_ptr = '\0';
     return buffer;
