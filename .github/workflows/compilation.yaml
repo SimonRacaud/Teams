@@ -32,15 +32,15 @@ jobs:
     steps:
     # Checkout code
     - name: Checkout code
-        uses: actions/checkout@v2
+      uses: actions/checkout@v2
 
     # Run
     - name: Run make
-        run: make server &> /tmp/server_compilation
+      run: make server &> /tmp/server_compilation
 
     - name: Upload artifacts
-        uses: actions/upload-artifact@v2
-        if: always()
-        with:
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
         name: server_compilation_output
         path: /tmp/server_compilation
