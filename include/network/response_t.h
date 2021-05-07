@@ -8,6 +8,8 @@
 #ifndef RESPONSE_T_H
 #define RESPONSE_T_H
 
+#include "socket_t.h"
+
 typedef enum response_error_code {
     SUCCESS = 0,
     ERROR = 1,
@@ -20,6 +22,7 @@ typedef enum response_error_code {
 } rcode_e;
 
 typedef struct response_s {
+    socket_t *receiver;
     rcode_e err_code;
     char *req_label;
     char **req_args;

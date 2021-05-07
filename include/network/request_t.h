@@ -8,7 +8,10 @@
 #ifndef REQUEST_T_H
 #define REQUEST_T_H
 
+#include "socket_t.h"
+
 typedef struct request_s {
+    socket_t *receiver;
     char *label;
     char **args;
 } request_t;
