@@ -10,6 +10,7 @@
 
 typedef struct select {
     fd_set read_fds;
+    fd_set write_fds;
     int status;
 } select_t;
 
