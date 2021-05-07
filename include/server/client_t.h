@@ -17,6 +17,7 @@ typedef struct client_s {
     user_t *user_ptr;
     char *read_buffer;
     socket_t socket;
+    LIST_ENTRY(client_s) entries;
 } client_t;
 
 #endif // CLIENT_T_H

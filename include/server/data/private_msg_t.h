@@ -23,6 +23,7 @@ typedef struct private_msg_s {
     user_t *sender;
     time_t timestamp;
     char body[SIZE_BODY];
+    LIST_ENTRY(private_msg_s) entries;
 } private_msg_t;
 
 #endif // PRIVATE_MSG_T_H

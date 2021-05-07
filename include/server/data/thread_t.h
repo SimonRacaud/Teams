@@ -24,6 +24,7 @@ typedef struct thread_s {
     time_t timestamp;
     user_t *user;
     LIST_HEAD(reply_list_header, reply_s) replies;
+    LIST_ENTRY(thread_s) entries;
 } thread_t;
 
 #endif // THREAD_T_H

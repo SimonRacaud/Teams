@@ -28,6 +28,7 @@ typedef struct user_s {
     char username[SIZE_NAME];
     LIST_HEAD(team_list_header, team_s) teams;
     LIST_HEAD(pm_list_header, private_msg_s) messages;
+    LIST_ENTRY(user_s) entries;
 } user_t;
 
 #endif // USER_T_H

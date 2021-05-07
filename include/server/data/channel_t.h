@@ -19,6 +19,7 @@ typedef struct channel_s {
     char name[SIZE_NAME];
     char description[SIZE_DESC];
     LIST_HEAD(thread_list_header, thread_s) threads;
+    LIST_ENTRY(channel_s) entries;
 } channel_t;
 
 #endif // CHANNEL_T_H

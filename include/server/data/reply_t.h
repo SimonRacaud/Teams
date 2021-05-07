@@ -20,6 +20,7 @@ typedef struct reply_s {
     user_t *user;
     time_t timestamp;
     char body[SIZE_BODY];
+    LIST_ENTRY(reply_s) entries;
 } reply_t;
 
 #endif // REPLY_T_H
