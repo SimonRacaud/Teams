@@ -4,6 +4,8 @@
 *.pdf
 .idea
 bootstrap
+myteams_cli
+myteams_server
 ### C ###
 # Prerequisites
 *.d
@@ -31,7 +33,8 @@ bootstrap
 
 # Shared objects (inc. Windows DLLs)
 *.dll
-*.so
+mysocket.so
+#*.so
 *.so.*
 *.dylib
 
