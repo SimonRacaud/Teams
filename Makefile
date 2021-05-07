@@ -9,7 +9,8 @@ DSRC	=	./src/
 
 SRC_FILES_CLI	=	client/main.c		\
 
-SRC_FILES_SRV	= 	server/main.c		\
+SRC_FILES_SRV	= 	server/main.c				\
+					utility/signal_manager.c	\
 
 SRC_CLI	=	$(addprefix $(DSRC), $(SRC_FILES_CLI))
 SRC_SRV	=	$(addprefix $(DSRC), $(SRC_FILES_SRV))
