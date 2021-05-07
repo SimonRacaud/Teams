@@ -10,12 +10,14 @@
 
 #include "data/database_t.h"
 #include "select_t.h"
+#include "socket_t.h"
 #include "client_t.h"
 #include <sys/queue.h>
 
 typedef struct server_s {
     database_t database;
     select_t select;
+    socket_t socket;
     bool loop;
     LIST_HEAD(client_list_header, client_s) clients;
 } server_t;
