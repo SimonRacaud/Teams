@@ -3,6 +3,7 @@
 
 *.pdf
 .idea
+bootstrap
 ### C ###
 # Prerequisites
 *.d

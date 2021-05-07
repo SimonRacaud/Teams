@@ -20,32 +20,35 @@ OBJ_SRV	=	$(SRC_SRV:.c=.o)
 NAME_CLI	=	myteams_cli
 NAME_SRV	=	myteams_server
 
+INCLUDE = -I./include -I./libs/myteams -I./libs/socket/include
 CFLAGS	+= -Wall -Wextra -W $(INCLUDE) #-Werror
 
-INCLUDE = -I./include -I./include/server -I./include/client
+LD_FLAGS += -lmysocket -L./libs/socket -lmyteams -L./libs/myteams
 
 debug: CFLAGS += -g
 debug: re
 
 all:  client server
 
+client: CFLAGS += -I./include/client
 client: $(OBJ_CLI)
-	@gcc -o $(NAME_CLI) $(OBJ_CLI) && \
+	@$(CC) -o $(NAME_CLI) $(OBJ_CLI) $(LD_FLAGS) && \
 		$(ECHO) $(BOLD_T)$(GREEN_C)"\n[✔] COMPILED:" $(DEFAULT)$(LIGHT_GREEN) "$(NAME_CLI)\n"$(DEFAULT) || \
 		$(ECHO) $(BOLD_T)$(RED_C)"[✘] "$(UNDLN_T)"BUILD FAILED:" $(LIGHT_RED) "$(NAME_CLI)\n"$(DEFAULT)
 
+server: CFLAGS += -I./include/server
 server: $(OBJ_SRV)
-	@gcc -o $(NAME_SRV) $(OBJ_SRV) && \
+	@$(CC) -o $(NAME_SRV) $(OBJ_SRV) $(LD_FLAGS) && \
 		$(ECHO) $(BOLD_T)$(GREEN_C)"\n[✔] COMPILED:" $(DEFAULT)$(LIGHT_GREEN) "$(NAME_SRV)\n"$(DEFAULT) || \
 		$(ECHO) $(BOLD_T)$(RED_C)"[✘] "$(UNDLN_T)"BUILD FAILED:" $(LIGHT_RED) "$(NAME_SRV)\n"$(DEFAULT)
 
 clean:
-	rm -f  $(OBJ_CLI) $(OBJ_SRV)
-	@rm -f *.gcda
-	@rm -f *.gcno
+	$(RM) -f  $(OBJ_CLI) $(OBJ_SRV)
+	@$(RM) -f *.gcda
+	@$(RM) -f *.gcno
 
 fclean:	clean
-	rm -f $(NAME_CLI) $(NAME_SRV)
+	$(RM) -f $(NAME_CLI) $(NAME_SRV)
 
 re:	fclean all
 
