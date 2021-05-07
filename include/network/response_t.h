@@ -27,6 +27,7 @@ typedef struct response_s {
     char *req_label;
     char **req_args;
     char *body;
+    SLIST_ENTRY(response_s) entries;
 } response_t;
 
 #endif // RESPONSE_T_H
