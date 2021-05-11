@@ -27,7 +27,7 @@ static void init_user_node(user_t *node, const char *username)
 }
 
 int create_user(database_t *db,
-const char *username, __attribute((unused)) uuid_selector_t *params)
+const char *username, __attribute__((unused)) uuid_selector_t *params)
 {
     user_t *node = NULL;
 

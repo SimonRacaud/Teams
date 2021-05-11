@@ -24,12 +24,13 @@
 */
 
 int create_reply(database_t *db, const char *msg, uuid_selector_t *params);
-int create_team(database_t *db, const char *teamname, uuid_selector_t *params);
 int create_private_msg(database_t *db, const char *msg, uuid_selector_t *params);
+int create_team(database_t *db,
+const char *teamname, const char *desc, uuid_selector_t *params);
 int create_channel(database_t *db,
 const char *channelname, uuid_selector_t *params);
 int create_user(database_t *db,
-const char *username, __attribute((unused)) uuid_selector_t *params);
+const char *username, __attribute__((unused)) uuid_selector_t *params);
 int create_thread(database_t *db,
 const char *threadname, uuid_selector_t *params);
 
