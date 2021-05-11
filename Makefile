@@ -7,10 +7,22 @@
 
 DSRC	=	./src/
 
+SRC_UT 			= 	tests/tests_project.c			\
+					src/utility/signal_manager.c	\
+					src/utility/strdup_format.c		\
+					src/parser/request_create.c		\
+
 SRC_FILES_CLI	=	client/main.c		\
 
 SRC_FILES_SRV	= 	server/main.c												\
 					utility/signal_manager.c									\
+					utility/strdup_format.c										\
+					server/app/app_create.c										\
+					server/app/app_destroy.c									\
+					server/app/app_loop.c										\
+					server/app/app_select.c										\
+					server/app/client.c											\
+					parser/request_create.c										\
 					server/Database/factories/create_team.c						\
 					server/Database/factories/create_user.c						\
 					server/Database/factories/create_reply.c					\
@@ -46,6 +58,7 @@ OBJ_SRV	=	$(SRC_SRV:.c=.o)
 
 NAME_CLI	=	myteams_cli
 NAME_SRV	=	myteams_server
+NAME_UT 	=	test.out
 
 INCLUDE = -I./include -I./libs/myteams -I./libs/socket/include
 CFLAGS	+= -Wall -Wextra -W $(INCLUDE) #-Werror
@@ -79,8 +92,8 @@ fclean:	clean
 
 re:	fclean all
 
-#tests_run:
-#	gcc -o $(NAME) $(SRC_UT) -I./include -lcriterion --coverage && ./$(NAME)
+tests_run:
+	gcc -o $(NAME_UT) $(SRC_UT) $(INCLUDE) -lcriterion --coverage && ./$(NAME_UT)
 
 .PHONY :        clean fclean re
 

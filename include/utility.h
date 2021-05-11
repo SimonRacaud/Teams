@@ -12,7 +12,13 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include "format_t.h"
+#include <ctype.h>
 
 int signal_manager(int signum, bool *activator_ptr);
+
+char *strdup_format(char *str, const format_t *ft, char **end_ptr);
+bool cmp_format(char *str, const format_t *ft);
 
 #endif // UTILITY_H

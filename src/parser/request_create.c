@@ -1,0 +1,113 @@
+/*
+** EPITECH PROJECT, 2021
+** B-NWP-400-REN-4-1-myteams-simon.racaud
+** File description:
+** 07/05/2021 request_parse.c
+*/
+
+#include "utility.h"
+#include "network/request_t.h"
+#include "format_t.h"
+
+static const format_t INPUT_LABEL_FORMAT = {
+    .prefix = "/",
+    .suffix_chars = " \t",
+    .suffix = "\r\n",
+    .accept_null_suffix = false,
+    .exclude = NULL,
+    .is_alpha = true,
+    .is_num = true,
+    .no_body = false
+};
+
+static const format_t INPUT_END_FORMAT = {
+    .prefix = NULL,
+    .suffix_chars = NULL,
+    .suffix = "\r\n",
+    .accept_null_suffix = false,
+    .exclude = NULL,
+    .is_alpha = false,
+    .is_num = false,
+    .no_body = true
+};
+
+static const format_t INPUT_ARG_FORMAT = {
+    .prefix = "\"",
+    .suffix_chars = "\"",
+    .suffix = NULL,
+    .accept_null_suffix = false,
+    .exclude = NULL,
+    .is_alpha = false,
+    .is_num = false,
+    .no_body = false
+};
+
+static char **alloc(char **prev, size_t *nb)
+{
+    char **res = NULL;
+
+    if (!prev) {
+        return calloc(2, sizeof(char *));
+    } else {
+        *nb += 1;
+        res = reallocarray(prev, (*nb + 1), sizeof(char *));
+        if (!res)
+            return NULL;
+        res[*nb] = NULL;
+        return res;
+    }
+}
+
+static char *skip_spaces(char *str)
+{
+    size_t i = 0;
+
+    while (str[i] != '\0') {
+        if (str[i] != ' ' && str[i] != '\t') {
+            return str + i;
+        }
+        i++;
+    }
+    return str + i;
+}
+
+static int parse_input(request_t *req, char *command)
+{
+    size_t arg_idx = 0;
+    char *ptr;
+
+    req->label = strdup_format(command, &INPUT_LABEL_FORMAT, &ptr);
+    if (req->label == NULL)
+        return EXIT_FAILURE;
+    ptr = skip_spaces(ptr);
+    req->args = alloc(NULL, NULL);
+    if (!req->args)
+        return EXIT_FAILURE;
+    while (true) {
+        if (cmp_format(ptr, &INPUT_END_FORMAT))
+            return EXIT_SUCCESS;
+        req->args[arg_idx] = strdup_format(ptr, &INPUT_ARG_FORMAT, &ptr);
+        if (!req->args[arg_idx])
+            return EXIT_FAILURE;
+        ptr = skip_spaces(ptr);
+        req->args = alloc(req->args, &arg_idx);
+    }
+    return EXIT_FAILURE;
+}
+
+request_t *request_create(char *command)
+{
+    request_t *req = malloc(sizeof(request_t));
+
+    if (!req)
+        return NULL;
+    req->receiver = NULL;
+    req->args = NULL;
+    if (parse_input(req, command) == EXIT_FAILURE)
+        return NULL;
+    if (!req->args[0]) {
+        free(req->args);
+        req->args = NULL;
+    }
+    return req;
+}
