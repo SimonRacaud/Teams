@@ -12,6 +12,12 @@
 
 typedef struct uuid_selector_s
 {
+    uuid_t uuid_user;
+    uuid_t uuid_team;
+    uuid_t uuid_reply;
+    uuid_t uuid_thread;
+    uuid_t uuid_channel;
+    uuid_t uuid_private_msg;
 } uuid_selector_t;
 
 #endif
