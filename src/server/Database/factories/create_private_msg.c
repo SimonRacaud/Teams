@@ -42,8 +42,6 @@ const char *msg, user_t *sender, uuid_selector_t *params)
 int create_private_msg(database_t *db,
 const char *msg, user_t *sender, uuid_selector_t *params)
 {
-    int err_val = ERROR;
-
     if (!db || !msg || !params)
         return ERROR;
     if (strlen(msg) > SIZE_BODY)

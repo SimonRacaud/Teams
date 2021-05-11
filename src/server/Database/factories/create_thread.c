@@ -7,7 +7,8 @@
 
 #include "database.h"
 
-static channel_t *get_channel_from_uuid(database_t *db, uuid_selector_t *params, int *err)
+channel_t *get_channel_from_uuid(database_t *db,
+uuid_selector_t *params, int *err)
 {
     team_t *team = get_match_team(db, params);
     channel_t *channel = NULL;
