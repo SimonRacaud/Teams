@@ -38,7 +38,7 @@ NAME_SRV	=	myteams_server
 INCLUDE = -I./include -I./libs/myteams -I./libs/socket/include
 CFLAGS	+= -Wall -Wextra -W $(INCLUDE) #-Werror
 
-LD_FLAGS += -lmysocket -L./libs/socket -lmyteams -L./libs/myteams
+LD_FLAGS += -lmysocket -L./libs/socket -lmyteams -L./libs/myteams -luuid
 
 debug: CFLAGS += -g
 debug: re

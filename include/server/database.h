@@ -8,11 +8,14 @@
 #ifndef DATABASE_H_
 #define DATABASE_H_
 
+#include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "client_t.h"
 #include "data/thread_t.h"
 #include "data/database_t.h"
 #include "uuid_selector_t.h"
+#include "network/response_t.h"
 
 /*
 **
