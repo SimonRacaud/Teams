@@ -10,8 +10,9 @@
 
 #include <stdlib.h>
 #include "client_t.h"
-#include "thread_t.h"
-#include "database_t.h"
+#include "data/thread_t.h"
+#include "data/database_t.h"
+#include "uuid_selector_t.h"
 
 /*
 **

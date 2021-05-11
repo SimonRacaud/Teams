@@ -9,8 +9,22 @@ DSRC	=	./src/
 
 SRC_FILES_CLI	=	client/main.c		\
 
-SRC_FILES_SRV	= 	server/main.c				\
-					utility/signal_manager.c	\
+SRC_FILES_SRV	= 	server/main.c										\
+					utility/signal_manager.c							\
+					server/Database/factories/create_team.c				\
+					server/Database/factories/create_user.c				\
+					server/Database/factories/create_reply.c			\
+					server/Database/factories/create_thread.c			\
+					server/Database/factories/create_channel.c			\
+					server/Database/factories/create_private_msg.c		\
+					server/Database/getter/get_team.c					\
+					server/Database/getter/get_user.c					\
+					server/Database/getter/get_reply.c					\
+					server/Database/getter/get_thread.c					\
+					server/Database/getter/get_channel.c				\
+					server/Database/getter/get_private_msg.c			\
+					server/Database/updater/user_subscription_add.c		\
+					server/Database/updater/user_subscription_remove.c	\
 
 SRC_CLI	=	$(addprefix $(DSRC), $(SRC_FILES_CLI))
 SRC_SRV	=	$(addprefix $(DSRC), $(SRC_FILES_SRV))
