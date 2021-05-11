@@ -8,7 +8,7 @@
 #ifndef REPLY_T_H
 #define REPLY_T_H
 
-#include <uuid/uuid.h>
+#include <uuid.h>
 #include "env.h"
 #include <time.h>
 #include "user_t.h"

@@ -8,7 +8,7 @@
 #ifndef USER_T_H
 #define USER_T_H
 
-#include <uuid/uuid.h>
+#include <uuid.h>
 #include <sys/queue.h>
 #include "env.h"
 #include "team_t.h"
