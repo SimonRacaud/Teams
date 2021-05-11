@@ -12,7 +12,7 @@ static team_t *get_match_team(database_t *db, uuid_selector_t *params)
     team_t *node = NULL;
 
     LIST_FOREACH(node, &db->teams, entries) {
-        if (uuid_compare(node->uuid, params->uuid_team))
+        if (!uuid_compare(node->uuid, params->uuid_team))
             return node;
     }
     return NULL;
