@@ -24,7 +24,8 @@
 */
 
 int create_reply(database_t *db, const char *msg, uuid_selector_t *params);
-int create_private_msg(database_t *db, const char *msg, uuid_selector_t *params);
+int create_private_msg(database_t *db,
+const char *msg, user_t *sender, uuid_selector_t *params);
 int create_team(database_t *db,
 const char *teamname, const char *desc, uuid_selector_t *params);
 int create_channel(database_t *db,
