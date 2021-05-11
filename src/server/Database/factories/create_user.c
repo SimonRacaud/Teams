@@ -31,11 +31,11 @@ const char *username, __attribute((unused)) uuid_selector_t *params)
 {
     user_t *node = NULL;
 
-    if (!db)
+    if (!db || !username)
         return ERROR;
     if (strlen(username) > SIZE_NAME)
         return ERROR;
-    if (!already_exist(db, username))
+    if (already_exist(db, username))
         return ERR_ALREADY_EXIST;
     node = malloc(sizeof(user_t));
     if (!node)
