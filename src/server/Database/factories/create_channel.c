@@ -75,6 +75,5 @@ const char *channelname, const char *desc, uuid_selector_t *params)
     if (!node)
         return ERROR;
     init_channel_node(node, channelname, desc);
-    inset_channel(node, db, params);
-    return SUCCESS;
+    return inset_channel(node, db, params);
 }
