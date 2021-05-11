@@ -19,6 +19,14 @@
 
 /*
 **
+** TOOLS
+**
+*/
+
+team_t *get_match_team(database_t *db, uuid_selector_t *params);
+
+/*
+**
 ** FACTORIES
 **
 */
@@ -33,7 +41,7 @@ const char *channelname, const char *desc, uuid_selector_t *params);
 int create_user(database_t *db,
 const char *username, __attribute__((unused)) uuid_selector_t *params);
 int create_thread(database_t *db,
-const char *threadname, uuid_selector_t *params);
+const char *title, const char *msg, uuid_selector_t *params);
 
 /*
 **

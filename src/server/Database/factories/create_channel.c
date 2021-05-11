@@ -7,7 +7,7 @@
 
 #include "database.h"
 
-static team_t *get_match_team(database_t *db, uuid_selector_t *params)
+team_t *get_match_team(database_t *db, uuid_selector_t *params)
 {
     team_t *node = NULL;
 
