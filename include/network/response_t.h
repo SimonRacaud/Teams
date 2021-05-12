@@ -9,6 +9,7 @@
 #define RESPONSE_T_H
 
 #include "socket_t.h"
+#include "env.h"
 
 typedef enum response_error_code {
     SUCCESS = 0,
@@ -26,8 +27,14 @@ typedef struct response_s {
     rcode_e err_code;
     char *req_label;
     char **req_args;
-    char *body;
+    void *body;
     SLIST_ENTRY(response_s) entries;
 } response_t;
+
+typedef struct body_header_s {
+    uint elem_size;
+    uint list_size;
+    char type[SIZE_NAME];
+} body_header_t;
 
 #endif // RESPONSE_T_H
