@@ -9,7 +9,7 @@
 #define BIN_TEAM_T_H
 
 #include "env.h"
-#include <uuid.h>
+#include <uuid/uuid.h>
 
 typedef struct bin_team_s {
     uuid_t uuid;
