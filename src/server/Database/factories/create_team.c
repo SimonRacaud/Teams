@@ -7,17 +7,6 @@
 
 #include "database.h"
 
-static bool already_exist(database_t *db, const char *teamname)
-{
-    team_t *node = NULL;
-
-    LIST_FOREACH(node, &db->teams, entries) {
-        if (!strcmp(node->name, teamname))
-            return true;
-    }
-    return false;
-}
-
 static void init_team_node(team_t *node, const char *teamname, const char *desc)
 {
     memset(node, 0, sizeof(team_t));
@@ -35,8 +24,6 @@ const char *desc, __attribute__((unused)) uuid_selector_t *params)
         return ERROR;
     if (strlen(teamname) > SIZE_NAME || strlen(desc) > SIZE_DESC)
         return ERROR;
-    if (already_exist(db, teamname))
-        return ERR_ALREADY_EXIST;
     node = malloc(sizeof(team_t));
     if (!node)
         return ERROR;
