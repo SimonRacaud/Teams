@@ -10,7 +10,7 @@
 
 #include <sys/queue.h>
 #include <time.h>
-#include <uuid.h>
+#include <uuid/uuid.h>
 #include "env.h"
 #include "user_t.h"
 #include "reply_t.h"

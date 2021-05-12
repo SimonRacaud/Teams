@@ -9,7 +9,7 @@
 #define TEAM_T_H
 
 #include <sys/queue.h>
-#include <uuid.h>
+#include <uuid/uuid.h>
 #include "env.h"
 #include "user_t.h"
 #include "channel_t.h"
