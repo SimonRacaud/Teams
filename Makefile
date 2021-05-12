@@ -10,6 +10,7 @@ DSRC	=	./src/
 SRC_UT 			= 	tests/tests_project.c			\
 					src/utility/signal_manager.c	\
 					src/utility/strdup_format.c		\
+					src/utility/walloc.c			\
 					src/parser/request_create.c		\
 					src/parser/request_destroy.c	\
 					src/parser/request_parse.c		\
@@ -26,6 +27,8 @@ SRC_FILES_SRV	= 	server/main.c												\
 					server/app/app_loop.c										\
 					server/app/app_select.c										\
 					server/app/client.c											\
+					server/app/process_request.c								\
+					server/request/request_execute.c							\
 					parser/request_create.c										\
 					parser/request_destroy.c									\
 					parser/request_parse.c										\

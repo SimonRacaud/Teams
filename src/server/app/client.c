@@ -13,7 +13,7 @@ int connect_client(server_t *server)
 
     if (!client)
         return EXIT_FAILURE;
-    if (socket_server_connect(client->socket, server->socket.fd)) {
+    if (socket_server_connect(&client->socket, server->socket.fd)) {
         free(client);
         return EXIT_FAILURE;
     }
@@ -23,11 +23,11 @@ int connect_client(server_t *server)
     return EXIT_SUCCESS;
 }
 
-void disconnect_client(client_list_t *list, client_t *client)
+void disconnect_client(client_t *client)
 {
     if (client->read_buffer) {
         free(client->read_buffer);
     }
-    socket_close(client->socket);
+    socket_close(&client->socket);
     LIST_REMOVE(client, entries);
 }

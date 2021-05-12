@@ -9,16 +9,20 @@
 
 static int process_read(server_t *server)
 {
-    client_t *ptr;
+    client_t *ptr = LIST_FIRST(&server->clients);
+    client_t *ptr_next = NULL;
 
     if (FD_READ_ISSET(server, server)) {
         if (connect_client(server) == EXIT_FAILURE)
             return EXIT_FAILURE;
     }
-    LIST_FOREACH(ptr, (&server->clients), entries) {
-        if (FD_READ_ISSET(ptr, server)) {
-            // process_request(server, ptr)
+    while (ptr != NULL) {
+        ptr_next = LIST_NEXT(ptr, entries);
+        if (FD_READ_ISSET(ptr, server)
+            && process_request(server, ptr)) {
+            return EXIT_FAILURE;
         }
+        ptr = ptr_next;
     }
     return EXIT_SUCCESS;
 }
