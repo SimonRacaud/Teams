@@ -9,7 +9,9 @@
 
 int user_subscription_add(database_t *db, uuid_selector_t *params)
 {
-    (void) db;
-    (void) params;
-    return 0;
+    if (!db || !params)
+        return ERROR;
+    if (uuid_is_null(params->uuid_user) || uuid_is_null(params->uuid_team))
+        return ERROR;
+    return SUCCESS;
 }
