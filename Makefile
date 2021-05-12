@@ -11,18 +11,24 @@ SRC_UT 			= 	tests/tests_project.c			\
 					src/utility/signal_manager.c	\
 					src/utility/strdup_format.c		\
 					src/parser/request_create.c		\
+					src/parser/request_destroy.c	\
+					src/parser/request_parse.c		\
+					src/parser/request_write.c		\
 
-SRC_FILES_CLI	=	client/main.c		\
+SRC_FILES_CLI	=	client/main.c					\
 
 SRC_FILES_SRV	= 	server/main.c												\
 					utility/signal_manager.c									\
 					utility/strdup_format.c										\
+					utility/walloc.c											\
 					server/app/app_create.c										\
 					server/app/app_destroy.c									\
 					server/app/app_loop.c										\
 					server/app/app_select.c										\
 					server/app/client.c											\
 					parser/request_create.c										\
+					parser/request_destroy.c									\
+					parser/request_parse.c										\
 					server/Database/factories/create_team.c						\
 					server/Database/factories/create_user.c						\
 					server/Database/factories/create_reply.c					\
@@ -88,7 +94,7 @@ clean:
 	@$(RM) -f *.gcno
 
 fclean:	clean
-	$(RM) -f $(NAME_CLI) $(NAME_SRV)
+	$(RM) -f $(NAME_CLI) $(NAME_SRV) $(NAME_UT)
 
 re:	fclean all
 
