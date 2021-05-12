@@ -24,6 +24,7 @@
 */
 
 team_t *get_match_team(database_t *db, uuid_selector_t *params);
+user_t *get_user_from_uuid(database_t *db, uuid_t uuid);
 channel_t *get_channel_from_uuid(database_t *db,
 uuid_selector_t *params, int *err);
 
