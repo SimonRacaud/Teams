@@ -42,22 +42,6 @@ static const format_t INPUT_ARG_FORMAT = {
     .no_body = false
 };
 
-static char **alloc(char **prev, size_t *nb)
-{
-    char **res = NULL;
-
-    if (!prev) {
-        return calloc(2, sizeof(char *));
-    } else {
-        *nb += 1;
-        res = reallocarray(prev, (*nb + 1), sizeof(char *));
-        if (!res)
-            return NULL;
-        res[*nb] = NULL;
-        return res;
-    }
-}
-
 static char *skip_spaces(char *str)
 {
     size_t i = 0;
@@ -73,24 +57,23 @@ static char *skip_spaces(char *str)
 
 static int parse_input(request_t *req, char *command)
 {
-    size_t arg_idx = 0;
     char *ptr;
 
     req->label = strdup_format(command, &INPUT_LABEL_FORMAT, &ptr);
     if (req->label == NULL)
         return EXIT_FAILURE;
     ptr = skip_spaces(ptr);
-    req->args = alloc(NULL, NULL);
+    req->args = walloc(NULL, 0);
     if (!req->args)
         return EXIT_FAILURE;
-    while (true) {
+    for (size_t idx = 0; true; idx++) {
         if (cmp_format(ptr, &INPUT_END_FORMAT))
             return EXIT_SUCCESS;
-        req->args[arg_idx] = strdup_format(ptr, &INPUT_ARG_FORMAT, &ptr);
-        if (!req->args[arg_idx])
+        req->args[idx] = strdup_format(ptr, &INPUT_ARG_FORMAT, &ptr);
+        if (!req->args[idx])
             return EXIT_FAILURE;
         ptr = skip_spaces(ptr);
-        req->args = alloc(req->args, &arg_idx);
+        req->args = walloc(req->args, idx + 2);
     }
     return EXIT_FAILURE;
 }

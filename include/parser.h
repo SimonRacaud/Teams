@@ -11,5 +11,8 @@
 #include "network/request_t.h"
 
 request_t *request_create(char *command);
+int request_write(request_t *request);
+void request_destroy(request_t *request);
+request_t *request_parse(char *input);
 
 #endif // PARSER_H

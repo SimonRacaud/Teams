@@ -8,17 +8,20 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 
+#include <ctype.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "format_t.h"
-#include <ctype.h>
 
 int signal_manager(int signum, bool *activator_ptr);
 
 char *strdup_format(char *str, const format_t *ft, char **end_ptr);
 bool cmp_format(char *str, const format_t *ft);
+
+char **walloc(char **prev, size_t nb);
 
 #endif // UTILITY_H
