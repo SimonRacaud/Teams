@@ -37,7 +37,8 @@ static int init_replay_node(thread_t *thread, user_t *user, const char *body)
     return SUCCESS;
 }
 
-int create_reply(database_t *db, const char *body, uuid_selector_t *params)
+int create_reply(database_t *db,
+user_t *sender, const char *body, uuid_selector_t *params)
 {
     int err = ERROR;
     thread_t *thread = NULL;
@@ -53,5 +54,5 @@ int create_reply(database_t *db, const char *body, uuid_selector_t *params)
     thread = get_thread_from_uuid(db, params, &err);
     if (!thread)
         return err;
-    return init_replay_node(thread, NULL, body);
+    return init_replay_node(thread, sender, body);
 }
