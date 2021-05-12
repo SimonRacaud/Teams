@@ -9,7 +9,12 @@
 
 team_t *get_team(database_t *db, uuid_selector_t *params)
 {
-    (void) db;
-    (void) params;
-    return NULL;
+    team_t *team = NULL;
+    
+    if (!db || !params)
+        return NULL;
+    if (uuid_is_null(params->uuid_team))
+        return NULL;
+    team = get_match_team(db, params);
+    return team;
 }
