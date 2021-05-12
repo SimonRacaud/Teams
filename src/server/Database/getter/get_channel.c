@@ -9,7 +9,14 @@
 
 channel_t *get_channel(database_t *db, uuid_selector_t *params)
 {
-    (void) db;
-    (void) params;
-    return NULL;
+    int err = ERROR;
+    channel_t *channel = NULL;
+
+    if (!db || !params)
+        return NULL;
+    if (uuid_is_null(params->uuid_team) || uuid_is_null(params->uuid_channel))
+        return NULL;
+    channel = get_channel_from_uuid(db, params, &err);
+    (void) err;
+    return channel;
 }
