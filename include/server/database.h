@@ -86,6 +86,7 @@ int user_subscription_remove(database_t *db, uuid_selector_t *params);
 
 bin_private_msg_t *serializer_private_msg_t(const private_msg_t *src);
 bin_channel_t *serializer_channel_t(const channel_t *src);
+bin_header_t *serializer_header_t(const database_t *db);
 bin_thread_t *serializer_thread_t(const thread_t *src);
 bin_reply_t *serializer_reply_t(const reply_t *src);
 bin_team_t *serializer_team_t(const team_t *src);
