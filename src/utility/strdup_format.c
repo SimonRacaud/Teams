@@ -21,7 +21,7 @@ static char *jump_char(char *str, const char *characters, bool accept_null)
 {
     if (accept_null && str[0] == '\0')
         return (str + 1);
-    if (strrchr(characters, str[0]) == NULL) {
+    if (strchr(characters, str[0]) == NULL) {
         return NULL;
     }
     return (str + 1);
@@ -40,7 +40,7 @@ static char *browse_body(char *str, const format_t *ft)
         return str;
     if (str[0] == '\0' || ft->no_body == true)
         return NULL;
-    if (ft->exclude && strrchr(ft->exclude, str[0]) != NULL)
+    if (ft->exclude && strchr(ft->exclude, str[0]) != NULL)
         return NULL;
     if (ft->is_alpha && ft->is_num && !isalnum(str[0]))
         return NULL;
