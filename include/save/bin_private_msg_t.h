@@ -10,7 +10,7 @@
 
 #include <time.h>
 #include <uuid/uuid.h>
-#include "../server/env.h"
+#include "env.h"
 
 typedef struct bin_private_msg_s {
     uuid_t uuid;
