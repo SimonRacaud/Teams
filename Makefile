@@ -29,15 +29,20 @@ SRC_FILES_SRV	= 	server/main.c												\
 					server/app/client.c											\
 					server/app/process_request.c								\
 					server/request/request_execute.c							\
-					parser/request_create.c										\
-					parser/request_destroy.c									\
-					parser/request_parse.c										\
-					parser/body/body_maker_team.c								\
-					parser/body/body_maker_channel.c							\
-					parser/body/body_maker_user.c								\
-					parser/body/body_maker_private_msg.c						\
-					parser/body/body_maker_reply.c								\
-					parser/body/body_maker_thread.c								\
+					network/request_create.c									\
+					network/request_destroy.c									\
+					network/request_parse.c										\
+					network/request_write.c										\
+					network/response_create.c									\
+					network/response_destroy.c									\
+					network/response_read.c										\
+					network/response_send.c										\
+					network/body/body_maker_team.c								\
+					network/body/body_maker_channel.c							\
+					network/body/body_maker_user.c								\
+					network/body/body_maker_private_msg.c						\
+					network/body/body_maker_reply.c								\
+					network/body/body_maker_thread.c							\
 					server/Database/factories/create_team.c						\
 					server/Database/factories/create_user.c						\
 					server/Database/factories/create_reply.c					\

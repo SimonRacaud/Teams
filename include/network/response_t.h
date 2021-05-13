@@ -10,6 +10,7 @@
 
 #include "socket_t.h"
 #include "env.h"
+#include <sys/queue.h>
 
 typedef enum response_error_code {
     SUCCESS = 0,
@@ -22,19 +23,20 @@ typedef enum response_error_code {
     ERR_UNKNOWN_TEAM = 7
 } rcode_e;
 
-typedef struct response_s {
-    socket_t *receiver;
-    rcode_e err_code;
-    char *req_label;
-    char **req_args;
-    void *body;
-    SLIST_ENTRY(response_s) entries;
-} response_t;
-
 typedef struct body_header_s {
     uint elem_size;
     uint list_size;
     char type[SIZE_NAME];
 } body_header_t;
+
+typedef struct response_s {
+    socket_t *receiver;
+    rcode_e err_code;
+    char *req_label;
+    char **req_args;
+    body_header_t *header;
+    void *body;
+    SLIST_ENTRY(response_s) entries;
+} response_t;
 
 #endif // RESPONSE_T_H
