@@ -14,6 +14,7 @@ typedef struct request_s {
     socket_t *receiver;
     char *label;
     char **args;
+    SLIST_ENTRY(request_s) entries;
 } request_t;
 
 #endif // REQUEST_T_H
