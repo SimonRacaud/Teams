@@ -10,7 +10,7 @@
 #include "data/reply_t.h"
 #include "save/bin_reply_t.h"
 
-bin_reply_t *serializer_reply_t(reply_t *src)
+bin_reply_t *serializer_reply_t(const reply_t *src)
 {
     bin_reply_t *dest = NULL;
 

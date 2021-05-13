@@ -10,7 +10,7 @@
 #include "data/team_t.h"
 #include "save/bin_team_t.h"
 
-bin_team_t *serializer_team_t(team_t *src)
+bin_team_t *serializer_team_t(const team_t *src)
 {
     bin_team_t *dest = NULL;
 

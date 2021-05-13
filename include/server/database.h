@@ -18,8 +18,8 @@
 #include "network/response_t.h"
 
 #include "save/bin_user_t.h"
+#include "save/bin_team_t.h"
 #include "save/bin_reply_t.h"
-#include "save/bin_header_t.h"
 #include "save/bin_thread_t.h"
 #include "save/bin_channel_t.h"
 #include "save/bin_private_msg_t.h"
@@ -82,6 +82,11 @@ int user_subscription_remove(database_t *db, uuid_selector_t *params);
 **
 */
 
+bin_private_msg_t *serializer_private_msg_t(const private_msg_t *src);
+bin_channel_t *serializer_channel_t(const channel_t *src);
+bin_thread_t *serializer_thread_t(const thread_t *src);
+bin_reply_t *serializer_reply_t(const reply_t *src);
+bin_team_t *serializer_team_t(const team_t *src);
 bin_user_t *serializer_user_t(const user_t *src);
 
 #endif
