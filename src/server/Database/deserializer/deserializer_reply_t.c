@@ -5,11 +5,7 @@
 ** deserializer_reply_t function
 */
 
-#include <stdlib.h>
-#include <string.h>
-#include "data/reply_t.h"
-#include "data/database_t.h"
-#include "save/bin_reply_t.h"
+#include "database.h"
 
 reply_t *deserializer_reply_t(const bin_reply_t *src, const database_t *db)
 {
@@ -21,5 +17,11 @@ reply_t *deserializer_reply_t(const bin_reply_t *src, const database_t *db)
     if (!dest)
         return NULL;
     memset(dest, 0, sizeof(reply_t));
+    dest->timestamp = src->timestamp;
+    uuid_copy(dest->uuid, src->uuid);
+    dest->user = get_user_from_uuid(db, src->user_uuid);
+    if (!dest->user)
+        return NULL;
+    memcpy(dest->body, src->body, strlen(src->body));
     return dest;
 }

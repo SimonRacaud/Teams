@@ -21,5 +21,8 @@ user_t *deserializer_user_t(const bin_user_t *src, const database_t *db)
     if (!dest)
         return NULL;
     memset(dest, 0, sizeof(user_t));
+    uuid_copy(dest->uuid, src->uuid);
+    dest->status = src->status;
+    memcpy(dest->username, src->name, strlen(src->name));
     return dest;
 }

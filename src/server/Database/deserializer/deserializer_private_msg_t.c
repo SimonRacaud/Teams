@@ -5,11 +5,7 @@
 ** deserializer_private_msg_t function
 */
 
-#include <stdlib.h>
-#include <string.h>
-#include "data/database_t.h"
-#include "data/private_msg_t.h"
-#include "save/bin_private_msg_t.h"
+#include "database.h"
 
 private_msg_t *deserializer_private_msg_t(
     const bin_private_msg_t *src, const database_t *db)
@@ -22,5 +18,10 @@ private_msg_t *deserializer_private_msg_t(
     if (!dest)
         return NULL;
     memset(dest, 0, sizeof(private_msg_t));
+    dest->timestamp = src->timestamp;
+    uuid_copy(dest->uuid, src->uuid);
+    dest->receiver = get_user_from_uuid(db, src->receiver_uuid);
+    dest->sender = get_user_from_uuid(db, src->sender_uuid);
+    memcpy(dest->body, src->body, strlen(src->body));
     return dest;
 }

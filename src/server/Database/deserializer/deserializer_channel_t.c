@@ -22,5 +22,8 @@ channel_t *deserializer_channel_t(
     if (!dest)
         return NULL;
     memset(dest, 0, sizeof(channel_t));
+    uuid_copy(dest->uuid, src->uuid);
+    memcpy(dest->name, src->name, strlen(src->name));
+    memcpy(dest->description, src->description, strlen(src->description));
     return dest;
 }

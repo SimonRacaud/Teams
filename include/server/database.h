@@ -31,7 +31,7 @@
 */
 
 team_t *get_match_team(database_t *db, uuid_selector_t *params);
-user_t *get_user_from_uuid(database_t *db, uuid_t uuid);
+user_t *get_user_from_uuid(const database_t *db, const uuid_t uuid);
 channel_t *get_channel_from_uuid(database_t *db,
 uuid_selector_t *params, int *err);
 
@@ -91,7 +91,7 @@ bin_user_t *serializer_user_t(const user_t *src);
 
 /*
 **
-** SERIALIZER
+** DESERIALIZER
 **
 */
 

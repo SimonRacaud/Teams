@@ -21,5 +21,8 @@ team_t *deserializer_team_t(const bin_team_t *src, const database_t *db)
     if (!dest)
         return NULL;
     memset(dest, 0, sizeof(team_t));
+    uuid_copy(dest->uuid, src->uuid);
+    memcpy(dest->name, src->name, strlen(src->name));
+    memcpy(dest->description, src->description, strlen(src->description));
     return dest;
 }

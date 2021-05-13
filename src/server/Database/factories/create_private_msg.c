@@ -7,7 +7,7 @@
 
 #include "database.h"
 
-user_t *get_user_from_uuid(database_t *db, uuid_t uuid)
+user_t *get_user_from_uuid(const database_t *db, const uuid_t uuid)
 {
     user_t *node = NULL;
 
