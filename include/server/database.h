@@ -17,6 +17,13 @@
 #include "uuid_selector_t.h"
 #include "network/response_t.h"
 
+#include "save/bin_user_t.h"
+#include "save/bin_reply_t.h"
+#include "save/bin_header_t.h"
+#include "save/bin_thread_t.h"
+#include "save/bin_channel_t.h"
+#include "save/bin_private_msg_t.h"
+
 /*
 **
 ** TOOLS
@@ -68,5 +75,13 @@ private_msg_t *get_private_msg(database_t *db, uuid_selector_t *params);
 
 int user_subscription_add(database_t *db, uuid_selector_t *params);
 int user_subscription_remove(database_t *db, uuid_selector_t *params);
+
+/*
+**
+** UPDATER
+**
+*/
+
+bin_user_t *serializer_user_t(const user_t *src);
 
 #endif
