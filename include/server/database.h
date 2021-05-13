@@ -21,6 +21,7 @@
 #include "save/bin_team_t.h"
 #include "save/bin_reply_t.h"
 #include "save/bin_thread_t.h"
+#include "save/bin_header_t.h"
 #include "save/bin_channel_t.h"
 #include "save/bin_private_msg_t.h"
 
@@ -30,6 +31,7 @@
 **
 */
 
+void fill_data_length(const database_t *db, bin_header_t *dest);
 team_t *get_match_team(database_t *db, uuid_selector_t *params);
 user_t *get_user_from_uuid(const database_t *db, const uuid_t uuid);
 channel_t *get_channel_from_uuid(database_t *db,
@@ -103,4 +105,5 @@ channel_t *deserializer_channel_t(
     const bin_channel_t *src, const database_t *db);
 private_msg_t *deserializer_private_msg_t(
     const bin_private_msg_t *src, const database_t *db);
+
 #endif

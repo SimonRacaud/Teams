@@ -31,12 +31,14 @@ SRC_FILES_SRV	= 	server/main.c												\
 					server/Database/serializer/serializer_team_t.c				\
 					server/Database/serializer/serializer_thread_t.c			\
 					server/Database/serializer/serializer_user_t.c				\
+					server/Database/serializer/serializer_header_t.c			\
 					server/Database/deserializer/deserializer_channel_t.c		\
 					server/Database/deserializer/deserializer_private_msg_t.c	\
 					server/Database/deserializer/deserializer_reply_t.c			\
 					server/Database/deserializer/deserializer_team_t.c			\
 					server/Database/deserializer/deserializer_thread_t.c		\
 					server/Database/deserializer/deserializer_user_t.c			\
+					server/Database/fill_data_length/fill_data_length.c			\
 
 SRC_CLI	=	$(addprefix $(DSRC), $(SRC_FILES_CLI))
 SRC_SRV	=	$(addprefix $(DSRC), $(SRC_FILES_SRV))
