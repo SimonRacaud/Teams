@@ -5,10 +5,10 @@
 ** Test File
 */
 
+#include <unistd.h>
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
-#include "parser.h"
-#include <unistd.h>
+#include "network.h"
 
 static void redirect_all_stdout(void)
 {

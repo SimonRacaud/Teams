@@ -44,6 +44,7 @@ response_t *response_create(
             return NULL;
         }
     }
+    res->header = NULL;
     res->body = body;
     return res;
 }

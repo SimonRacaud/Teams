@@ -15,7 +15,7 @@
 #include <sys/queue.h>
 #include "server_t.h"
 #include "socket.h"
-#include "parser.h"
+#include "network.h"
 
 #define SERVER_MAX_CLIENT 42
 
