@@ -23,8 +23,11 @@ static size_t get_teams_length(const user_t *src)
 
 bin_user_t *serializer_user_t(const user_t *src)
 {
-    bin_user_t *dest = malloc(sizeof(bin_user_t));
+    bin_user_t *dest = NULL;
 
+    if (!src)
+        return NULL;
+    dest = malloc(sizeof(bin_user_t));
     if (!dest)
         return NULL;
     memset(dest, 0, sizeof(bin_user_t));
