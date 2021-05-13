@@ -78,7 +78,7 @@ int user_subscription_remove(database_t *db, uuid_selector_t *params);
 
 /*
 **
-** UPDATER
+** SERIALIZER
 **
 */
 
@@ -89,4 +89,18 @@ bin_reply_t *serializer_reply_t(const reply_t *src);
 bin_team_t *serializer_team_t(const team_t *src);
 bin_user_t *serializer_user_t(const user_t *src);
 
+/*
+**
+** SERIALIZER
+**
+*/
+
+user_t *deserializer_user_t(const bin_user_t *src, const database_t *db);
+team_t *deserializer_team_t(const bin_team_t *src, const database_t *db);
+reply_t *deserializer_reply_t(const bin_reply_t *src, const database_t *db);
+thread_t *deserializer_thread_t(const bin_thread_t *src, const database_t *db);
+channel_t *deserializer_channel_t(
+    const bin_channel_t *src, const database_t *db);
+private_msg_t *deserializer_private_msg_t(
+    const bin_private_msg_t *src, const database_t *db);
 #endif
