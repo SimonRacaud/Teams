@@ -18,6 +18,8 @@
 #include "format_t.h"
 
 int signal_manager(int signum, bool *activator_ptr);
+bool is_number(const char *str);
+bool is_ip(const char *str);
 
 char *strdup_format(char *str, const format_t *ft, char **end_ptr);
 bool cmp_format(char *str, const format_t *ft);
