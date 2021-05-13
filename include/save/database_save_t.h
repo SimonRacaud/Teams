@@ -18,14 +18,14 @@
 #include "bin_reply_t.h"
 
 typedef struct database_save_s {
-    bin_header_t head;
-    bin_user_t *users;
+    bin_header_t *head;
+    bin_user_t **users;
     uuid_t **user_teams_list;
-    bin_team_t *teams;
-    bin_channel_t *channels;
-    bin_thread_t *threads;
-    bin_reply_t *replies;
-    bin_private_msg_t *messages;
+    bin_team_t **teams;
+    bin_channel_t **channels;
+    bin_thread_t **threads;
+    bin_reply_t **replies;
+    bin_private_msg_t **messages;
 } database_save_t;
 
 #endif // DATABASE_SAVE_T_H
