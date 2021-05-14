@@ -12,6 +12,7 @@
 #include "env.h"
 #include <time.h>
 #include "user_t.h"
+#include "thread_t.h"
 
 typedef struct reply_list_header reply_list_t;
 typedef struct thread_s thread_t;

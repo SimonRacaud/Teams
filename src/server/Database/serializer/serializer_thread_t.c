@@ -22,8 +22,7 @@ bin_thread_t *serializer_thread_t(const thread_t *src)
     memset(dest, 0, sizeof(bin_thread_t));
     uuid_copy(dest->uuid, src->uuid);
     uuid_copy(dest->user_uuid, src->user->uuid);
-    // TODO set the vqlue of dest->channel_uuid
-    // uuid_copy(dest->channel_uuid, ?);
+    uuid_copy(dest->channel_uuid, src->parent_channel->uuid);
     dest->timestamp = src->timestamp;
     memcpy(dest->title, src->title, strlen(src->title));
     memcpy(dest->body, src->body, strlen(src->body));

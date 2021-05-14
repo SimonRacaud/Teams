@@ -21,8 +21,7 @@ bin_channel_t *serializer_channel_t(const channel_t *src)
         return NULL;
     memset(dest, 0, sizeof(bin_channel_t));
     uuid_copy(dest->uuid, src->uuid);
-    // TODO set the vqlue of dest->team_uuid
-    // uuid_copy(dest->team_uuid, ?);
+    uuid_copy(dest->team_uuid, src->parent_team->uuid);
     memcpy(dest->name, src->name, strlen(src->name));
     memcpy(dest->description, src->description, strlen(src->description));
     return dest;
