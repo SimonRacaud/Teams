@@ -119,17 +119,20 @@ all:  client server
 
 client: CFLAGS += -I./include/client
 client: $(OBJ_CLI)
+	make -C libs/socket
 	@$(CC) -o $(NAME_CLI) $(OBJ_CLI) $(LD_FLAGS) && \
 		$(ECHO) $(BOLD_T)$(GREEN_C)"\n[✔] COMPILED:" $(DEFAULT)$(LIGHT_GREEN) "$(NAME_CLI)\n"$(DEFAULT) || \
 		$(ECHO) $(BOLD_T)$(RED_C)"[✘] "$(UNDLN_T)"BUILD FAILED:" $(LIGHT_RED) "$(NAME_CLI)\n"$(DEFAULT)
 
 server: CFLAGS += -I./include/server
 server: $(OBJ_SRV)
+	make -C libs/socket
 	@$(CC) -o $(NAME_SRV) $(OBJ_SRV) $(LD_FLAGS) && \
 		$(ECHO) $(BOLD_T)$(GREEN_C)"\n[✔] COMPILED:" $(DEFAULT)$(LIGHT_GREEN) "$(NAME_SRV)\n"$(DEFAULT) || \
 		$(ECHO) $(BOLD_T)$(RED_C)"[✘] "$(UNDLN_T)"BUILD FAILED:" $(LIGHT_RED) "$(NAME_SRV)\n"$(DEFAULT)
 
 clean:
+	make clean -C libs/socket
 	$(RM) -f  $(OBJ_CLI) $(OBJ_SRV)
 	@$(RM) -f *.gcda
 	@$(RM) -f *.gcno
