@@ -23,6 +23,7 @@
 #include "save/bin_thread_t.h"
 #include "save/bin_header_t.h"
 #include "save/bin_channel_t.h"
+#include "save/database_save_t.h"
 #include "save/bin_private_msg_t.h"
 
 /*
@@ -36,6 +37,8 @@ team_t *get_match_team(database_t *db, uuid_selector_t *params);
 user_t *get_user_from_uuid(const database_t *db, const uuid_t uuid);
 channel_t *get_channel_from_uuid(database_t *db,
 uuid_selector_t *params, int *err);
+bool run_fill_data(const database_t *db,
+    bin_header_t *dest, database_save_t *db_save);
 
 /*
 **

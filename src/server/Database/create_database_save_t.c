@@ -6,13 +6,15 @@
 */
 
 #include "database.h"
-#include "save/database_save_t.h"
 
-static bool init_checker(database_save_t *dest)
+static bool init_checker(const database_t *db, database_save_t *dest)
 {
+    bin_header_t header = {0};
+
     if (!dest->users || !dest->teams || !dest->channels || !dest->threads ||
         !dest->replies || !dest->messages || !dest->user_teams_list)
         return false;
+    memset(&header, 0, sizeof(bin_header_t));
     memset(dest->users, 0, sizeof(bin_user_t *) * dest->head->nb_user);
     //memset(dest->user_teams_list, 0, ?); TODO
     memset(dest->teams, 0, sizeof(bin_team_t *) * dest->head->nb_team);
@@ -21,7 +23,7 @@ static bool init_checker(database_save_t *dest)
     memset(dest->replies, 0, sizeof(bin_reply_t *) * dest->head->nb_reply);
     memset(dest->messages, 0,
     sizeof(bin_private_msg_t *) * dest->head->nb_private_msg);
-    return true;
+    return run_fill_data(db, &header, dest);
 }
 
 static bool init_database_save_t(const database_t *db, database_save_t *dest)
@@ -37,7 +39,7 @@ static bool init_database_save_t(const database_t *db, database_save_t *dest)
     dest->replies = malloc(sizeof(bin_reply_t *) * dest->head->nb_reply);
     dest->messages =
     malloc(sizeof(bin_private_msg_t *) * dest->head->nb_private_msg);
-    if (!init_checker(dest))
+    if (!init_checker(db, dest))
         return false;
     return true;
 }
