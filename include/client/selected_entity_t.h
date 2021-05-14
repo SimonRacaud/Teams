@@ -8,7 +8,7 @@
 #ifndef SELECTED_ENTITY_T_H
 #define SELECTED_ENTITY_T_H
 
-#include <uuid/uuid.h>
+#include "uuid.h"
 
 typedef struct selected_entity_s {
     uuid_t team;

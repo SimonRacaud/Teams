@@ -8,7 +8,7 @@
 #ifndef CHANNEL_T_H
 #define CHANNEL_T_H
 
-#include <uuid/uuid.h>
+#include "uuid.h"
 #include <sys/queue.h>
 #include "env.h"
 

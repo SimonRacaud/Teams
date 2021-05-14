@@ -9,7 +9,7 @@
 #define BIN_REPLY_T_H
 
 #include <time.h>
-#include <uuid/uuid.h>
+#include "uuid.h"
 #include "env.h"
 
 typedef struct bin_reply_s {

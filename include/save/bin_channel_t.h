@@ -9,7 +9,7 @@
 #define BIN_CHANNEL_T_H
 
 #include "env.h"
-#include <uuid/uuid.h>
+#include "uuid.h"
 
 typedef struct bin_channel_s {
     uuid_t uuid;

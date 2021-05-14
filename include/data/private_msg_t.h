@@ -11,7 +11,7 @@
 #include "env.h"
 #include "user_t.h"
 #include <time.h>
-#include <uuid/uuid.h>
+#include "uuid.h"
 
 typedef struct private_msg_list_header pm_list_t;
 
