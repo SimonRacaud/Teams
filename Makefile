@@ -106,6 +106,8 @@ NAME_SRV	=	myteams_server
 NAME_UT 	=	test.out
 
 INCLUDE = -I./include -I./libs/myteams -I./libs/socket/include
+CFLAGS 	+= `pkg-config --cflags uuid`
+LDFLAGS += `pkg-config --libs uuid`
 CFLAGS	+= -Wall -Wextra -W $(INCLUDE) #-Werror
 
 LD_FLAGS += -lmysocket -L./libs/socket -lmyteams -L./libs/myteams -luuid
