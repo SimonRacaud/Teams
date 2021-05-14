@@ -21,8 +21,8 @@ static int process_cli(client_t *client)
     } else if (!input) {
         return EXIT_FAILURE;
     }
-    //request = request_create(input); TODO
-    //request_push(&client->stack, request); TODO
+    request = request_create(input);
+    request_push(&client->stack, request, &client->socket);
     return EXIT_SUCCESS;
 }
 
@@ -30,12 +30,14 @@ static int process_response(client_t *client)
 {
     response_t *response = NULL;
 
-    //response = response_read(client->socket.fd); TODO
-    if (response == NULL)
+    response = response_read(client->socket.fd);
+    if (response == NULL) {
+        printf("ERROR: fail to read response\n");
         return EXIT_FAILURE;
+    }
     if (logger(response) == EXIT_FAILURE)
         return EXIT_FAILURE;
-    //response_destroy(response); TODO
+    response_destroy(response);
     return EXIT_SUCCESS;
 }
 

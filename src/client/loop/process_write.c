@@ -17,8 +17,10 @@ int process_write(client_t *client)
     while (!SLIST_EMPTY(&client->stack)) {
         ptr = SLIST_FIRST(&client->stack);
         SLIST_REMOVE_HEAD(&client->stack, entries);
-        //request_send(ptr); TODO
-        //request_destroy(ptr); TODO
+        if (request_write(ptr) == EXIT_FAILURE) {
+            printf("ERROR: fail to send request\n");
+        }
+        request_destroy(ptr);
     }
     return EXIT_SUCCESS;
 }

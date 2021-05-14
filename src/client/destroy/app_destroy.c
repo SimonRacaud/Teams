@@ -14,7 +14,7 @@ static void stack_destroy(request_stack_t *stack)
     while (!SLIST_EMPTY(stack)) {
         ptr = SLIST_FIRST(stack);
         SLIST_REMOVE_HEAD(stack, entries);
-        // request_destroy(ptr); // TODO
+        request_destroy(ptr);
     }
 }
 

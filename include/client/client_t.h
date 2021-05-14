@@ -14,8 +14,7 @@
 #include "args_t.h"
 #include <sys/queue.h>
 #include "network/request_t.h"
-
-typedef struct request_stack_s request_stack_t;
+#include "network.h"
 
 typedef struct client_s {
     args_t args;

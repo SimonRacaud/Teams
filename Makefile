@@ -29,8 +29,14 @@ SRC_FILES_CLI	=	client/main.c							\
 					utility/is_ip.c							\
 					utility/is_number.c						\
 					utility/signal_manager.c				\
-
-SRC_FILES_CLI	=	client/main.c					\
+					utility/walloc.c						\
+					utility/strdup_format.c					\
+					network/request_create.c				\
+					network/request_destroy.c				\
+					network/request_write.c					\
+					network/response_destroy.c				\
+					network/response_read.c					\
+					network/request_push.c					\
 
 SRC_FILES_SRV	= 	server/main.c												\
 					utility/signal_manager.c									\

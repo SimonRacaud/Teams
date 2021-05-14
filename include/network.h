@@ -20,11 +20,14 @@
 #include "save/bin_channel_t.h"
 #include "save/bin_private_msg_t.h"
 
+typedef struct request_stack_s request_stack_t;
+
 /// REQUEST
 request_t *request_create(char *command);
 request_t *request_parse(char *input);
 void request_destroy(request_t *request);
 int request_write(request_t *request);
+void request_push(request_stack_t *stack, request_t *req, socket_t *client);
 
 /// RESPONSE
 response_t *response_create(

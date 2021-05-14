@@ -17,6 +17,7 @@
 #include "socket.h"
 #include "client_t.h"
 #include "utility.h"
+#include "network.h"
 #include "network/response_t.h"
 
 #define CONNECT_ATTEMPT 10

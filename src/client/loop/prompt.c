@@ -9,7 +9,5 @@
 
 char *prompt(char **buffer_ptr, bool *disconnect)
 {
-    char *input = NULL;
-
     return fd_getline(STDIN_FILENO, buffer_ptr, disconnect);
 }
