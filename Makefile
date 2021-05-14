@@ -22,6 +22,7 @@ SRC_FILES_SRV	= 	server/main.c												\
 					utility/signal_manager.c									\
 					utility/strdup_format.c										\
 					utility/walloc.c											\
+					utility/is_number.c											\
 					server/app/app_create.c										\
 					server/app/app_destroy.c									\
 					server/app/app_loop.c										\

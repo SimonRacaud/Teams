@@ -24,4 +24,6 @@ bool cmp_format(char *str, const format_t *ft);
 
 char **walloc(char **prev, size_t nb);
 
+bool is_number(const char *str);
+
 #endif // UTILITY_H
