@@ -9,6 +9,7 @@
 #define REQUEST_T_H
 
 #include "socket_t.h"
+#include <sys/queue.h>
 
 typedef struct request_s {
     socket_t *receiver;
