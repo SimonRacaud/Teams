@@ -13,6 +13,9 @@
 #include "socket_t.h"
 #include "client_t.h"
 #include <sys/queue.h>
+#include "network/response_t.h"
+
+typedef struct response_stack response_stack_t;
 
 typedef struct server_s {
     database_t database;
@@ -20,6 +23,7 @@ typedef struct server_s {
     socket_t socket;
     bool loop;
     LIST_HEAD(client_list_header, client_s) clients;
+    SLIST_HEAD(response_stack, response_s) responses;
 } server_t;
 
 #endif // SERVER_T_H

@@ -26,6 +26,9 @@
 /// Uncomment to activate debug mode
 /// #define DEBUG 1
 
+#define GET_DELIM(buffer, delim) (delim[0] == '\0') ? strchr(buffer, '\0') \
+                                                    : strstr(buffer, delim)
+
 #define TO_PROCESS(connection, fds) FD_ISSET(connection->sock.fd, &fds)
 
 int socket_server_create(socket_t *sock, uint port, uint max_client);
@@ -34,6 +37,9 @@ int fd_select(select_t *data, size_t size_read, size_t size_write, ...);
 int socket_server_connect(socket_t *client, int server_fd);
 
 char *fd_getline(int fd, char **buffer_ptr, bool *empty);
+char *fd_getline_delim(int fd, char **buffer_ptr, const char *delim);
+char *fd_read(int fd, char **buffer_ptr, size_t size);
+
 int socket_send(socket_t *sock, const char *msg);
 
 int socket_client_ip_connect(socket_t *sock, uint port, const char *ip);

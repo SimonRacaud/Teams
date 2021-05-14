@@ -11,5 +11,6 @@
 #define SIZE_NAME 32
 #define SIZE_DESC 255
 #define SIZE_BODY 512
+#define END_COM "\r\n"
 
 #endif // ENV_H

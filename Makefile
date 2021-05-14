@@ -7,10 +7,43 @@
 
 DSRC	=	./src/
 
-SRC_FILES_CLI	=	client/main.c		\
+SRC_UT 			= 	tests/tests_project.c			\
+					src/utility/signal_manager.c	\
+					src/utility/strdup_format.c		\
+					src/utility/walloc.c			\
+					src/parser/request_create.c		\
+					src/parser/request_destroy.c	\
+					src/parser/request_parse.c		\
+					src/parser/request_write.c		\
+
+SRC_FILES_CLI	=	client/main.c					\
 
 SRC_FILES_SRV	= 	server/main.c												\
 					utility/signal_manager.c									\
+					utility/strdup_format.c										\
+					utility/walloc.c											\
+					utility/is_number.c											\
+					server/app/app_create.c										\
+					server/app/app_destroy.c									\
+					server/app/app_loop.c										\
+					server/app/app_select.c										\
+					server/app/client.c											\
+					server/app/process_request.c								\
+					server/request/request_execute.c							\
+					network/request_create.c									\
+					network/request_destroy.c									\
+					network/request_parse.c										\
+					network/request_write.c										\
+					network/response_create.c									\
+					network/response_destroy.c									\
+					network/response_read.c										\
+					network/response_send.c										\
+					network/body/body_maker_team.c								\
+					network/body/body_maker_channel.c							\
+					network/body/body_maker_user.c								\
+					network/body/body_maker_private_msg.c						\
+					network/body/body_maker_reply.c								\
+					network/body/body_maker_thread.c							\
 					server/Database/factories/create_team.c						\
 					server/Database/factories/create_user.c						\
 					server/Database/factories/create_reply.c					\
@@ -50,6 +83,7 @@ OBJ_SRV	=	$(SRC_SRV:.c=.o)
 
 NAME_CLI	=	myteams_cli
 NAME_SRV	=	myteams_server
+NAME_UT 	=	test.out
 
 INCLUDE = -I./include -I./libs/myteams -I./libs/socket/include
 CFLAGS	+= -Wall -Wextra -W $(INCLUDE) #-Werror
@@ -79,12 +113,12 @@ clean:
 	@$(RM) -f *.gcno
 
 fclean:	clean
-	$(RM) -f $(NAME_CLI) $(NAME_SRV)
+	$(RM) -f $(NAME_CLI) $(NAME_SRV) $(NAME_UT)
 
 re:	fclean all
 
-#tests_run:
-#	gcc -o $(NAME) $(SRC_UT) -I./include -lcriterion --coverage && ./$(NAME)
+tests_run:
+	gcc -o $(NAME_UT) $(SRC_UT) $(INCLUDE) -lcriterion --coverage && ./$(NAME_UT)
 
 .PHONY :        clean fclean re
 

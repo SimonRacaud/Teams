@@ -11,6 +11,8 @@ SRC_FILES = socket_client_hostname_connect.c	\
 			socket_client_ip_connect.c			\
 			socket_close.c						\
 			fd_getline.c						\
+			fd_getline_delim.c					\
+			fd_read.c							\
 			socket_send.c						\
 			socket_server_connect.c				\
 			socket_server_create.c				\
