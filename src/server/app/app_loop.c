@@ -35,9 +35,11 @@ static int process_write(server_t *server)
     while (ptr != NULL) {
         ptr_next = SLIST_NEXT(ptr, entries);
         if (FD_WRITE_ISSET(ptr, server)) {
-            // send_response(server, ptr)
+            if (response_send(ptr) == EXIT_FAILURE) {
+                printf("ERROR: send_response failed\n");
+            }
             SLIST_REMOVE(&server->responses, ptr, response_s, entries);
-            free(ptr);
+            response_destroy(ptr);
         }
         ptr = ptr_next;
     }
