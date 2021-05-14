@@ -14,11 +14,13 @@
 #include "env.h"
 #include "user_t.h"
 #include "reply_t.h"
+#include "channel_t.h"
 
 typedef struct thread_list_header thread_list_t;
 
 typedef struct thread_s {
     uuid_t uuid;
+    channel_t *parent_channel;
     char title[SIZE_NAME];
     char body[SIZE_BODY];
     time_t timestamp;
