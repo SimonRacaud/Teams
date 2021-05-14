@@ -11,16 +11,23 @@ static bool run_fill_private_msg(user_t *user,
     bin_header_t *dest, database_save_t *db_save)
 {
     private_msg_t *msg = NULL;
+    team_t *user_team = NULL;
+    size_t pos = 0;
 
-    if (user) {
-        LIST_FOREACH(msg, &user->messages, entries) {
-            db_save->messages[dest->nb_private_msg] =
-            serializer_private_msg_t(msg);
-            if (!db_save->messages[dest->nb_private_msg])
-                return false;
-            dest->nb_private_msg++;
-        }
+    LIST_FOREACH(msg, &user->messages, entries) {
+        db_save->messages[dest->nb_private_msg] =
+        serializer_private_msg_t(msg);
+        if (!db_save->messages[dest->nb_private_msg])
+            return false;
+        dest->nb_private_msg++;
     }
+    db_save->user_teams_list[dest->nb_user] =
+    malloc(sizeof(uuid_t) * get_nb_team_from_user(user));
+    if (!db_save->user_teams_list[dest->nb_user])
+        return false;
+    LIST_FOREACH(user_team, &user->teams, entries)
+        uuid_copy(db_save->user_teams_list[dest->nb_user][pos++],
+        user_team->uuid);
     return true;
 }
 

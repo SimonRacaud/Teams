@@ -32,6 +32,7 @@
 **
 */
 
+size_t get_nb_team_from_user(user_t *user);
 void fill_data_length(const database_t *db, bin_header_t *dest);
 team_t *get_match_team(database_t *db, uuid_selector_t *params);
 user_t *get_user_from_uuid(const database_t *db, const uuid_t uuid);
