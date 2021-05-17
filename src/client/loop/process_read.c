@@ -22,6 +22,11 @@ static int process_cli(client_t *client)
         return EXIT_FAILURE;
     }
     request = request_create(input);
+    free(input);
+    if (!request) {
+        printf("ERROR: invalid command\n");
+        return EXIT_SUCCESS;
+    }
     request_push(&client->stack, request, &client->socket);
     return EXIT_SUCCESS;
 }
@@ -43,13 +48,13 @@ static int process_response(client_t *client)
 
 int process_read(client_t *client)
 {
-    if (FD_ISSET(STDIN_FILENO, &client->select.read_fds)) {
-        if (process_cli(client) == EXIT_FAILURE) {
+    if (FD_ISSET(client->socket.fd, &client->select.read_fds)) {
+        if (process_response(client) == EXIT_FAILURE) {
             return EXIT_FAILURE;
         }
     }
-    if (FD_ISSET(client->socket.fd, &client->select.read_fds)) {
-        if (process_response(client) == EXIT_FAILURE) {
+    if (FD_ISSET(STDIN_FILENO, &client->select.read_fds)) {
+        if (process_cli(client) == EXIT_FAILURE) {
             return EXIT_FAILURE;
         }
     }
