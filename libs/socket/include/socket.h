@@ -37,7 +37,8 @@ int fd_select(select_t *data, size_t size_read, size_t size_write, ...);
 int socket_server_connect(socket_t *client, int server_fd);
 
 char *fd_getline(int fd, char **buffer_ptr, bool *empty);
-char *fd_getline_delim(int fd, char **buffer_ptr, const char *delim);
+char *fd_getline_delim(
+    int fd, char **buffer_ptr, const char *delim, bool *empty);
 char *fd_read(int fd, char **buffer_ptr, size_t size);
 
 int socket_send(socket_t *sock, const char *msg);

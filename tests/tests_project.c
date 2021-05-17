@@ -133,14 +133,12 @@ Test(request_write, t01)
     cr_assert_eq(request_write(&req), EXIT_SUCCESS);
     len = read(fds[0], buffer, 99);
     buffer[len] = '\0';
-    cr_assert_str_eq(buffer, "Hello");
-    cr_assert_eq(buffer[6], '\r');
-    cr_assert_eq(buffer[7], '\n');
+    cr_assert_str_eq(buffer, "Hello\r\r\r\n");
 }
 
 Test(request_parse, t01)
 {
-    request_t *req = request_parse("Hello\0World\0\r\n");
+    request_t *req = request_parse("Hello\r\rWorld\r\r");
 
     cr_assert_str_eq(req->label, "Hello");
     cr_assert_str_eq(req->args[0], "World");

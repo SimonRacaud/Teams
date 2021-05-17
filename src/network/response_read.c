@@ -24,7 +24,7 @@ static int read_header_req_arguments(
     char *ptr = NULL;
     uint size = 0;
 
-    if (!(ptr = fd_getline_delim(fd, buffer_ptr, FIELD_END)))
+    if (!(ptr = fd_getline_delim(fd, buffer_ptr, FIELD_END, NULL)))
         return free_all(*buffer_ptr, ptr, response);
     size = atoi(ptr);
     free(ptr);
@@ -36,7 +36,7 @@ static int read_header_req_arguments(
         response->req_args = NULL;
     }
     for (size_t i = 0; i < (size_t) size; i++) {
-        if (!(ptr = fd_getline_delim(fd, buffer_ptr, FIELD_END)))
+        if (!(ptr = fd_getline_delim(fd, buffer_ptr, FIELD_END, NULL)))
             return free_all(*buffer_ptr, ptr, response);
         response->req_args[i] = ptr;
     }
@@ -48,13 +48,13 @@ static int read_header(response_t *response, int fd, char **buffer_ptr)
     char *ptr = NULL;
 
     response->receiver = NULL;
-    if (!(ptr = fd_getline_delim(fd, buffer_ptr, FIELD_END))) {
+    if (!(ptr = fd_getline_delim(fd, buffer_ptr, FIELD_END, NULL))) {
         return free_all(*buffer_ptr, ptr, response);
     } else if (strlen(ptr) != 3 && is_number(ptr) == false) {
         return free_all(*buffer_ptr, ptr, response);
     }
     response->err_code = atoi(ptr);
-    if (!(ptr = fd_getline_delim(fd, buffer_ptr, FIELD_END))) {
+    if (!(ptr = fd_getline_delim(fd, buffer_ptr, FIELD_END, NULL))) {
         return free_all(*buffer_ptr, ptr, response);
     }
     response->req_label = ptr;

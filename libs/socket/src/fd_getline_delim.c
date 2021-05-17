@@ -24,7 +24,7 @@ static char *allocator(char *previous, size_t inc)
     }
 }
 
-static char *read_line(int fd, char *buffer, const char *delim)
+static char *read_line(int fd, char *buffer, const char *delim, bool *empty)
 {
     char *delim_ptr = GET_DELIM(buffer, delim);
     ssize_t read_len = READ_SIZE;
@@ -35,6 +35,8 @@ static char *read_line(int fd, char *buffer, const char *delim)
         if (read_len == -1) {
             perror("read");
             return NULL;
+        } else if (read_len == 0 && empty) {
+            *empty = true;
         }
         buffer[end + read_len] = '\0';
         end += read_len;
@@ -45,13 +47,14 @@ static char *read_line(int fd, char *buffer, const char *delim)
     return buffer;
 }
 
-char *fd_getline_delim(int fd, char **buffer_ptr, const char *delim)
+char *fd_getline_delim(
+    int fd, char **buffer_ptr, const char *delim, bool *empty)
 {
     char *buffer = allocator(*buffer_ptr, READ_SIZE);
     char *delim_ptr;
     size_t delim_size = strlen(delim);
 
-    buffer = read_line(fd, buffer, delim);
+    buffer = read_line(fd, buffer, delim, empty);
     if (!buffer)
         return NULL;
     delim_ptr = GET_DELIM(buffer, delim);

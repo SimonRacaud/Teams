@@ -8,12 +8,13 @@
 #include "network/request_t.h"
 #include "utility.h"
 #include "socket.h"
+#include "env.h"
 
 static const format_t FIELD_FORMAT = {
     .prefix = NULL,
-    .suffix_chars = "",
-    .accept_null_suffix = true,
-    .suffix = NULL,
+    .suffix_chars = NULL,
+    .accept_null_suffix = false,
+    .suffix = "\r\r",
     .exclude = NULL,
     .is_alpha = false,
     .is_num = false,
@@ -23,7 +24,7 @@ static const format_t FIELD_FORMAT = {
 static const format_t END_FORMAT = {
     .prefix = NULL,
     .suffix_chars = NULL,
-    .suffix = "\r\n",
+    .suffix = END_COM,
     .accept_null_suffix = false,
     .exclude = NULL,
     .is_alpha = false,
@@ -37,12 +38,13 @@ static int parse_args(request_t *req, char *ptr)
     if (!req->args)
         return EXIT_FAILURE;
     for (size_t idx = 0; true; idx++) {
-        if (cmp_format(ptr, &END_FORMAT)) {
+        if (ptr[0] == '\0') {
             return EXIT_SUCCESS;
         }
         req->args[idx] = strdup_format(ptr, &FIELD_FORMAT, &ptr);
         if (!req->args[idx])
             return EXIT_FAILURE;
+        ptr += 2;
         req->args = walloc(req->args, idx + 1);
         if (!req->args)
             return EXIT_FAILURE;
@@ -57,6 +59,7 @@ static int parser(request_t *req, char *input)
     req->label = strdup_format(ptr, &FIELD_FORMAT, &ptr);
     if (!req->label)
         return EXIT_FAILURE;
+    ptr += 2;
     if (parse_args(req, ptr) == EXIT_FAILURE) {
         return EXIT_FAILURE;
     }
