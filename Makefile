@@ -31,6 +31,7 @@ SRC_FILES_CLI	=	client/main.c							\
 					utility/signal_manager.c				\
 					utility/walloc.c						\
 					utility/strdup_format.c					\
+					utility/strconcat.c						\
 					network/request_create.c				\
 					network/request_destroy.c				\
 					network/request_write.c					\
@@ -43,6 +44,7 @@ SRC_FILES_SRV	= 	server/main.c												\
 					utility/strdup_format.c										\
 					utility/walloc.c											\
 					utility/is_number.c											\
+					utility/strconcat.c											\
 					server/app/app_create.c										\
 					server/app/app_destroy.c									\
 					server/app/app_loop.c										\
