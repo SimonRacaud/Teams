@@ -12,8 +12,8 @@
 static const format_t INPUT_LABEL_FORMAT = {
     .prefix = "/",
     .suffix_chars = " \t",
-    .suffix = "\r\n",
-    .accept_null_suffix = false,
+    .suffix = NULL,
+    .accept_null_suffix = true,
     .exclude = NULL,
     .is_alpha = true,
     .is_num = true,
@@ -22,9 +22,9 @@ static const format_t INPUT_LABEL_FORMAT = {
 
 static const format_t INPUT_END_FORMAT = {
     .prefix = NULL,
-    .suffix_chars = NULL,
-    .suffix = "\r\n",
-    .accept_null_suffix = false,
+    .suffix_chars = "",
+    .suffix = NULL,
+    .accept_null_suffix = true,
     .exclude = NULL,
     .is_alpha = false,
     .is_num = false,
@@ -55,14 +55,8 @@ static char *skip_spaces(char *str)
     return str + i;
 }
 
-static int parse_input(request_t *req, char *command)
+static int parse_input_args(request_t *req, char *ptr)
 {
-    char *ptr;
-
-    req->label = strdup_format(command, &INPUT_LABEL_FORMAT, &ptr);
-    if (req->label == NULL)
-        return EXIT_FAILURE;
-    ptr = skip_spaces(ptr);
     req->args = walloc(NULL, 0);
     if (!req->args)
         return EXIT_FAILURE;
@@ -75,7 +69,20 @@ static int parse_input(request_t *req, char *command)
         ptr = skip_spaces(ptr);
         req->args = walloc(req->args, idx + 2);
     }
-    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
+}
+
+static int parse_input(request_t *req, char *command)
+{
+    char *ptr = NULL;
+
+    req->label = strdup_format(command, &INPUT_LABEL_FORMAT, &ptr);
+    if (req->label == NULL)
+        return EXIT_FAILURE;
+    if (ptr - command > strlen(command))
+        ptr = &command[strlen(command)];
+    ptr = skip_spaces(ptr);
+    return parse_input_args(req, ptr);
 }
 
 request_t *request_create(char *command)
