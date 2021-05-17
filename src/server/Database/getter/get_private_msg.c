@@ -8,7 +8,7 @@
 #include "database.h"
 
 static private_msg_t *get_private_msg_from_uuid(
-    database_t *db, uuid_selector_t *params)
+    const database_t *db, uuid_selector_t *params)
 {
     private_msg_t *msg = NULL;
     user_t *user = get_user(db, params);
@@ -22,7 +22,7 @@ static private_msg_t *get_private_msg_from_uuid(
     return NULL;
 }
 
-private_msg_t *get_private_msg(database_t *db, uuid_selector_t *params)
+private_msg_t *get_private_msg(const database_t *db, uuid_selector_t *params)
 {
     if (!db || !params)
         return NULL;

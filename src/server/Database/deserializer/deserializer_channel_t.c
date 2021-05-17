@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include "database.h"
 #include "data/channel_t.h"
 #include "data/database_t.h"
 #include "save/bin_channel_t.h"

@@ -7,7 +7,7 @@
 
 #include "database.h"
 
-channel_t *get_channel(database_t *db, uuid_selector_t *params)
+channel_t *get_channel(const database_t *db, uuid_selector_t *params)
 {
     int err = ERROR;
     channel_t *channel = NULL;

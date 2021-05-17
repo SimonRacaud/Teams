@@ -7,7 +7,7 @@
 
 #include "database.h"
 
-user_t *get_user(database_t *db, uuid_selector_t *params)
+user_t *get_user(const database_t *db, uuid_selector_t *params)
 {
     if (!db || !params)
         return NULL;
