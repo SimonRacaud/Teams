@@ -12,9 +12,12 @@
 
 static void init_fds(fd_set *fds, va_list list, size_t size)
 {
+    int fd = 0;
+
     FD_ZERO(fds);
     for (size_t i = 0; i < size; i++) {
-        FD_SET(va_arg(list, int), fds);
+        fd = va_arg(list, int);
+        FD_SET(fd, fds);
     }
 }
 
