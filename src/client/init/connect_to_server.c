@@ -13,6 +13,7 @@ int connect_to_server(socket_t *sock, uint port, const char *ip)
         if (socket_client_ip_connect(sock, port, ip) == EXIT_SUCCESS) {
             return EXIT_SUCCESS;
         }
+        sleep(1);
     }
     printf("Too many attempt. quit\n");
     return EXIT_FAILURE;
