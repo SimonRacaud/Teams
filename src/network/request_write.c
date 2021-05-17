@@ -5,25 +5,33 @@
 ** 11/05/2021 write_request.c
 */
 
+#include "env.h"
 #include "utility.h"
 #include "network/request_t.h"
-#include "env.h"
+
+const char *REQ_FIELD_END = "\r\r";
+
+static char *add_str(char *str, const char *add)
+{
+    char *res = strconcat(str, add);
+
+    return strconcat(res, REQ_FIELD_END);
+}
 
 int request_write(request_t *request)
 {
     int fd;
+    char *str = NULL;
 
     if (!request || !request->label || !request->receiver)
         return EXIT_FAILURE;
     fd = request->receiver->fd;
-    if (write(fd, request->label, strlen(request->label) + 1) == -1)
-        return EXIT_FAILURE;
-    if (request->args) {
-        for (size_t i = 0; request->args[i] != NULL; i++) {
-            write(fd, request->args[i], strlen(request->args[i]) + 1);
-        }
+    str = add_str(str, request->label);
+    for (size_t i = 0; request->args && request->args[i] != NULL; i++) {
+        str = add_str(str, request->args[i]);
     }
-    if (write(fd, END_COM, strlen(END_COM)) == -1)
-        return EXIT_FAILURE;
+    str = add_str(str, END_COM);
+    write(fd, str, strlen(str));
+    free(str);
     return EXIT_SUCCESS;
 }
