@@ -42,7 +42,6 @@ channel_t *get_channel_from_uuid(
     const database_t *db, uuid_selector_t *params, int *err);
 bool run_fill_data(
     const database_t *db, bin_header_t *dest, database_save_t *db_save);
-bool save_database(const database_t *db);
 
 /*
 **
@@ -115,5 +114,21 @@ channel_t *deserializer_channel_t(
     const bin_channel_t *src, const database_t *db);
 private_msg_t *deserializer_private_msg_t(
     const bin_private_msg_t *src, const database_t *db);
+
+/*
+**
+** SAVER / LOADER
+**
+*/
+
+bool save_database(const database_t *db);
+database_t *load_database(void);
+bool read_users(bin_header_t *header, database_save_t *db, size_t *offset);
+void read_teams(bin_header_t *header, database_save_t *db, size_t *offset);
+void read_channels(bin_header_t *header, database_save_t *db, size_t *offset);
+void read_threads(bin_header_t *header, database_save_t *db, size_t *offset);
+void read_replies(bin_header_t *header, database_save_t *db, size_t *offset);
+void read_private_msg(
+    bin_header_t *header, database_save_t *db, size_t *offset);
 
 #endif
