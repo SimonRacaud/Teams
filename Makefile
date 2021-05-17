@@ -111,9 +111,6 @@ CFLAGS	+= -Wall -Wextra -W $(INCLUDE) #-Werror
 
 LD_FLAGS += -lmysocket -L./libs/socket -lmyteams -L./libs/myteams -luuid
 
-debug: CFLAGS += -g
-debug: re
-
 all:  client server
 
 client: CFLAGS += -I./include/client
@@ -143,6 +140,9 @@ re:	fclean all
 
 tests_run:
 	gcc -o $(NAME_UT) $(SRC_UT) $(INCLUDE) -lcriterion --coverage && ./$(NAME_UT)
+
+debug: CFLAGS += -g
+debug: re
 
 .PHONY :        clean fclean re
 
