@@ -16,6 +16,7 @@
 #include "server_t.h"
 #include "socket.h"
 #include "network.h"
+#include "handler.h"
 
 #define SERVER_MAX_CLIENT 42
 

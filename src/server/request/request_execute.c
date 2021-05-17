@@ -8,8 +8,8 @@
 #include "server.h"
 #include "request_handler_t.h"
 
-static const request_handler_t HANDLERS[] = {
-    {.label = "help", .handler = NULL},
+const request_handler_t HANDLERS[] = {
+    {.label = "help", .handler = handler_help},
     {.label = "login", .handler = NULL},
     {.label = "logout", .handler = NULL},
     {.label = "users", .handler = NULL},
