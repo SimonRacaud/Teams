@@ -30,79 +30,42 @@ static char *get_help_msg(void)
     return list;
 }
 
-static char *generate_tram(int enum_stat,
-const char *field, size_t *length, const char **arg)
+static void *get_body(void)
 {
-    size_t len = 3 + strlen(field) + sizeof(uint);
-    size_t len_tmp = 0;
-    uint nb_arg = get_tab_len(arg);
-    char embedded = '\0';
-    char *tram = malloc(len);
-
-    if (!tram)
-        return NULL;
-    sprintf(tram, "%.2i%c%s", enum_stat, embedded, field);
-    tram[3 + strlen(field) + 1] = nb_arg;
-    for (size_t i = 0; i < nb_arg; i++) {
-        len_tmp = strlen(arg[i]) + 1;
-        tram = realloc(tram, len + len_tmp);
-        if (!tram)
-            return NULL;
-        memcpy(tram + len, arg[i], len_tmp);
-        len += len_tmp;
-    }
-    *length = len;
-    return tram;
-}
-
-static char *add_body(char *tram, size_t *length)
-{
-    body_header_t body = {0};
+    body_header_t body_struct = {0};
     const char type[] = "string";
     char *msg = get_help_msg();
+    void *body = NULL;
 
     if (!msg)
         return NULL;
-    body.list_size = 1;
-    body.elem_size = strlen(msg);
-    memcpy(body.type, type, strlen(type));
-    tram = realloc(tram, *length + sizeof(body_header_t) + body.elem_size);
-    if (!tram)
+    body = malloc(sizeof(body_header_t) + strlen(msg));
+    if (!body)
         return NULL;
-    memcpy(tram + (*length), &body, sizeof(body_header_t));
-    *length += sizeof(body_header_t);
-    memcpy(tram + (*length), msg, body.elem_size);
-    *length += body.elem_size;
+    body_struct.list_size = 1;
+    body_struct.elem_size = strlen(msg);
+    memcpy(body_struct.type, type, strlen(type));
+    memcpy(body, &body_struct, sizeof(body_header_t));
+    memcpy(body + sizeof(body_header_t), msg, body_struct.elem_size);
     free(msg);
-    return tram;
-}
-
-static char *generate_response(request_t *request)
-{
-    const char **params = (const char **) request->args;
-    size_t length = 0;
-    char *tram = NULL;
-
-    tram = generate_tram(SUCCESS, request->label, &length, params);
-    if (!tram)
-        return NULL;
-    tram = add_body(tram, &length);
-    if (!tram)
-        return NULL;
-    return add_crlf(tram, length);
+    return body;
 }
 
 int handler_help(server_t *srv, request_t *request)
 {
-    char *msg = NULL;
+    response_t *response = NULL;
     int return_value = 0;
+    void *body = NULL;
 
     if (!srv || !request)
         return EXIT_FAILURE;
-    msg = generate_response(request);
-    if (!msg)
+    body = get_body();
+    if (!body)
         return EXIT_FAILURE;
-    return_value = socket_send(request->receiver, msg);
-    free(msg);
+    response = response_create(SUCCESS, request, request->receiver, body);
+    if (!response)
+        return EXIT_FAILURE;
+    return_value = response_send(response);
+    response_destroy(response);
     return return_value;
 }
