@@ -9,7 +9,7 @@ on:
 jobs:
   lib-socket:
     runs-on: ubuntu-20.04
-    container: epitechcontent/epitest-docker
+    container: epitechcontent/epitest-docker:devel
     steps:
       # Checkout code
       - name: Checkout code
@@ -21,7 +21,7 @@ jobs:
 
   client:
     runs-on: ubuntu-20.04
-    container: epitechcontent/epitest-docker
+    container: epitechcontent/epitest-docker:devel
     needs: lib-socket
     steps:
       # Checkout code
@@ -34,7 +34,7 @@ jobs:
 
   server:
     runs-on: ubuntu-20.04
-    container: epitechcontent/epitest-docker
+    container: epitechcontent/epitest-docker:devel
     needs: lib-socket
     steps:
     # Checkout code

@@ -16,15 +16,14 @@ static void redirect_all_stdout(void)
     cr_redirect_stderr();
 }
 
-// Test(function, t01, .init = redirect_all_stdout)
+//Test(function, t01, .init = redirect_all_stdout)
 //{
-//
-//     cr_assert_stderr_eq_str("");
-// }
+//    cr_assert_stderr_eq_str("");
+//}
 
 Test(cli_request_parser, t01)
 {
-    request_t *req = request_create("/hello \"world\"\r\n");
+    request_t *req = request_create("/hello \"world\"");
 
     if (req == NULL) {
         fprintf(stderr, "NULL REQUEST\n");
@@ -36,7 +35,7 @@ Test(cli_request_parser, t01)
 
 Test(cli_request_parser, t02)
 {
-    request_t *req = request_create("/hello\r\n");
+    request_t *req = request_create("/hello");
 
     if (req == NULL) {
         fprintf(stderr, "NULL REQUEST\n");
@@ -47,7 +46,7 @@ Test(cli_request_parser, t02)
 
 Test(cli_request_parser, t03)
 {
-    request_t *req = request_create("/hello \"world\" \" world \"\r\n");
+    request_t *req = request_create("/hello \"world\" \" world \"");
 
     if (req == NULL) {
         fprintf(stderr, "NULL REQUEST\n");
@@ -60,49 +59,49 @@ Test(cli_request_parser, t03)
 
 Test(cli_request_parser, t04)
 {
-    request_t *req = request_create("/ hello \r\n");
+    request_t *req = request_create("/ hello ");
 
     cr_assert_eq(req, NULL);
 }
 
 Test(cli_request_parser, t05)
 {
-    request_t *req = request_create("/hello \"world\" ");
+    request_t *req = request_create("/hello \"world\" \r");
 
     cr_assert_eq(req, NULL);
 }
 
 Test(cli_request_parser, t06)
 {
-    request_t *req = request_create("/hello world\r\n");
+    request_t *req = request_create("/hello world");
 
     cr_assert_eq(req, NULL);
 }
 
 Test(cli_request_parser, t07)
 {
-    request_t *req = request_create("/hello \"world \r\n");
+    request_t *req = request_create("/hello \"world ");
 
     cr_assert_eq(req, NULL);
 }
 
 Test(cli_request_parser, t08)
 {
-    request_t *req = request_create("/hello world\" \r\n");
+    request_t *req = request_create("/hello world\" ");
 
     cr_assert_eq(req, NULL);
 }
 
 Test(cli_request_parser, t09)
 {
-    request_t *req = request_create("/hello \t \"world\" \t \t \r\n");
+    request_t *req = request_create("/hello \t \"world\" \t \t ");
 
     cr_assert_neq(req, NULL);
 }
 
 Test(cli_request_parser, t10)
 {
-    request_t *req = request_create("/ \r\n");
+    request_t *req = request_create("/ ");
 
     cr_assert_str_eq(req->label, "");
     cr_assert_eq(req->args, NULL);
@@ -110,7 +109,7 @@ Test(cli_request_parser, t10)
 
 Test(cli_request_parser, t11)
 {
-    request_t *req = request_create("\r\n");
+    request_t *req = request_create("");
 
     cr_assert_eq(req, NULL);
 }
@@ -127,11 +126,7 @@ Test(request_write, t01)
     int fds[2];
     int res = pipe(fds);
     socket_t sock = {.fd = fds[1]};
-    request_t req = {
-        .receiver = &sock,
-        .label = "Hello",
-        .args = NULL
-    };
+    request_t req = {.receiver = &sock, .label = "Hello", .args = NULL};
     char buffer[100];
     int len;
 

@@ -19,9 +19,10 @@ static char *jump_pattern(char *str, const char *pattern)
 
 static char *jump_char(char *str, const char *characters, bool accept_null)
 {
-    if (accept_null && str[0] == '\0')
+    if (accept_null && str[0] == '\0') {
         return (str + 1);
-    if (strchr(characters, str[0]) == NULL) {
+    }
+    if (str[0] == '\0' || strchr(characters, str[0]) == NULL) {
         return NULL;
     }
     return (str + 1);

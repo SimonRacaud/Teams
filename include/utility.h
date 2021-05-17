@@ -28,4 +28,6 @@ char **walloc(char **prev, size_t nb);
 
 bool is_number(const char *str);
 
+char *strconcat(char *a, const char *b);
+
 #endif // UTILITY_H
