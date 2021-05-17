@@ -30,7 +30,7 @@ int request_write(request_t *request)
     for (size_t i = 0; request->args && request->args[i] != NULL; i++) {
         str = add_str(str, request->args[i]);
     }
-    str = add_str(str, END_COM);
+    str = strconcat(str, END_COM);
     write(fd, str, strlen(str));
     free(str);
     return EXIT_SUCCESS;
