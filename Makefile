@@ -144,10 +144,14 @@ re:	fclean all
 tests_run:
 	gcc -o $(NAME_UT) $(SRC_UT) $(INCLUDE) -lcriterion --coverage && ./$(NAME_UT)
 
+coverage:
+	@gcovr -r . --exclude-directories tests
+	@gcovr -b --exclude-directories tests
+
 debug: CFLAGS += -g
 debug: re
 
-.PHONY :        clean fclean re
+.PHONY:	client server clean fclean re tests_run coverage debug
 
 ECHO	=	/bin/echo -e
 DEFAULT	=	"\e[0m"

@@ -34,7 +34,7 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	@ar rc $(NAME) $(OBJ) && \
      	$(ECHO) $(BOLD_T)$(GREEN_C)"\n[✔] COMPILED:" $(DEFAULT)$(LIGHT_GREN) "$(NAME)\n"$(DEFAULT) || \
-  		$(ECHO) $(BOLD_T)$(RED_C)"[✘] "$(UNDLN_T)"BUILD FAILED:" $(LIGHT_RED) "$(NAME)\n"$(DEFAULT)
+  		($(ECHO) $(BOLD_T)$(RED_C)"[✘] "$(UNDLN_T)"BUILD FAILED:" $(LIGHT_RED) "$(NAME)\n"$(DEFAULT) && exit 1)
 
 clean:
 	@$(RM) $(OBJ)
