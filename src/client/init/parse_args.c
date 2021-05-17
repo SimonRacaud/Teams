@@ -29,10 +29,11 @@ int parse_args(args_t *args, int argc, char **argv)
     if (argc != REQUIRED_ARGC) {
         return usage(argv[0], EXIT_FAILURE);
     }
-    if (!is_number(argv[1]) || !is_ip(argv[2])) {
+    if (!is_number(argv[2]) || !is_ip(argv[1])) {
+        printf("ERROR: invalid port value\n");
         return EXIT_FAILURE;
     }
-    args->port = (uint)atoi(argv[1]);
-    args->ip = argv[2];
+    args->port = (uint)atoi(argv[2]);
+    args->ip = argv[1];
     return EXIT_SUCCESS;
 }
