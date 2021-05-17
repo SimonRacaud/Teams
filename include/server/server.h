@@ -28,6 +28,7 @@
 
 ///     APP
 int app_create(server_t *server, uint port);
+int app_loop(server_t *server);
 int app_destroy(server_t *server);
 
 int app_select(server_t *server);
