@@ -20,8 +20,7 @@ static void stack_destroy(request_stack_t *stack)
 
 int app_destroy(client_t *client)
 {
-    if (socket_close(&client->socket) == EXIT_FAILURE)
-        return EXIT_FAILURE;
+    socket_close(&client->socket);
     stack_destroy(&client->stack);
     if (client->cli_buffer) {
         free(client->cli_buffer);
