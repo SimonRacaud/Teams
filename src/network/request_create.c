@@ -86,8 +86,10 @@ request_t *request_create(char *command)
         return NULL;
     req->receiver = NULL;
     req->args = NULL;
-    if (parse_input(req, command) == EXIT_FAILURE)
+    if (parse_input(req, command) == EXIT_FAILURE) {
+        free(req);
         return NULL;
+    }
     if (!req->args[0]) {
         free(req->args);
         req->args = NULL;
