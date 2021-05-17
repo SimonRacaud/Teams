@@ -42,6 +42,7 @@ SRC_FILES_CLI	=	client/main.c							\
 					network/request_write.c					\
 					network/response_destroy.c				\
 					network/response_read.c					\
+					network/response_send.c					\
 					network/request_push.c					\
 
 SRC_FILES_SRV	= 	server/main.c												\
