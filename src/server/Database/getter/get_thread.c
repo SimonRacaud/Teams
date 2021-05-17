@@ -7,7 +7,8 @@
 
 #include "database.h"
 
-static thread_t *get_thread_from_uuid(database_t *db, uuid_selector_t *params)
+static thread_t *get_thread_from_uuid(const database_t *db,
+uuid_selector_t *params)
 {
     int err = ERROR;
     channel_t *channel = get_channel_from_uuid(db, params, &err);
@@ -22,7 +23,7 @@ static thread_t *get_thread_from_uuid(database_t *db, uuid_selector_t *params)
     return NULL;
 }
 
-thread_t *get_thread(database_t *db, uuid_selector_t *params)
+thread_t *get_thread(const database_t *db, uuid_selector_t *params)
 {
     if (!db || !params)
         return NULL;

@@ -7,7 +7,8 @@
 
 #include "database.h"
 
-static reply_t *get_reply_from_uuid(database_t *db, uuid_selector_t *params)
+static reply_t *get_reply_from_uuid(const database_t *db,
+uuid_selector_t *params)
 {
     reply_t *reply = NULL;
     thread_t *thread = get_thread(db, params);
@@ -21,7 +22,7 @@ static reply_t *get_reply_from_uuid(database_t *db, uuid_selector_t *params)
     return NULL;
 }
 
-reply_t *get_reply(database_t *db, uuid_selector_t *params)
+reply_t *get_reply(const database_t *db, uuid_selector_t *params)
 {
     if (!db || !params)
         return NULL;

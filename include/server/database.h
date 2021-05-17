@@ -34,9 +34,9 @@
 
 size_t get_nb_team_from_user(user_t *user);
 void fill_data_length(const database_t *db, bin_header_t *dest);
-team_t *get_match_team(database_t *db, uuid_selector_t *params);
+team_t *get_match_team(const database_t *db, uuid_selector_t *params);
 user_t *get_user_from_uuid(const database_t *db, const uuid_t uuid);
-channel_t *get_channel_from_uuid(database_t *db,
+channel_t *get_channel_from_uuid(const database_t *db,
 uuid_selector_t *params, int *err);
 bool run_fill_data(const database_t *db,
     bin_header_t *dest, database_save_t *db_save);
@@ -66,12 +66,12 @@ const char *title, const char *msg, uuid_selector_t *params);
 **
 */
 
-user_t *get_user(database_t *db, uuid_selector_t *params);
-team_t *get_team(database_t *db, uuid_selector_t *params);
-reply_t *get_reply(database_t *db, uuid_selector_t *params);
-thread_t *get_thread(database_t *db, uuid_selector_t *params);
-channel_t *get_channel(database_t *db, uuid_selector_t *params);
-private_msg_t *get_private_msg(database_t *db, uuid_selector_t *params);
+user_t *get_user(const database_t *db, uuid_selector_t *params);
+team_t *get_team(const database_t *db, uuid_selector_t *params);
+reply_t *get_reply(const database_t *db, uuid_selector_t *params);
+thread_t *get_thread(const database_t *db, uuid_selector_t *params);
+channel_t *get_channel(const database_t *db, uuid_selector_t *params);
+private_msg_t *get_private_msg(const database_t *db, uuid_selector_t *params);
 
 /*
 **

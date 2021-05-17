@@ -23,8 +23,7 @@ bin_reply_t *serializer_reply_t(const reply_t *src)
     dest->timestamp = src->timestamp;
     uuid_copy(dest->uuid, src->uuid);
     uuid_copy(dest->user_uuid, src->user->uuid);
-    // TODO set the vqlue of dest->thread_uuid
-    // uuid_copy(dest->thread_uuid, ?);
+    uuid_copy(dest->thread_uuid, src->parent_thread->uuid);
     memcpy(dest->body, src->body, strlen(src->body));
     return dest;
 }

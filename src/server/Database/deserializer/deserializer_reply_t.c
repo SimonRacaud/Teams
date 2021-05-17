@@ -20,7 +20,8 @@ reply_t *deserializer_reply_t(const bin_reply_t *src, const database_t *db)
     dest->timestamp = src->timestamp;
     uuid_copy(dest->uuid, src->uuid);
     dest->user = get_user_from_uuid(db, src->user_uuid);
-    if (!dest->user)
+    dest->parent_thread = NULL; // thread_uuid TODO
+    if (!dest->user || !dest->parent_thread)
         return NULL;
     memcpy(dest->body, src->body, strlen(src->body));
     return dest;

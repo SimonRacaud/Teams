@@ -11,10 +11,10 @@ SRC_UT 			= 	tests/tests_project.c			\
 					src/utility/signal_manager.c	\
 					src/utility/strdup_format.c		\
 					src/utility/walloc.c			\
-					src/parser/request_create.c		\
-					src/parser/request_destroy.c	\
-					src/parser/request_parse.c		\
-					src/parser/request_write.c		\
+					src/network/request_create.c	\
+					src/network/request_destroy.c	\
+					src/network/request_parse.c		\
+					src/network/request_write.c		\
 
 SRC_FILES_CLI	=	client/main.c							\
 					client/destroy/app_destroy.c			\
@@ -112,20 +112,21 @@ CFLAGS	+= -Wall -Wextra -W $(INCLUDE) #-Werror
 LD_FLAGS += -lmysocket -L./libs/socket -lmyteams -L./libs/myteams -luuid
 
 all:  client server
+	ln -sf ./libs/myteams/libmyteams.so libmyteams.so
 
 client: CFLAGS += -I./include/client
 client: $(OBJ_CLI)
 	make -C libs/socket
-	@$(CC) -o $(NAME_CLI) $(OBJ_CLI) $(LD_FLAGS) && \
+	@$(CC) -o $(NAME_CLI) $(OBJ_CLI) $(LD_FLAGS) -Wl,-rpath=$(PWD) && \
 		$(ECHO) $(BOLD_T)$(GREEN_C)"\n[✔] COMPILED:" $(DEFAULT)$(LIGHT_GREEN) "$(NAME_CLI)\n"$(DEFAULT) || \
-		$(ECHO) $(BOLD_T)$(RED_C)"[✘] "$(UNDLN_T)"BUILD FAILED:" $(LIGHT_RED) "$(NAME_CLI)\n"$(DEFAULT)
+		($(ECHO) $(BOLD_T)$(RED_C)"[✘] "$(UNDLN_T)"BUILD FAILED:" $(LIGHT_RED) "$(NAME_CLI)\n"$(DEFAULT) && exit 1)
 
 server: CFLAGS += -I./include/server
 server: $(OBJ_SRV)
 	make -C libs/socket
-	@$(CC) -o $(NAME_SRV) $(OBJ_SRV) $(LD_FLAGS) && \
+	@$(CC) -o $(NAME_SRV) $(OBJ_SRV) $(LD_FLAGS) -Wl,-rpath=$(PWD) && \
 		$(ECHO) $(BOLD_T)$(GREEN_C)"\n[✔] COMPILED:" $(DEFAULT)$(LIGHT_GREEN) "$(NAME_SRV)\n"$(DEFAULT) || \
-		$(ECHO) $(BOLD_T)$(RED_C)"[✘] "$(UNDLN_T)"BUILD FAILED:" $(LIGHT_RED) "$(NAME_SRV)\n"$(DEFAULT)
+		($(ECHO) $(BOLD_T)$(RED_C)"[✘] "$(UNDLN_T)"BUILD FAILED:" $(LIGHT_RED) "$(NAME_SRV)\n"$(DEFAULT) && exit 1)
 
 clean:
 	make clean -C libs/socket

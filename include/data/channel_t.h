@@ -11,6 +11,7 @@
 #include "uuid.h"
 #include <sys/queue.h>
 #include "env.h"
+#include "team_t.h"
 
 typedef struct channel_list_header channel_list_t;
 typedef struct team_s team_t;
