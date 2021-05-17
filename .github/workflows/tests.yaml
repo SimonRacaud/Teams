@@ -3,8 +3,7 @@ name: Run tests
 on:
   workflow_run:
     workflows: ["Check compilation"]
-    branches:
-      - master
+    branches: [master]
     types:
       - completed
 
