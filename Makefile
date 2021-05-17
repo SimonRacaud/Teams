@@ -93,10 +93,11 @@ SRC_FILES_SRV	= 	server/main.c												\
 					server/Database/deserializer/deserializer_team_t.c			\
 					server/Database/deserializer/deserializer_thread_t.c		\
 					server/Database/deserializer/deserializer_user_t.c			\
-					server/Database/fill_data/fill_data_length.c				\
-					server/Database/fill_data/run_fill_data.c					\
-					server/Database/fill_data/get_nb_team_from_user.c			\
-					server/Database/create_database_save_t.c					\
+					server/Database/saver/fill_data/fill_data_length.c			\
+					server/Database/saver/fill_data/run_fill_data.c				\
+					server/Database/saver/fill_data/get_nb_team_from_user.c		\
+					server/Database/saver/create_database_save_t.c				\
+					server/Database/saver/saver.c								\
 
 SRC_CLI	=	$(addprefix $(DSRC), $(SRC_FILES_CLI))
 SRC_SRV	=	$(addprefix $(DSRC), $(SRC_FILES_SRV))

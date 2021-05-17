@@ -26,6 +26,8 @@
 #include "save/database_save_t.h"
 #include "save/bin_private_msg_t.h"
 
+#define DB_FILEPATH "database"
+
 /*
 **
 ** TOOLS
@@ -36,10 +38,11 @@ size_t get_nb_team_from_user(user_t *user);
 void fill_data_length(const database_t *db, bin_header_t *dest);
 team_t *get_match_team(const database_t *db, uuid_selector_t *params);
 user_t *get_user_from_uuid(const database_t *db, const uuid_t uuid);
-channel_t *get_channel_from_uuid(const database_t *db,
-uuid_selector_t *params, int *err);
-bool run_fill_data(const database_t *db,
-    bin_header_t *dest, database_save_t *db_save);
+channel_t *get_channel_from_uuid(
+    const database_t *db, uuid_selector_t *params, int *err);
+bool run_fill_data(
+    const database_t *db, bin_header_t *dest, database_save_t *db_save);
+bool save_database(const database_t *db);
 
 /*
 **
@@ -47,18 +50,19 @@ bool run_fill_data(const database_t *db,
 **
 */
 
-int create_reply(database_t *db,
-user_t *sender, const char *body, uuid_selector_t *params);
-int create_private_msg(database_t *db,
-const char *msg, user_t *sender, uuid_selector_t *params);
-int create_team(database_t *db,
-const char *teamname, const char *desc, uuid_selector_t *params);
-int create_channel(database_t *db,
-const char *channelname, const char *desc, uuid_selector_t *params);
-int create_user(database_t *db,
-const char *username, __attribute__((unused)) uuid_selector_t *params);
-int create_thread(database_t *db,
-const char *title, const char *msg, uuid_selector_t *params);
+int create_reply(
+    database_t *db, user_t *sender, const char *body, uuid_selector_t *params);
+int create_private_msg(
+    database_t *db, const char *msg, user_t *sender, uuid_selector_t *params);
+int create_team(database_t *db, const char *teamname, const char *desc,
+    uuid_selector_t *params);
+int create_channel(database_t *db, const char *channelname, const char *desc,
+    uuid_selector_t *params);
+int create_user(database_t *db, const char *username,
+    __attribute__((unused)) uuid_selector_t *params);
+int create_thread(database_t *db, const char *title, const char *msg,
+    uuid_selector_t *params);
+database_save_t *create_database_save_t(const database_t *db);
 
 /*
 **
