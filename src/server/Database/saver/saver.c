@@ -21,12 +21,14 @@ static bool write_list(int fd, void *list, uint n, int size)
 
 static bool write_database(int fd, database_save_t *db)
 {
+    size_t offset = 0;
+
     for (uint i = 0; i < db->head->nb_user; i++) {
         if (write(fd, db->users[i], sizeof(bin_user_t)) == -1)
             return false;
-        if (!write_list(fd, db->user_teams_list,
-                db->users[i]->nb_subscribed_teams, sizeof(uuid_t)))
-            return false;
+        for (uint k = 0; k < db->users[i]->nb_subscribed_teams; k++, offset++)
+            if (write(fd, db->user_teams_list + offset, sizeof(uuid_t)) == -1)
+                return false;
     }
     if (!write_list(fd, db->teams, db->head->nb_team, sizeof(bin_team_t))
         || !write_list(
@@ -62,6 +64,7 @@ bool save_database(const database_t *db)
         printf("write_database: %s\n", strerror(errno));
         return false;
     }
+    destroy_database_save_t(db_save);
     if (close(fd) == -1) {
         printf("save_database => close: %s\n", strerror(errno));
         return false;

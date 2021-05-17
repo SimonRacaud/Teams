@@ -58,3 +58,18 @@ database_save_t *create_database_save_t(const database_t *db)
         return NULL;
     return dest;
 }
+
+void destroy_database_save_t(const database_save_t *db)
+{
+    free(db->head);
+    free(db->users);
+    for (uint i = 0; i < db->head->nb_user; i++)
+        free(db->user_teams_list[i]);
+    free(db->user_teams_list);
+    free(db->teams);
+    free(db->channels);
+    free(db->threads);
+    free(db->replies);
+    free(db->messages);
+    free(db);
+}

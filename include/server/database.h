@@ -63,6 +63,7 @@ int create_user(database_t *db, const char *username,
 int create_thread(database_t *db, const char *title, const char *msg,
     uuid_selector_t *params);
 database_save_t *create_database_save_t(const database_t *db);
+void destroy_database_save_t(const database_save_t *db);
 
 /*
 **
