@@ -11,6 +11,7 @@ SRC_UT 			= 	tests/tests_project.c			\
 					src/utility/signal_manager.c	\
 					src/utility/strdup_format.c		\
 					src/utility/walloc.c			\
+					src/utility/strconcat.c			\
 					src/utility/is_number.c			\
 					src/network/request_create.c	\
 					src/network/request_destroy.c	\
