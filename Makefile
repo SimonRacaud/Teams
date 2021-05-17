@@ -11,10 +11,15 @@ SRC_UT 			= 	tests/tests_project.c			\
 					src/utility/signal_manager.c	\
 					src/utility/strdup_format.c		\
 					src/utility/walloc.c			\
+					src/utility/is_number.c			\
 					src/network/request_create.c	\
 					src/network/request_destroy.c	\
 					src/network/request_parse.c		\
 					src/network/request_write.c		\
+					src/network/response_create.c	\
+					src/network/response_destroy.c	\
+					src/network/response_send.c	\
+					src/network/response_read.c	\
 
 SRC_FILES_CLI	=	client/main.c							\
 					client/destroy/app_destroy.c			\
@@ -142,7 +147,7 @@ fclean:	clean
 re:	fclean all
 
 tests_run:
-	gcc -o $(NAME_UT) $(SRC_UT) $(INCLUDE) -lcriterion --coverage && ./$(NAME_UT)
+	gcc -o $(NAME_UT) $(SRC_UT) $(INCLUDE) $(LD_FLAGS) -lcriterion --coverage && ./$(NAME_UT)
 
 coverage:
 	@gcovr -r . --exclude-directories tests

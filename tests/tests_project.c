@@ -146,3 +146,24 @@ Test(request_parse, t01)
     cr_assert_str_eq(req->args[0], "World");
     cr_assert_eq(req->args[1], NULL);
 }
+
+Test(response, t01)
+{
+    int fds[2];
+    int x = pipe(fds);
+    socket_t soc = {.fd = fds[1]};
+    request_t *req = request_create("/help \"bob\"  \"KOK\"  ");
+    response_t *res = response_create(ERROR, req, &soc, NULL);
+
+    cr_assert_neq(res, NULL);
+    cr_assert_str_eq(res->req_label, "help");
+    cr_assert_str_eq(res->req_args[0], "bob");
+    cr_assert_eq(res->err_code, ERROR);
+    cr_assert_eq(response_send(res), EXIT_SUCCESS);
+    res = response_read(fds[0]);
+    cr_assert_neq(res, NULL);
+    cr_assert_eq(res->err_code, ERROR);
+    cr_assert_str_eq(res->req_label, "help");
+    cr_assert_str_eq(res->req_args[0], "bob");
+    cr_assert_str_eq(res->req_args[1], "KOK");
+}
