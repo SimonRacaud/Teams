@@ -121,21 +121,22 @@ CFLAGS	+= -Wall -Wextra -W $(INCLUDE) #-Werror
 LD_FLAGS += -lmysocket -L./libs/socket -lmyteams -L./libs/myteams -luuid
 
 all:  client server
-	ln -sf ./libs/myteams/libmyteams.so libmyteams.so
 
 client: CFLAGS += -I./include/client
-client: $(OBJ_CLI)
-	make -C libs/socket
+client: socket $(OBJ_CLI)
 	@$(CC) -o $(NAME_CLI) $(OBJ_CLI) $(LD_FLAGS) -Wl,-rpath=$(PWD) && \
 		$(ECHO) $(BOLD_T)$(GREEN_C)"\n[✔] COMPILED:" $(DEFAULT)$(LIGHT_GREEN) "$(NAME_CLI)\n"$(DEFAULT) || \
 		($(ECHO) $(BOLD_T)$(RED_C)"[✘] "$(UNDLN_T)"BUILD FAILED:" $(LIGHT_RED) "$(NAME_CLI)\n"$(DEFAULT) && exit 1)
 
 server: CFLAGS += -I./include/server
-server: $(OBJ_SRV)
-	make -C libs/socket
+server: socket $(OBJ_SRV)
 	@$(CC) -o $(NAME_SRV) $(OBJ_SRV) $(LD_FLAGS) -Wl,-rpath=$(PWD) && \
 		$(ECHO) $(BOLD_T)$(GREEN_C)"\n[✔] COMPILED:" $(DEFAULT)$(LIGHT_GREEN) "$(NAME_SRV)\n"$(DEFAULT) || \
 		($(ECHO) $(BOLD_T)$(RED_C)"[✘] "$(UNDLN_T)"BUILD FAILED:" $(LIGHT_RED) "$(NAME_SRV)\n"$(DEFAULT) && exit 1)
+
+socket:
+	@make -C libs/socket
+	@ln -sf ./libs/myteams/libmyteams.so libmyteams.so
 
 clean:
 	make clean -C libs/socket
@@ -148,8 +149,8 @@ fclean:	clean
 
 re:	fclean all
 
-tests_run:
-	gcc -o $(NAME_UT) $(SRC_UT) $(INCLUDE) $(LD_FLAGS) -lcriterion --coverage && ./$(NAME_UT)
+tests_run: socket
+	gcc -o $(NAME_UT) $(SRC_UT) $(INCLUDE) $(LD_FLAGS) -Wl,-rpath=$(PWD) -lcriterion --coverage && ./$(NAME_UT)
 
 coverage:
 	@gcovr -r . --exclude-directories tests
@@ -158,7 +159,7 @@ coverage:
 debug: CFLAGS += -g
 debug: re
 
-.PHONY:	client server clean fclean re tests_run coverage debug
+.PHONY:	client server clean socket fclean re tests_run coverage debug
 
 ECHO	=	/bin/echo -e
 DEFAULT	=	"\e[0m"
