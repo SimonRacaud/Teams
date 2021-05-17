@@ -11,7 +11,7 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-20.04
-    container: epitechcontent/epitest-docker
+    container: epitechcontent/epitest-docker:devel
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       # Checkout code
