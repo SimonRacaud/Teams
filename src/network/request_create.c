@@ -79,7 +79,7 @@ static int parse_input(request_t *req, char *command)
     req->label = strdup_format(command, &INPUT_LABEL_FORMAT, &ptr);
     if (req->label == NULL)
         return EXIT_FAILURE;
-    if (ptr - command > strlen(command))
+    if ((size_t)(ptr - command) > strlen(command))
         ptr = &command[strlen(command)];
     ptr = skip_spaces(ptr);
     return parse_input_args(req, ptr);
