@@ -9,6 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 static const size_t READ_SIZE = 42;
 
@@ -27,17 +28,20 @@ static char *allocator(char *previous, size_t inc)
     }
 }
 
-static char *read_line(int fd, char *buffer)
+static char *read_line(int fd, char *buffer, bool *empty)
 {
     char *new_line_ptr = strchr(buffer, '\n');
     ssize_t read_len = READ_SIZE;
     size_t end = strlen(buffer);
 
+    *empty = false;
     while (!new_line_ptr && (size_t)read_len == READ_SIZE) {
         read_len = read(fd, &buffer[end], READ_SIZE);
         if (read_len == -1) {
             perror("read");
             return NULL;
+        } else if (read_len == 0) {
+            *empty = true;
         }
         buffer[end + read_len] = '\0';
         end += read_len;
@@ -48,12 +52,12 @@ static char *read_line(int fd, char *buffer)
     return buffer;
 }
 
-char *fd_getline(int fd, char **buffer_ptr)
+char *fd_getline(int fd, char **buffer_ptr, bool *empty)
 {
     char *buffer = allocator(*buffer_ptr, READ_SIZE);
     char *new_line_ptr;
 
-    buffer = read_line(fd, buffer);
+    buffer = read_line(fd, buffer, empty);
     if (!buffer)
         return NULL;
     new_line_ptr = strchr(buffer, '\n');
