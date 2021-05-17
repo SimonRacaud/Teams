@@ -7,9 +7,22 @@ on:
 
 
 jobs:
+  lib-socket:
+    runs-on: ubuntu-20.04
+    container: epitechcontent/epitest-docker
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Run
+      - name: Run make
+        run: make -C libs/socket
+
   client:
     runs-on: ubuntu-20.04
     container: epitechcontent/epitest-docker
+    needs: lib-socket
     steps:
       # Checkout code
       - name: Checkout code
@@ -22,6 +35,7 @@ jobs:
   server:
     runs-on: ubuntu-20.04
     container: epitechcontent/epitest-docker
+    needs: lib-socket
     steps:
     # Checkout code
     - name: Checkout code
