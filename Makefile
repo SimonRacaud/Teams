@@ -11,10 +11,10 @@ SRC_UT 			= 	tests/tests_project.c			\
 					src/utility/signal_manager.c	\
 					src/utility/strdup_format.c		\
 					src/utility/walloc.c			\
-					src/parser/request_create.c		\
-					src/parser/request_destroy.c	\
-					src/parser/request_parse.c		\
-					src/parser/request_write.c		\
+					src/network/request_create.c	\
+					src/network/request_destroy.c	\
+					src/network/request_parse.c		\
+					src/network/request_write.c		\
 
 SRC_FILES_CLI	=	client/main.c							\
 					client/destroy/app_destroy.c			\
