@@ -14,12 +14,14 @@
 #include "user_t.h"
 
 typedef struct reply_list_header reply_list_t;
+typedef struct thread_s thread_t;
 
 typedef struct reply_s {
     uuid_t uuid;
     user_t *user;
     time_t timestamp;
     char body[SIZE_BODY];
+    thread_t *parent_thread;
     LIST_ENTRY(reply_s) entries;
 } reply_t;
 

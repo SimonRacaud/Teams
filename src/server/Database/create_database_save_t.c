@@ -16,7 +16,7 @@ static bool init_checker(const database_t *db, database_save_t *dest)
         return false;
     memset(&header, 0, sizeof(bin_header_t));
     memset(dest->users, 0, sizeof(bin_user_t *) * dest->head->nb_user);
-    //memset(dest->user_teams_list, 0, ?); TODO
+    memset(dest->user_teams_list, 0, sizeof(uuid_t *) * dest->head->nb_user);
     memset(dest->teams, 0, sizeof(bin_team_t *) * dest->head->nb_team);
     memset(dest->channels, 0, sizeof(bin_channel_t *) * dest->head->nb_channel);
     memset(dest->threads, 0, sizeof(bin_thread_t *) * dest->head->nb_thread);
@@ -32,7 +32,7 @@ static bool init_database_save_t(const database_t *db, database_save_t *dest)
     if (!dest->head)
         return false;
     dest->users = malloc(sizeof(bin_user_t *) * dest->head->nb_user);
-    //dest->user_teams_list; TODO a quoi cela sert et que dois-je mettre dedans
+    dest->user_teams_list = malloc(sizeof(uuid_t *) * dest->head->nb_user);
     dest->teams = malloc(sizeof(bin_team_t *) * dest->head->nb_team);
     dest->channels = malloc(sizeof(bin_channel_t *) * dest->head->nb_channel);
     dest->threads = malloc(sizeof(bin_thread_t *) * dest->head->nb_thread);

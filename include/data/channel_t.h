@@ -13,9 +13,11 @@
 #include "env.h"
 
 typedef struct channel_list_header channel_list_t;
+typedef struct team_s team_t;
 
 typedef struct channel_s {
     uuid_t uuid;
+    team_t *parent_team;
     char name[SIZE_NAME];
     char description[SIZE_DESC];
     LIST_HEAD(thread_list_header, thread_s) threads;
