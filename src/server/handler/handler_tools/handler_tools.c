@@ -19,5 +19,6 @@ size_t get_arg_size(const char **arg)
 
 void get_uuid_from_string(uuid_t dest, const char *str)
 {
-    memcpy(&dest, str, 16);
+    memset(dest, 0, 16);
+    memcpy(dest, str, 15);
 }
