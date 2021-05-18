@@ -90,6 +90,7 @@ response_t *response_read(int fd)
 
     if (!response)
         return NULL;
+    response->body = NULL;
     if (read_header(response, fd, &buffer) == EXIT_FAILURE)
         return NULL;
     if (read_body(response, fd, &buffer))
