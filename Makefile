@@ -45,6 +45,7 @@ SRC_FILES_CLI	=	client/main.c							\
 					network/response_read.c					\
 					network/response_send.c					\
 					network/request_push.c					\
+					network/debug_response.c				\
 
 SRC_FILES_SRV	= 	server/main.c												\
 					utility/signal_manager.c									\

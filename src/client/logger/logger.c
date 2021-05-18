@@ -10,6 +10,6 @@
 
 int logger(response_t *response)
 {
-
+    debug_response(response);
     return EXIT_SUCCESS;
 }

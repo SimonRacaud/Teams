@@ -47,5 +47,6 @@ void *body_maker_string(const char *str);
 
 /// UTILITY
 char *strconcat_suffix(char *str, const char *add, const char *suffix);
+void debug_response(response_t *response);
 
 #endif // NETWORK_H
