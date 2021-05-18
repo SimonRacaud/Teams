@@ -39,11 +39,11 @@ static void *get_body(void)
 
     if (!msg)
         return NULL;
-    body = malloc(sizeof(body_header_t) + strlen(msg));
+    body = malloc(sizeof(body_header_t) + strlen(msg) + 1);
     if (!body)
         return NULL;
     body_struct.list_size = 1;
-    body_struct.elem_size = strlen(msg);
+    body_struct.elem_size = strlen(msg) + 1;
     memcpy(body_struct.type, type, strlen(type));
     memcpy(body, &body_struct, sizeof(body_header_t));
     memcpy(body + sizeof(body_header_t), msg, body_struct.elem_size);
