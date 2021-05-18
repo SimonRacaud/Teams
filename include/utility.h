@@ -25,9 +25,9 @@ char *strdup_format(char *str, const format_t *ft, char **end_ptr);
 bool cmp_format(char *str, const format_t *ft);
 
 char **walloc(char **prev, size_t nb);
-
+bool is_empty(const char *str);
 bool is_number(const char *str);
-
+size_t walen(char **word_array);
 char *strconcat(char *a, const char *b);
 
 #endif // UTILITY_H

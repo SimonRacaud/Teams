@@ -36,6 +36,8 @@ void response_destroy(response_t *response);
 int response_send(response_t *response);
 response_t *response_read(int fd, buffer_t *buffer);
 
+int reply(rcode_e code, request_t *request, void *body);
+
 /// BODY
 void *body_maker_team(team_t *team, bool is_list);
 void *body_maker_reply(reply_t *reply, bool is_list);
@@ -43,8 +45,10 @@ void *body_maker_thread(thread_t *thread, bool is_list);
 void *body_maker_user(user_t *user, bool is_list);
 void *body_maker_private_msg(private_msg_t *private_msg, bool is_list);
 void *body_maker_channel(channel_t *channel, bool is_list);
+void *body_maker_string(const char *str);
 
 /// UTILITY
 char *strconcat_suffix(char *str, const char *add, const char *suffix);
+void debug_response(response_t *response);
 
 #endif // NETWORK_H

@@ -45,6 +45,7 @@ SRC_FILES_CLI	=	client/main.c							\
 					network/response_read.c					\
 					network/response_send.c					\
 					network/request_push.c					\
+					network/debug_response.c				\
 
 SRC_FILES_SRV	= 	server/main.c												\
 					utility/signal_manager.c									\
@@ -52,6 +53,8 @@ SRC_FILES_SRV	= 	server/main.c												\
 					utility/walloc.c											\
 					utility/is_number.c											\
 					utility/strconcat.c											\
+					utility/walen.c												\
+					utility/is_empty.c											\
 					server/app/app_create.c										\
 					server/app/app_destroy.c									\
 					server/app/app_loop.c										\
@@ -67,12 +70,14 @@ SRC_FILES_SRV	= 	server/main.c												\
 					network/response_destroy.c									\
 					network/response_read.c										\
 					network/response_send.c										\
+					network/reply.c												\
 					network/body/body_maker_team.c								\
 					network/body/body_maker_channel.c							\
 					network/body/body_maker_user.c								\
 					network/body/body_maker_private_msg.c						\
 					network/body/body_maker_reply.c								\
 					network/body/body_maker_thread.c							\
+					network/body/body_maker_string.c							\
 					server/handler/handler_help.c								\
 					server/handler/handler_user.c								\
 					server/handler/handler_users.c								\

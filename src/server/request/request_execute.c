@@ -34,17 +34,12 @@ static int call_handler(
     return EXIT_SUCCESS;
 }
 
-static void command_not_found(request_t *request, client_t *client)
+static void command_not_found(request_t *request)
 {
-    response_t *response = NULL;
+    void *body = body_maker_string("Command not found");
 
-    response = response_create(ERROR, request, &client->socket, NULL);
+    reply(ERROR, request, body);
     printf("WARNING: command not found.\n");
-    if (!response) {
-        return;
-    }
-    response_send(response);
-    response_destroy(response);
 }
 
 int request_execute(request_t *request, server_t *server, client_t *client)
@@ -55,6 +50,6 @@ int request_execute(request_t *request, server_t *server, client_t *client)
             return call_handler(request, server, HANDLERS[i].handler);
         }
     }
-    command_not_found(request, client);
+    command_not_found(request);
     return EXIT_SUCCESS;
 }
