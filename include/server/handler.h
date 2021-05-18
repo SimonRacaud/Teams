@@ -17,5 +17,6 @@
 */
 
 int handler_help(server_t *srv, request_t *request);
+int handler_users(server_t *srv, request_t *request);
 
 #endif
