@@ -22,3 +22,22 @@ int reply(rcode_e code, request_t *request, void *body)
     response_destroy(response);
     return EXIT_SUCCESS;
 }
+
+int reply_str(rcode_e code, request_t *request, const char *str)
+{
+    response_t *response;
+    void *body = body_maker_string(str);
+
+    if (!body)
+        return EXIT_FAILURE;
+    response = response_create(code, request, request->receiver, body);
+    if (!response) {
+        return EXIT_FAILURE;
+    }
+    if (response_send(response) == EXIT_FAILURE) {
+        response_destroy(response);
+        return EXIT_FAILURE;
+    }
+    response_destroy(response);
+    return EXIT_SUCCESS;
+}
