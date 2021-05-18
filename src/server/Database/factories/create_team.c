@@ -15,6 +15,16 @@ static void init_team_node(team_t *node, const char *teamname, const char *desc)
     uuid_generate(node->uuid);
 }
 
+static void event(uuid_t team, const char *name, uuid_t user)
+{
+    char team_uuid[UUID_STR];
+    char user_uuid[UUID_STR];
+
+    uuid_unparse(team, team_uuid);
+    uuid_unparse(user, user_uuid);
+    server_event_team_created(team_uuid, name, user_uuid);
+}
+
 rcode_e create_team(database_t *db, const char *teamname,
 const char *desc, uuid_selector_t *params)
 {
@@ -30,5 +40,6 @@ const char *desc, uuid_selector_t *params)
     init_team_node(node, teamname, desc);
     LIST_INSERT_HEAD(&db->teams, node, entries);
     uuid_copy(params->uuid_team, node->uuid);
+    event(node->uuid, teamname, params->uuid_user);
     return SUCCESS;
 }

@@ -33,11 +33,17 @@ uuid_selector_t *params, int *err_val)
 static void init_channel_node(channel_t *node,
 const char *channelname, const char *desc, uuid_selector_t *params)
 {
+    char uuid_team[UUID_STR];
+    char uuid_channel[UUID_STR];
+
     memset(node, 0, sizeof(channel_t));
     memcpy(node->name, channelname, strlen(channelname));
     memcpy(node->description, desc, strlen(desc));
     uuid_generate(node->uuid);
     uuid_copy(params->uuid_channel, node->uuid);
+    uuid_unparse(params->uuid_team, uuid_team);
+    uuid_unparse(node->uuid, uuid_channel);
+    server_event_channel_created(uuid_team, uuid_channel, channelname);
 }
 
 static int inset_channel(channel_t *node,

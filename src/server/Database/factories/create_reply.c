@@ -23,6 +23,16 @@ static thread_t *get_thread_from_uuid(
     return NULL;
 }
 
+static void event(uuid_t thread, uuid_t user, const char *body)
+{
+    char uuid_thread[UUID_STR];
+    char uuid_user[UUID_STR];
+
+    uuid_unparse(thread, uuid_thread);
+    uuid_unparse(user, uuid_user);
+    server_event_thread_new_reply(uuid_thread, uuid_user, body);
+}
+
 static int init_replay_node(
     thread_t *thread, user_t *user, const char *body, uuid_selector_t *params)
 {
@@ -37,6 +47,7 @@ static int init_replay_node(
     uuid_generate(reply->uuid);
     LIST_INSERT_HEAD(&thread->replies, reply, entries);
     uuid_copy(params->uuid_reply, reply->uuid);
+    event(thread->uuid, user->uuid, body);
     return SUCCESS;
 }
 

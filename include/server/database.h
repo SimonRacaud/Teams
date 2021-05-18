@@ -25,6 +25,7 @@
 #include "save/bin_channel_t.h"
 #include "save/database_save_t.h"
 #include "save/bin_private_msg_t.h"
+#include "logging_server.h"
 
 /*
 **
@@ -46,17 +47,28 @@ bool run_fill_data(const database_t *db,
 ** FACTORIES
 **
 */
+/// INFO : after call, the created entity uuid is set in params
 
+/// WARNING : you must set the current team, channel, thread uuid in params
 rcode_e create_reply(database_t *db,
 user_t *sender, const char *body, uuid_selector_t *params);
+
+/// WARNING : you must set the current user uuid in params
 rcode_e create_private_msg(database_t *db,
 const char *msg, user_t *sender, uuid_selector_t *params);
+
+/// WARNING : you must set the current user uuid in params
 rcode_e create_team(database_t *db,
 const char *teamname, const char *desc, uuid_selector_t *params);
+
+/// WARNING : you must set the current team uuid in params
 rcode_e create_channel(database_t *db,
 const char *channelname, const char *desc, uuid_selector_t *params);
+
 rcode_e create_user(database_t *db,
 const char *username, __attribute__((unused)) uuid_selector_t *params);
+
+/// WARNING : you must set the current user + channel uuid in params
 rcode_e create_thread(database_t *db,
 const char *title, const char *msg, uuid_selector_t *params);
 

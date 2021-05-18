@@ -20,10 +20,14 @@ static bool already_exist(database_t *db, const char *username)
 
 static void init_user_node(user_t *node, const char *username)
 {
+    char uuid[UUID_STR];
+
     memset(node, 0, sizeof(user_t));
     memcpy(node->username, username, strlen(username));
     node->status = DISCONNECTED;
     uuid_generate(node->uuid);
+    uuid_unparse(node->uuid, uuid);
+    server_event_user_created(uuid, username);
 }
 
 rcode_e create_user(database_t *db,
