@@ -91,7 +91,9 @@ private_msg_t *get_private_msg(const database_t *db, uuid_selector_t *params);
 **
 */
 
+/// params needs uuid_user and uuid_teams
 int user_subscription_add(database_t *db, uuid_selector_t *params);
+/// params needs uuid_user and uuid_teams
 int user_subscription_remove(database_t *db, uuid_selector_t *params);
 
 /*
