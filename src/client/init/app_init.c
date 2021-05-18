@@ -18,6 +18,7 @@ int app_init(client_t *client, int argc, char **argv)
 {
     client->cli_buffer = NULL;
     client->loop = false;
+    client->response_buffer.buff = NULL;
     uuid_clear(client->selector.team);
     uuid_clear(client->selector.channel);
     uuid_clear(client->selector.thread);

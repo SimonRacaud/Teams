@@ -35,7 +35,7 @@ static int process_response(client_t *client)
 {
     response_t *response = NULL;
 
-    response = response_read(client->socket.fd);
+    response = response_read(client->socket.fd, &client->response_buffer);
     if (response == NULL) {
         printf("ERROR: fail to read response\n");
         return EXIT_FAILURE;

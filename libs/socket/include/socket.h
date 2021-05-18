@@ -21,6 +21,12 @@
 #include "socket_t.h"
 #include "select_t.h"
 
+typedef struct buffer_s {
+    char *buff;
+    size_t size;
+    size_t data_size;
+} buffer_t;
+
 #define RANDOM_PORT 0
 
 /// Uncomment to activate debug mode
@@ -38,8 +44,8 @@ int socket_server_connect(socket_t *client, int server_fd);
 
 char *fd_getline(int fd, char **buffer_ptr, bool *empty);
 char *fd_getline_delim(
-    int fd, char **buffer_ptr, const char *delim, bool *empty);
-char *fd_read(int fd, char **buffer_ptr, size_t size);
+    int fd, buffer_t *buffer, const char *delim, bool *empty);
+char *fd_read(int fd, buffer_t *buffer, size_t size);
 
 int socket_send(socket_t *sock, const char *msg);
 

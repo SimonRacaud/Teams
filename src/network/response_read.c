@@ -10,22 +10,22 @@
 
 extern const char *FIELD_END;
 
-static int free_all(char *buffer, char *ptr, response_t *response)
+static int free_all(buffer_t *buffer, char *ptr, response_t *response)
 {
     free(ptr);
-    free(buffer);
+    free(buffer->buff);
     free(response);
     return EXIT_FAILURE;
 }
 
 static int read_header_req_arguments(
-    response_t *response, int fd, char **buffer_ptr)
+    response_t *response, int fd, buffer_t *buffer)
 {
     char *ptr = NULL;
     uint size = 0;
 
-    if (!(ptr = fd_getline_delim(fd, buffer_ptr, FIELD_END, NULL)))
-        return free_all(*buffer_ptr, ptr, response);
+    if (!(ptr = fd_getline_delim(fd, buffer, FIELD_END, NULL)))
+        return free_all(buffer, ptr, response);
     size = atoi(ptr);
     free(ptr);
     if (size > 0) {
@@ -36,39 +36,39 @@ static int read_header_req_arguments(
         response->req_args = NULL;
     }
     for (size_t i = 0; i < (size_t) size; i++) {
-        if (!(ptr = fd_getline_delim(fd, buffer_ptr, FIELD_END, NULL)))
-            return free_all(*buffer_ptr, ptr, response);
+        if (!(ptr = fd_getline_delim(fd, buffer, FIELD_END, NULL)))
+            return free_all(buffer, ptr, response);
         response->req_args[i] = ptr;
     }
     return EXIT_SUCCESS;
 }
 
-static int read_header(response_t *response, int fd, char **buffer_ptr)
+static int read_header(response_t *response, int fd, buffer_t *buffer)
 {
     char *ptr = NULL;
 
     response->receiver = NULL;
-    if (!(ptr = fd_getline_delim(fd, buffer_ptr, FIELD_END, NULL))) {
-        return free_all(*buffer_ptr, ptr, response);
+    if (!(ptr = fd_getline_delim(fd, buffer, FIELD_END, NULL))) {
+        return free_all(buffer, ptr, response);
     } else if (strlen(ptr) != 3 && is_number(ptr) == false) {
-        return free_all(*buffer_ptr, ptr, response);
+        return free_all(buffer, ptr, response);
     }
     response->err_code = atoi(ptr);
-    if (!(ptr = fd_getline_delim(fd, buffer_ptr, FIELD_END, NULL))) {
-        return free_all(*buffer_ptr, ptr, response);
+    if (!(ptr = fd_getline_delim(fd, buffer, FIELD_END, NULL))) {
+        return free_all(buffer, ptr, response);
     }
     response->req_label = ptr;
-    if (read_header_req_arguments(response, fd, buffer_ptr))
+    if (read_header_req_arguments(response, fd, buffer))
         return EXIT_FAILURE;
     return EXIT_SUCCESS;
 }
 
-static int read_body(response_t *response, int fd, char **buffer_ptr)
+static int read_body(response_t *response, int fd, buffer_t *buffer)
 {
     size_t size = 0;
 
     response->header =
-        (body_header_t *) fd_read(fd, buffer_ptr, sizeof(body_header_t));
+        (body_header_t *) fd_read(fd, buffer, sizeof(body_header_t));
     if (!response->header)
         return EXIT_FAILURE;
     size = response->header->elem_size * response->header->list_size;
@@ -76,24 +76,26 @@ static int read_body(response_t *response, int fd, char **buffer_ptr)
         free(response->header);
         return EXIT_SUCCESS;
     }
-    if (!(response->body = fd_read(fd, buffer_ptr, size))) {
+    if (!(response->body = fd_read(fd, buffer, size))) {
         free(response->header);
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;
 }
 
-response_t *response_read(int fd)
+response_t *response_read(int fd, buffer_t *buffer)
 {
     response_t *response = malloc(sizeof(response_t));
-    char *buffer = NULL;
 
     if (!response)
         return NULL;
     response->body = NULL;
-    if (read_header(response, fd, &buffer) == EXIT_FAILURE)
+    if (read_header(response, fd, buffer) == EXIT_FAILURE)
         return NULL;
-    if (read_body(response, fd, &buffer))
-        free(buffer);
+    if (read_body(response, fd, buffer) == EXIT_FAILURE) {
+        free(buffer->buff);
+        buffer->buff = NULL;
+        return NULL;
+    }
     return response;
 }

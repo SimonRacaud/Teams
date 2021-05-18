@@ -32,9 +32,9 @@ void request_push(request_stack_t *stack, request_t *req, socket_t *client);
 /// RESPONSE
 response_t *response_create(
     rcode_e code, request_t *request, socket_t *client, void *body);
-response_t *response_read(int fd);
 void response_destroy(response_t *response);
 int response_send(response_t *response);
+response_t *response_read(int fd, buffer_t *buffer);
 
 /// BODY
 void *body_maker_team(team_t *team, bool is_list);
@@ -43,5 +43,8 @@ void *body_maker_thread(thread_t *thread, bool is_list);
 void *body_maker_user(user_t *user, bool is_list);
 void *body_maker_private_msg(private_msg_t *private_msg, bool is_list);
 void *body_maker_channel(channel_t *channel, bool is_list);
+
+/// UTILITY
+char *strconcat_suffix(char *str, const char *add, const char *suffix);
 
 #endif // NETWORK_H

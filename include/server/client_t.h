@@ -10,12 +10,13 @@
 
 #include "data/user_t.h"
 #include "socket_t.h"
+#include "socket.h"
 
 typedef struct client_list_header client_list_t;
 
 typedef struct client_s {
     user_t *user_ptr;
-    char *read_buffer;
+    buffer_t buffer;
     socket_t socket;
     LIST_ENTRY(client_s) entries;
 } client_t;

@@ -152,13 +152,14 @@ Test(response, t01)
     socket_t soc = {.fd = fds[1]};
     request_t *req = request_create("/help \"bob\"  \"KOK\"  ");
     response_t *res = response_create(ERROR, req, &soc, NULL);
+    buffer_t buffer = {0};
 
     cr_assert_neq(res, NULL);
     cr_assert_str_eq(res->req_label, "help");
     cr_assert_str_eq(res->req_args[0], "bob");
     cr_assert_eq(res->err_code, ERROR);
     cr_assert_eq(response_send(res), EXIT_SUCCESS);
-    res = response_read(fds[0]);
+    res = response_read(fds[0], &buffer);
     cr_assert_neq(res, NULL);
     cr_assert_eq(res->err_code, ERROR);
     cr_assert_str_eq(res->req_label, "help");
