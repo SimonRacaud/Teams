@@ -26,7 +26,7 @@ uuid_selector_t *params, int *err)
 }
 
 static void init_thread_node(channel_t *channel,
-const char *title, const char *body)
+const char *title, const char *body, uuid_selector_t *params)
 {
     thread_t *node = malloc(sizeof(thread_t));
 
@@ -36,9 +36,10 @@ const char *title, const char *body)
     node->timestamp = time(NULL);
     uuid_generate(node->uuid);
     LIST_INSERT_HEAD(&channel->threads, node, entries);
+    uuid_copy(params->uuid_thread, node->uuid);
 }
 
-int create_thread(database_t *db,
+rcode_e create_thread(database_t *db,
 const char *title, const char *body, uuid_selector_t *params)
 {
     int err = ERROR;
@@ -53,6 +54,6 @@ const char *title, const char *body, uuid_selector_t *params)
     channel = get_channel_from_uuid(db, params, &err);
     if (!channel)
         return err;
-    init_thread_node(channel, title, body);
+    init_thread_node(channel, title, body, params);
     return SUCCESS;
 }

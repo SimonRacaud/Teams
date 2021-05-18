@@ -15,8 +15,8 @@ static void init_team_node(team_t *node, const char *teamname, const char *desc)
     uuid_generate(node->uuid);
 }
 
-int create_team(database_t *db, const char *teamname,
-const char *desc, __attribute__((unused)) uuid_selector_t *params)
+rcode_e create_team(database_t *db, const char *teamname,
+const char *desc, uuid_selector_t *params)
 {
     team_t *node = NULL;
 
@@ -29,5 +29,6 @@ const char *desc, __attribute__((unused)) uuid_selector_t *params)
         return ERROR;
     init_team_node(node, teamname, desc);
     LIST_INSERT_HEAD(&db->teams, node, entries);
+    uuid_copy(params->uuid_team, node->uuid);
     return SUCCESS;
 }

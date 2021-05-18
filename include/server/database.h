@@ -47,17 +47,17 @@ bool run_fill_data(const database_t *db,
 **
 */
 
-int create_reply(database_t *db,
+rcode_e create_reply(database_t *db,
 user_t *sender, const char *body, uuid_selector_t *params);
-int create_private_msg(database_t *db,
+rcode_e create_private_msg(database_t *db,
 const char *msg, user_t *sender, uuid_selector_t *params);
-int create_team(database_t *db,
+rcode_e create_team(database_t *db,
 const char *teamname, const char *desc, uuid_selector_t *params);
-int create_channel(database_t *db,
+rcode_e create_channel(database_t *db,
 const char *channelname, const char *desc, uuid_selector_t *params);
-int create_user(database_t *db,
+rcode_e create_user(database_t *db,
 const char *username, __attribute__((unused)) uuid_selector_t *params);
-int create_thread(database_t *db,
+rcode_e create_thread(database_t *db,
 const char *title, const char *msg, uuid_selector_t *params);
 
 /*

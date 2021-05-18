@@ -26,8 +26,8 @@ static void init_user_node(user_t *node, const char *username)
     uuid_generate(node->uuid);
 }
 
-int create_user(database_t *db,
-const char *username, __attribute__((unused)) uuid_selector_t *params)
+rcode_e create_user(database_t *db,
+const char *username, uuid_selector_t *params)
 {
     user_t *node = NULL;
 
@@ -42,5 +42,6 @@ const char *username, __attribute__((unused)) uuid_selector_t *params)
         return ERROR;
     init_user_node(node, username);
     LIST_INSERT_HEAD(&db->users, node, entries);
+    uuid_copy(params->uuid_user, node->uuid);
     return SUCCESS;
 }

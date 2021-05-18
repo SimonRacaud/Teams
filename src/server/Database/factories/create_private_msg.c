@@ -36,10 +36,11 @@ const char *msg, user_t *sender, uuid_selector_t *params)
     node->timestamp = time(NULL);
     node->receiver = receiver;
     node->sender = sender;
+    uuid_copy(params->uuid_private_msg, node->uuid);
     return SUCCESS;
 }
 
-int create_private_msg(database_t *db,
+rcode_e create_private_msg(database_t *db,
 const char *msg, user_t *sender, uuid_selector_t *params)
 {
     if (!db || !msg || !params)
