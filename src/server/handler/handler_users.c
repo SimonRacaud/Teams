@@ -63,7 +63,7 @@ static void *get_body(database_t *db)
     if (!body)
         return NULL;
     body_struct.list_size = 1;
-    body_struct.elem_size = strlen(list);
+    body_struct.elem_size = strlen(list) + 1;
     memcpy(body_struct.type, type, strlen(type));
     memcpy(body, &body_struct, sizeof(body_header_t));
     memcpy(body + sizeof(body_header_t), list, body_struct.elem_size);
