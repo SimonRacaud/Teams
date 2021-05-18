@@ -43,6 +43,7 @@ void *body_maker_thread(thread_t *thread, bool is_list);
 void *body_maker_user(user_t *user, bool is_list);
 void *body_maker_private_msg(private_msg_t *private_msg, bool is_list);
 void *body_maker_channel(channel_t *channel, bool is_list);
+void *body_maker_string(const char *str);
 
 /// UTILITY
 char *strconcat_suffix(char *str, const char *add, const char *suffix);
