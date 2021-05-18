@@ -9,8 +9,6 @@
 #include "server.h"
 #include "request_handler_t.h"
 
-#include "database.h"
-
 static inline size_t get_nb_length(int nb)
 {
     return floor(log10(abs(nb))) + 1;
