@@ -21,11 +21,11 @@ static char *get_help_msg(void)
     list = malloc(sizeof(char) * size);
     if (!list)
         return NULL;
-    for (size_t i = 0; HANDLERS[i].label; i++) {
+    for (size_t u = 0; HANDLERS[u].label; u++) {
         strcpy(list + pos, "- ");
-        strcpy(list + pos + 2, HANDLERS[i].label);
-        pos += (strlen(HANDLERS[i].label) + 2 + 1);
-        list[pos++] = (HANDLERS[i + 1].label) ? '\n' : '\0';
+        strcpy(list + pos + 2, HANDLERS[u].label);
+        pos += (strlen(HANDLERS[u].label) + 2);
+        list[pos++] = (HANDLERS[u + 1].label) ? '\n' : '\0';
     }
     return list;
 }
