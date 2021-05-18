@@ -98,6 +98,7 @@ SRC_FILES_SRV	= 	server/main.c												\
 					server/Database/saver/fill_data/get_nb_team_from_user.c		\
 					server/Database/saver/create_database_save_t.c				\
 					server/Database/saver/saver.c								\
+					server/Database/loader/convert_database.c					\
 
 SRC_CLI	=	$(addprefix $(DSRC), $(SRC_FILES_CLI))
 SRC_SRV	=	$(addprefix $(DSRC), $(SRC_FILES_SRV))

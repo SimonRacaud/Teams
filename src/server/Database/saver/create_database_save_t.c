@@ -71,5 +71,5 @@ void destroy_database_save_t(const database_save_t *db)
     free(db->threads);
     free(db->replies);
     free(db->messages);
-    free(db);
+    free((database_save_t *) db);
 }

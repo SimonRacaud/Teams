@@ -58,49 +58,46 @@ static bool fill_database(bin_header_t *header, database_save_t *db)
     read_threads(header, db, &offset);
     read_replies(header, db, &offset);
     read_private_msg(header, db, &offset);
-    destroy_database_save_t(db);
     return true;
 }
 
-static bool read_database_save(int fd)
+static database_save_t *read_database_save(int fd)
 {
     bin_header_t *buffer;
     struct stat st;
     database_save_t *db;
 
     if (fstat(fd, &st) == -1 || S_ISDIR(st.st_mode))
-        return false;
+        return NULL;
     buffer = malloc(st.st_size);
     if (buffer == NULL)
-        return false;
+        return NULL;
     if (read(fd, buffer, st.st_size) <= 0)
-        return false;
+        return NULL;
     db = create_empty_database_save(buffer);
     if (db == NULL)
-        return false;
-    return fill_database(buffer, db);
+        return NULL;
+    if (!fill_database(buffer, db))
+        return NULL;
+    return db;
 }
 
-/**
- * @brief Return true on successfully. Return false otherwise.
- *
- * @param db
- * @return boolean
- */
 database_t *load_database(void)
 {
     int fd = open(DB_FILEPATH, O_RDONLY);
+    database_save_t *db_save;
 
     if (fd < 0) {
         return NULL;
     }
-    if (!read_database_save(fd)) {
+    db_save = read_database_save(fd);
+    if (db_save == NULL) {
         printf("read_database_save: %s\n", strerror(errno));
-        return false;
+        return NULL;
     }
     if (close(fd) == -1) {
         printf("load_database => close: %s\n", strerror(errno));
         return NULL;
     }
-    return true;
+    return convert_to_database(db_save);
 }

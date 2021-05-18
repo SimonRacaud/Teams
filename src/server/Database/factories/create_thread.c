@@ -7,26 +7,38 @@
 
 #include "database.h"
 
-channel_t *get_channel_from_uuid(const database_t *db,
-uuid_selector_t *params, int *err)
+channel_t *get_channel_by_uuid(
+    const channel_t **channels, uint size, const uuid_t *uuid)
+{
+    for (uint i = 0; i < size; i++)
+        if (!uuid_compare(channels[i], uuid))
+            return channels[i];
+    return NULL;
+}
+
+channel_t *get_channel_from_uuid(
+    const database_t *db, uuid_selector_t *params, int *err)
 {
     team_t *team = get_match_team(db, params);
     channel_t *channel = NULL;
 
     if (!team) {
-        *err = ERR_UNKNOWN_TEAM;
+        if (err)
+            *err = ERR_UNKNOWN_TEAM;
         return NULL;
     }
-    LIST_FOREACH(channel, &team->channels, entries) {
+    LIST_FOREACH(channel, &team->channels, entries)
+    {
         if (!uuid_compare(channel->uuid, params->uuid_channel))
             return channel;
     }
-    *err = ERR_UNKNOWN_CHANNEL;
+    if (err)
+        *err = ERR_UNKNOWN_CHANNEL;
     return NULL;
 }
 
-static void init_thread_node(channel_t *channel,
-const char *title, const char *body)
+static void init_thread_node(
+    channel_t *channel, const char *title, const char *body)
 {
     thread_t *node = malloc(sizeof(thread_t));
 
@@ -38,8 +50,8 @@ const char *title, const char *body)
     LIST_INSERT_HEAD(&channel->threads, node, entries);
 }
 
-int create_thread(database_t *db,
-const char *title, const char *body, uuid_selector_t *params)
+int create_thread(database_t *db, const char *title, const char *body,
+    uuid_selector_t *params)
 {
     int err = ERROR;
     channel_t *channel = NULL;
