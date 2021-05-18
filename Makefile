@@ -53,6 +53,8 @@ SRC_FILES_SRV	= 	server/main.c												\
 					utility/walloc.c											\
 					utility/is_number.c											\
 					utility/strconcat.c											\
+					utility/walen.c												\
+					utility/is_empty.c											\
 					server/app/app_create.c										\
 					server/app/app_destroy.c									\
 					server/app/app_loop.c										\
