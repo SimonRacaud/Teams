@@ -28,6 +28,8 @@
 #define FD_WRITE_ISSET(el, server) \
     FD_ISSET(el->receiver->fd, &server->select.write_fds)
 
+#define UNUSED __attribute__((unused))
+
 ///     APP
 int app_create(server_t *server, uint port);
 int app_loop(server_t *server);

@@ -26,10 +26,10 @@ const request_handler_t HANDLERS[] = {
     {.label = NULL, .handler = NULL}};
 
 static int call_handler(
-    request_t *request, server_t *server, handler_t handler)
+    request_t *request, server_t *server, handler_t handler, client_t *client)
 {
     if (handler) {
-        return handler(server, request);
+        return handler(server, request, client);
     }
     return EXIT_SUCCESS;
 }
@@ -39,7 +39,7 @@ int request_execute(request_t *request, server_t *server, client_t *client)
     request->receiver = &client->socket;
     for (size_t i = 0; HANDLERS[i].label != NULL; i++) {
         if (strcmp(HANDLERS[i].label, request->label) == 0) {
-            return call_handler(request, server, HANDLERS[i].handler);
+            return call_handler(request, server, HANDLERS[i].handler, client);
         }
     }
     if (reply_str(ERROR, request, "Command not found") == EXIT_FAILURE)
