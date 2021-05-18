@@ -8,10 +8,10 @@
 #include "database.h"
 
 channel_t *get_channel_by_uuid(
-    const channel_t **channels, uint size, const uuid_t *uuid)
+    channel_t **channels, uint size, const uuid_t uuid)
 {
     for (uint i = 0; i < size; i++)
-        if (!uuid_compare(channels[i], uuid))
+        if (!uuid_compare(channels[i]->uuid, uuid))
             return channels[i];
     return NULL;
 }

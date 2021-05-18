@@ -8,7 +8,7 @@
 #include "database.h"
 
 thread_t *deserializer_thread_t(const bin_thread_t *src, const database_t *db,
-    const database_save_t *db_save, const channel_t **channels)
+    const database_save_t *db_save, channel_t **channels)
 {
     thread_t *dest = NULL;
 
@@ -52,8 +52,8 @@ static bool fill_threads_replies(
     return true;
 }
 
-thread_t **deserialize_all_threads(const database_save_t *db_save,
-    const database_t *db, const channel_t **channels)
+thread_t **deserialize_all_threads(
+    const database_save_t *db_save, const database_t *db, channel_t **channels)
 {
     thread_t **result = calloc(db_save->head->nb_thread, sizeof(thread_t *));
 

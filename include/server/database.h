@@ -41,9 +41,8 @@ user_t *get_user_from_uuid(const database_t *db, const uuid_t uuid);
 channel_t *get_channel_from_uuid(
     const database_t *db, uuid_selector_t *params, int *err);
 channel_t *get_channel_by_uuid(
-    const channel_t **channels, uint size, const uuid_t *uuid);
-thread_t *get_thread_by_uuid(
-    const thread_t **threads, uint size, const uuid_t *uuid);
+    channel_t **channels, uint size, const uuid_t uuid);
+thread_t *get_thread_by_uuid(thread_t **threads, uint size, const uuid_t uuid);
 bool run_fill_data(
     const database_t *db, bin_header_t *dest, database_save_t *db_save);
 
@@ -113,17 +112,17 @@ bin_user_t *serializer_user_t(const user_t *src);
 user_t *deserializer_user_t(const bin_user_t *src, const database_t *db);
 team_t *deserializer_team_t(const bin_team_t *src, const database_t *db);
 reply_t *deserializer_reply_t(const bin_reply_t *src, const database_t *db,
-    const database_save_t *db_save, const thread_t **threads);
+    const database_save_t *db_save, thread_t **threads);
 thread_t *deserializer_thread_t(const bin_thread_t *src, const database_t *db,
-    const database_save_t *db_save, const channel_t **channels);
+    const database_save_t *db_save, channel_t **channels);
 channel_t *deserializer_channel_t(
     const bin_channel_t *src, const database_t *db);
 private_msg_t *deserializer_private_msg_t(
     const bin_private_msg_t *src, const database_t *db);
-reply_t **deserialize_all_replies(const database_save_t *db_save,
-    const database_t *db, const thread_t **threads);
-thread_t **deserialize_all_threads(const database_save_t *db_save,
-    const database_t *db, const channel_t **channels);
+reply_t **deserialize_all_replies(
+    const database_save_t *db_save, const database_t *db, thread_t **threads);
+thread_t **deserialize_all_threads(
+    const database_save_t *db_save, const database_t *db, channel_t **channels);
 channel_t **deserialize_all_channels(
     const database_save_t *db_save, const database_t *db);
 private_msg_t **deserialize_all_private_msg(

@@ -40,7 +40,7 @@ static bool fill_user_teams(const database_save_t *db_save, database_t *db,
     memset(&params, 0, sizeof(uuid_selector_t));
     for (uint k = 0; k < db_save->users[user_index]->nb_subscribed_teams;
          k++, teams_index++) {
-        uuid_copy(&params.uuid_team, db_save->user_teams_list[teams_index]);
+        uuid_copy(params.uuid_team, *db_save->user_teams_list[teams_index]);
         team = get_team(db, &params);
         if (team == NULL)
             return false;

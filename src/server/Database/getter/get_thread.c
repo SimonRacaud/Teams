@@ -7,11 +7,10 @@
 
 #include "database.h"
 
-thread_t *get_thread_by_uuid(
-    const thread_t **threads, uint size, const uuid_t *uuid)
+thread_t *get_thread_by_uuid(thread_t **threads, uint size, const uuid_t uuid)
 {
     for (uint i = 0; i < size; i++)
-        if (!uuid_compare(threads[i], uuid))
+        if (!uuid_compare(threads[i]->uuid, uuid))
             return threads[i];
     return NULL;
 }

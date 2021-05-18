@@ -8,7 +8,7 @@
 #include "database.h"
 
 reply_t *deserializer_reply_t(const bin_reply_t *src, const database_t *db,
-    const database_save_t *db_save, const thread_t **threads)
+    const database_save_t *db_save, thread_t **threads)
 {
     reply_t *dest = NULL;
 
@@ -36,8 +36,8 @@ static inline void destroy_created_result(reply_t **result, uint max_index)
     free(result);
 }
 
-reply_t **deserialize_all_replies(const database_save_t *db_save,
-    const database_t *db, const thread_t **threads)
+reply_t **deserialize_all_replies(
+    const database_save_t *db_save, const database_t *db, thread_t **threads)
 {
     reply_t **result = calloc(db_save->head->nb_reply, sizeof(reply_t *));
 
