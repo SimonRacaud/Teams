@@ -21,17 +21,6 @@ static const format_t FIELD_FORMAT = {
     .no_body = false
 };
 
-static const format_t END_FORMAT = {
-    .prefix = NULL,
-    .suffix_chars = NULL,
-    .suffix = END_COM,
-    .accept_null_suffix = false,
-    .exclude = NULL,
-    .is_alpha = false,
-    .is_num = false,
-    .no_body = true
-};
-
 static int parse_args(request_t *req, char *ptr)
 {
     req->args = walloc(NULL, 0);
