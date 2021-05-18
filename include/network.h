@@ -36,6 +36,8 @@ void response_destroy(response_t *response);
 int response_send(response_t *response);
 response_t *response_read(int fd, buffer_t *buffer);
 
+int reply(rcode_e code, request_t *request, void *body);
+
 /// BODY
 void *body_maker_team(team_t *team, bool is_list);
 void *body_maker_reply(reply_t *reply, bool is_list);

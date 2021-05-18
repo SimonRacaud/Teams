@@ -68,6 +68,7 @@ SRC_FILES_SRV	= 	server/main.c												\
 					network/response_destroy.c									\
 					network/response_read.c										\
 					network/response_send.c										\
+					network/reply.c												\
 					network/body/body_maker_team.c								\
 					network/body/body_maker_channel.c							\
 					network/body/body_maker_user.c								\
