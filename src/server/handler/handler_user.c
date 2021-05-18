@@ -9,7 +9,8 @@
 #include "database.h"
 #include "request_handler_t.h"
 
-static bool is_correct_arg(database_t *db, request_t *req, int *err, user_t **user)
+static bool is_correct_arg(database_t *db,
+request_t *req, int *err, user_t **user)
 {
     uuid_t uuid;
 
@@ -29,9 +30,12 @@ static bool is_correct_arg(database_t *db, request_t *req, int *err, user_t **us
     }
 }
 
-static char *get_users_data()
+static char *get_users_data(user_t *user)
 {
-    return strdup("NOT ALREADY DEV!!!!!");
+    char *str = NULL;
+
+    asprintf(&str, "Username: %s\nUuid: %s", user->username, user->uuid);
+    return str;
 }
 
 static void *get_body(user_t *user)
