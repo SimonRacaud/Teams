@@ -9,12 +9,13 @@
 #include "database.h"
 #include "request_handler_t.h"
 
-static bool is_correct_arg(database_t *db, request_t *req, int *err, user_t **user)
+static bool is_correct_arg(database_t *db,
+request_t *req, int *err, user_t **user)
 {
     uuid_t uuid;
 
     if (get_arg_size((const char **) req->args) == 1) {
-        if (strlen(req->args[0]) == 16) {
+        if (strlen(req->args[0]) + 1 == 16) {
             get_uuid_from_string(uuid, req->args[0]);
             *user = get_user_from_uuid(db, uuid);
             *err = ERR_UNKNOWN_USER;
@@ -29,29 +30,32 @@ static bool is_correct_arg(database_t *db, request_t *req, int *err, user_t **us
     }
 }
 
-static char *get_users_data()
+static char *get_users_data(user_t *user)
 {
-    return strdup("NOT ALREADY DEV!!!!!");
+    char *str = NULL;
+
+    asprintf(&str, "Username: %s\nUuid: %s", user->username, user->uuid);
+    return str;
 }
 
 static void *get_body(user_t *user)
 {
     body_header_t body_struct = {0};
     const char type[] = "string";
-    char *list = get_users_data(user);
+    char *data = get_users_data(user);
     void *body = NULL;
 
-    if (!list)
+    if (!data)
         return NULL;
-    body = malloc(sizeof(body_header_t) + strlen(list));
+    body = malloc(sizeof(body_header_t) + strlen(data) + 1);
     if (!body)
         return NULL;
     body_struct.list_size = 1;
-    body_struct.elem_size = strlen(list);
+    body_struct.elem_size = strlen(data) + 1;
     memcpy(body_struct.type, type, strlen(type));
     memcpy(body, &body_struct, sizeof(body_header_t));
-    memcpy(body + sizeof(body_header_t), list, body_struct.elem_size);
-    free(list);
+    memcpy(body + sizeof(body_header_t), data, body_struct.elem_size);
+    free(data);
     return body;
 }
 

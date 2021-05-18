@@ -8,6 +8,7 @@
 #ifndef APP_H_
 #define APP_H_
 
+#define _GNU_SOURCE
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
