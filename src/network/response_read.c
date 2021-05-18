@@ -73,7 +73,6 @@ static int read_body(response_t *response, int fd, buffer_t *buffer)
         return EXIT_FAILURE;
     size = response->header->elem_size * response->header->list_size;
     if (size == 0) {
-        free(response->header);
         return EXIT_SUCCESS;
     }
     if (!(response->body = fd_read(fd, buffer, size))) {
