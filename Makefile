@@ -74,6 +74,7 @@ SRC_FILES_SRV	= 	server/main.c												\
 					network/body/body_maker_reply.c								\
 					network/body/body_maker_thread.c							\
 					server/handler/handler_help.c								\
+					server/handler/handler_users.c								\
 					server/Database/factories/create_team.c						\
 					server/Database/factories/create_user.c						\
 					server/Database/factories/create_reply.c					\
@@ -119,7 +120,7 @@ NAME_UT 	=	test.out
 INCLUDE = -I./include -I./libs/myteams -I./libs/socket/include -I./libs/
 CFLAGS	+= -Wall -Wextra -W $(INCLUDE) #-Werror
 
-LD_FLAGS += -lmysocket -L./libs/socket -lmyteams -L./libs/myteams -luuid
+LD_FLAGS += -lmysocket -L./libs/socket -lmyteams -L./libs/myteams -luuid -lm
 
 all:  client server
 
