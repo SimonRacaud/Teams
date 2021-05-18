@@ -13,7 +13,7 @@ const request_handler_t HANDLERS[] = {
     {.label = "login", .handler = NULL},
     {.label = "logout", .handler = NULL},
     {.label = "users", .handler = handler_users},
-    {.label = "user", .handler = NULL},
+    {.label = "user", .handler = handler_user},
     {.label = "send", .handler = NULL},
     {.label = "messages", .handler = NULL},
     {.label = "subscribe", .handler = NULL},

@@ -77,7 +77,9 @@ SRC_FILES_SRV	= 	server/main.c												\
 					network/body/body_maker_thread.c							\
 					network/body/body_maker_string.c							\
 					server/handler/handler_help.c								\
+					server/handler/handler_user.c								\
 					server/handler/handler_users.c								\
+					server/handler/handler_tools/handler_tools.c				\
 					server/Database/factories/create_team.c						\
 					server/Database/factories/create_user.c						\
 					server/Database/factories/create_reply.c					\
