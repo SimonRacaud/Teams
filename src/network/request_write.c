@@ -11,11 +11,13 @@
 
 const char *REQ_FIELD_END = "\r\r";
 
-static char *add_str(char *str, const char *add)
+char *strconcat_suffix(char *str, const char *add, const char *suffix)
 {
     char *res = strconcat(str, add);
 
-    return strconcat(res, REQ_FIELD_END);
+    if (!res)
+        return NULL;
+    return strconcat(res, suffix);
 }
 
 int request_write(request_t *request)
@@ -26,9 +28,9 @@ int request_write(request_t *request)
     if (!request || !request->label || !request->receiver)
         return EXIT_FAILURE;
     fd = request->receiver->fd;
-    str = add_str(str, request->label);
+    str = strconcat_suffix(str, request->label, REQ_FIELD_END);
     for (size_t i = 0; request->args && request->args[i] != NULL; i++) {
-        str = add_str(str, request->args[i]);
+        str = strconcat_suffix(str, request->args[i], REQ_FIELD_END);
     }
     str = strconcat(str, END_COM);
     write(fd, str, strlen(str));

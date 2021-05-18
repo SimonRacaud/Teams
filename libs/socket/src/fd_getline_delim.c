@@ -9,63 +9,78 @@
 
 static const size_t READ_SIZE = 42;
 
-static char *allocator(char *previous, size_t inc)
+static int allocator(buffer_t *buffer, size_t inc)
 {
-    size_t size;
-    char *res;
-
-    if (!previous) {
-        res = malloc(sizeof(char) * inc);
-        res[0] = '\0';
-        return res;
+    if (!buffer->buff) {
+        buffer->buff = malloc(sizeof(char) * (inc + 1));
+        if (!buffer->buff)
+            return EXIT_FAILURE;
+        buffer->buff[0] = '\0';
+        buffer->size = (inc + 1);
+        buffer->data_size = 0;
     } else {
-        size = strlen(previous) + 1;
-        return realloc(previous, sizeof(char) * (inc + size));
+        if (buffer->size - buffer->data_size > inc) {
+            return EXIT_SUCCESS;
+        }
+        buffer->size += inc;
+        buffer->buff = realloc(buffer->buff, sizeof(char) * buffer->size);
+        if (!buffer->buff)
+            return EXIT_FAILURE;
     }
+    return EXIT_SUCCESS;
 }
 
-static char *read_line(int fd, char *buffer, const char *delim, bool *empty)
+static int read_line(int fd, buffer_t *buffer, const char *delim, bool *empty)
 {
-    char *delim_ptr = GET_DELIM(buffer, delim);
+    char *delim_ptr = GET_DELIM(buffer->buff, delim);
     ssize_t read_len = READ_SIZE;
-    size_t end = strlen(buffer);
 
     while (!delim_ptr && (size_t) read_len == READ_SIZE) {
-        read_len = read(fd, &buffer[end], READ_SIZE);
+        read_len = read(fd, &buffer->buff[buffer->data_size], READ_SIZE);
         if (read_len == -1) {
             perror("read");
-            return NULL;
+            return EXIT_FAILURE;
         } else if (read_len == 0 && empty) {
             *empty = true;
         }
-        buffer[end + read_len] = '\0';
-        end += read_len;
-        delim_ptr = strstr(buffer, delim);
-        if (!delim_ptr)
-            buffer = allocator(buffer, READ_SIZE);
+        buffer->buff[buffer->data_size + read_len] = '\0';
+        buffer->data_size += read_len;
+        delim_ptr = GET_DELIM(buffer->buff, delim);
+        if (!delim_ptr && allocator(buffer, READ_SIZE))
+            return EXIT_FAILURE;
     }
-    return buffer;
+    return EXIT_SUCCESS;
+}
+
+static char *process_result(buffer_t *buffer, const char *delim)
+{
+    char *delim_ptr = GET_DELIM(buffer->buff, delim);
+    size_t delim_size = strlen(delim);
+    char *line;
+
+    if (!delim_ptr) {
+        return NULL;
+    } else if (buffer->data_size - ((delim_ptr + delim_size) - buffer->buff)
+        > 0) {
+        *delim_ptr = '\0';
+        line = strndup(buffer->buff, (delim_ptr - buffer->buff));
+        buffer->data_size -= (strlen(line) + delim_size);
+        memcpy(buffer->buff, (delim_ptr + delim_size), buffer->data_size + 1);
+    } else {
+        *delim_ptr = '\0';
+        line = buffer->buff;
+        buffer->buff = NULL;
+        buffer->data_size = 0;
+    }
+    return line;
 }
 
 char *fd_getline_delim(
-    int fd, char **buffer_ptr, const char *delim, bool *empty)
+    int fd, buffer_t *buffer, const char *delim, bool *empty)
 {
-    char *buffer = allocator(*buffer_ptr, READ_SIZE);
-    char *delim_ptr;
-    size_t delim_size = strlen(delim);
-
-    buffer = read_line(fd, buffer, delim, empty);
-    if (!buffer)
+    if (allocator(buffer, READ_SIZE))
         return NULL;
-    delim_ptr = GET_DELIM(buffer, delim);
-    if (!delim_ptr) {
-        *buffer_ptr = buffer;
+    if (read_line(fd, buffer, delim, empty))
         return NULL;
-    } else if (strlen(delim_ptr + delim_size) > 0) {
-        *buffer_ptr = strdup(delim_ptr + delim_size);
-    } else {
-        *buffer_ptr = NULL;
-    }
-    *delim_ptr = '\0';
-    return buffer;
+    return process_result(buffer, delim);
 }

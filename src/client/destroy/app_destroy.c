@@ -25,5 +25,6 @@ int app_destroy(client_t *client)
     if (client->cli_buffer) {
         free(client->cli_buffer);
     }
+    free(client->response_buffer.buff);
     return EXIT_SUCCESS;
 }
