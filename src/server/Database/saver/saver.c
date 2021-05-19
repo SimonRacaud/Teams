@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include "database.h"
 
-static bool write_list(int fd, void *list, uint n, int size)
+static bool write_list(int fd, const void *list, uint n, int size)
 {
     for (uint i = 0; i < n; i++)
         if (write(fd, list + i, size) == -1)
@@ -19,19 +19,24 @@ static bool write_list(int fd, void *list, uint n, int size)
     return true;
 }
 
-static bool write_database(int fd, database_save_t *db)
+static bool write_user(int fd, const database_save_t *db)
 {
-    size_t offset = 0;
-
-    if (write(fd, db->head, sizeof(bin_header_t)) == -1)
-        return false;
     for (uint i = 0; i < db->head->nb_user; i++) {
         if (write(fd, db->users[i], sizeof(bin_user_t)) == -1)
             return false;
-        for (uint k = 0; k < db->users[i]->nb_subscribed_teams; k++, offset++)
-            if (write(fd, db->user_teams_list + offset, sizeof(uuid_t)) == -1)
+        for (uint k = 0; k < db->users[i]->nb_subscribed_teams; k++)
+            if (write(fd, db->user_teams_list[i][k], sizeof(uuid_t)) == -1)
                 return false;
     }
+    return true;
+}
+
+static bool write_database(int fd, const database_save_t *db)
+{
+    if (write(fd, db->head, sizeof(bin_header_t)) == -1)
+        return false;
+    if (!write_user(fd, db))
+        return false;
     if (!write_list(fd, db->teams, db->head->nb_team, sizeof(bin_team_t))
         || !write_list(
             fd, db->channels, db->head->nb_channel, sizeof(bin_channel_t))
