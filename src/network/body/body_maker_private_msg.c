@@ -32,26 +32,35 @@ static size_t get_list_size(private_msg_t *ptr, bool is_list)
     }
 }
 
-void *body_maker_private_msg(private_msg_t *private_msg, bool is_list)
+static void write_content(void *body, private_msg_t *private_msg, bool is_list)
 {
-    size_t size = get_list_size(private_msg, is_list);
-    bin_private_msg_t *packet = NULL;
     bin_private_msg_t *ptr = NULL;
-    void *body = NULL;
+    bin_private_msg_t *packet = NULL;
 
-    body = malloc(sizeof(body_header_t) + sizeof(bin_private_msg_t) * size);
-    if (!body)
-        return NULL;
-    *((body_header_t *) body) = (body_header_t){
-        .elem_size = sizeof(bin_private_msg_t), .list_size = size,
-        .type = "private_msg"};
-    ptr = (body + sizeof(body_header_t));
+    ptr = (bin_private_msg_t *) ((char *) body + sizeof(body_header_t));
     for (private_msg_t *node = private_msg; node;
          node = LIST_NEXT(node, entries)) {
         packet = serializer_private_msg_t(node);
         *ptr = *packet;
         free(packet);
         ptr++;
+        if (!is_list)
+            break;
     }
+}
+
+void *body_maker_private_msg(private_msg_t *private_msg, bool is_list)
+{
+    size_t size = get_list_size(private_msg, is_list);
+    void *body = NULL;
+
+    body = malloc(sizeof(body_header_t) + sizeof(bin_private_msg_t) * size);
+    if (!body)
+        return NULL;
+    *((body_header_t *) body) =
+        (body_header_t){.elem_size = sizeof(bin_private_msg_t),
+            .list_size = size,
+            .type = "private_msg"};
+    write_content(body, private_msg, is_list);
     return body;
 }

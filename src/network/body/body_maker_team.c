@@ -34,12 +34,14 @@ void *body_maker_team(team_t *team, bool is_list)
         return NULL;
     *((body_header_t *)body) = (body_header_t) {
         .elem_size = sizeof(bin_team_t), .list_size = size, .type = "team"};
-    ptr = (body + sizeof(body_header_t));
+    ptr = (bin_team_t *)((char *)body + sizeof(body_header_t));
     for (team_t *node = team; node; node = LIST_NEXT(node, entries)) {
         packet = serializer_team_t(node);
         *ptr = *packet;
         free(packet);
         ptr++;
+        if (!is_list)
+            break;
     }
     return body;
 }

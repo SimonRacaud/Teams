@@ -34,12 +34,14 @@ void *body_maker_reply(reply_t *reply, bool is_list)
         return NULL;
     *((body_header_t *) body) = (body_header_t){
         .elem_size = sizeof(bin_reply_t), .list_size = size, .type = "reply"};
-    ptr = (body + sizeof(body_header_t));
+    ptr = (bin_reply_t *)((char *)body + sizeof(body_header_t));
     for (reply_t *node = reply; node; node = LIST_NEXT(node, entries)) {
         packet = serializer_reply_t(node);
         *ptr = *packet;
         free(packet);
         ptr++;
+        if (!is_list)
+            break;
     }
     return body;
 }

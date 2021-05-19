@@ -34,12 +34,13 @@ void *body_maker_user(user_t *user, bool is_list)
         return NULL;
     *((body_header_t *) body) = (body_header_t){
         .elem_size = sizeof(bin_user_t), .list_size = size, .type = "user"};
-    ptr = (body + sizeof(body_header_t));
-    for (user_t *node = user; node; node = LIST_NEXT(node, entries)) {
+    ptr = (bin_user_t *) ((char *) body + sizeof(body_header_t));
+    for (user_t *node = user; node; node = LIST_NEXT(node, entries), ptr++) {
         packet = serializer_user_t(node);
-        *ptr = *packet;
+        memcpy(ptr, packet, sizeof(bin_user_t));
         free(packet);
-        ptr++;
+        if (!is_list)
+            break;
     }
     return body;
 }
