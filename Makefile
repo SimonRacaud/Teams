@@ -84,6 +84,7 @@ SRC_FILES_SRV	= 	server/main.c												\
 					\
 					server/handler/handler_help.c								\
 					server/handler/handler_user.c								\
+					server/handler/handler_send.c								\
 					server/handler/handler_users.c								\
 					server/handler/handler_login.c								\
 					server/handler/handler_logout.c								\

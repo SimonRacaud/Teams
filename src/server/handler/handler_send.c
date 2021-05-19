@@ -19,10 +19,9 @@ static bool is_correct_arg(request_t *request)
     return false;
 }
 
-static bool generate_msg(database_t *db, request_t *request)
+static bool generate_msg(database_t *db, request_t *request, user_t *sender)
 {
     uuid_selector_t params = {0};
-    user_t *sender = request->receiver;
     int ret = SUCCESS;
 
     if (!sender)
@@ -32,29 +31,30 @@ static bool generate_msg(database_t *db, request_t *request)
     return (ret == SUCCESS);
 }
 
-static response_t *get_response(server_t *srv, request_t *request)
+static response_t *get_response(server_t *srv,
+request_t *req, client_t *client)
 {
     response_t *resp = NULL;
 
-    if (is_correct_arg(request)) {
-        if (generate_msg(&srv->database, request))
-            resp = response_create(SUCCESS, request, request->receiver, NULL);
+    if (is_correct_arg(req)) {
+        if (generate_msg(&srv->database, req, client->user_ptr))
+            resp = response_create(SUCCESS, req, req->receiver, NULL);
         else
-            resp = response_create(ERR_UNKNOWN_USER, request, request->receiver, NULL);
+            resp = response_create(ERR_UNKNOWN_USER, req, req->receiver, NULL);
     } else {
-        resp = response_create(ERROR, request, request->receiver, NULL);
+        resp = response_create(ERROR, req, req->receiver, NULL);
     }
     return resp;
 }
 
-int handler_send(server_t *srv, request_t *request)
+int handler_send(server_t *srv, request_t *request, client_t *client)
 {
     response_t *response = NULL;
     int return_value = 0;
 
     if (!srv || !request)
         return EXIT_FAILURE;
-    response = get_response(srv, request);
+    response = get_response(srv, request, client);
     if (!response)
         return EXIT_FAILURE;
     return_value = response_send(response);

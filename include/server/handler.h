@@ -33,6 +33,7 @@ void get_uuid_from_string(uuid_t dest, const char *str);
 **
 */
 
+int handler_send(server_t *srv, request_t *request, client_t *client);
 int handler_help(server_t *srv, request_t *request, client_t *client);
 int handler_user(server_t *srv, request_t *request, client_t *client);
 int handler_users(server_t *srv, request_t *request, client_t *client);
