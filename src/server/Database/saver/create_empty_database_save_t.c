@@ -45,12 +45,6 @@ database_save_t *create_empty_database_save(bin_header_t *buffer)
         return NULL;
     if (!init_header(db, buffer))
         return NULL;
-    printf("users: %d\n", db->head->nb_user);
-    printf("teams: %d\n", db->head->nb_team);
-    printf("threads: %d\n", db->head->nb_thread);
-    printf("replies: %d\n", db->head->nb_reply);
-    printf("messages: %d\n", db->head->nb_private_msg);
-    printf("channels: %d\n", db->head->nb_channel);
     db->users = malloc(sizeof(bin_user_t *) * db->head->nb_user);
     db->user_teams_list = malloc(sizeof(uuid_t *) * db->head->nb_user);
     db->teams = malloc(sizeof(bin_team_t *) * db->head->nb_team);
