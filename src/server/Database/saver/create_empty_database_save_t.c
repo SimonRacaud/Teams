@@ -10,6 +10,7 @@
 static void init_database_save(database_save_t *db)
 {
     memset(db->users, 0, sizeof(bin_user_t *) * db->head->nb_user);
+    memset(db->user_teams_list, 0, sizeof(uuid_t *) * db->head->nb_user);
     memset(db->teams, 0, sizeof(bin_team_t *) * db->head->nb_team);
     memset(db->channels, 0, sizeof(bin_channel_t *) * db->head->nb_channel);
     memset(db->threads, 0, sizeof(bin_thread_t *) * db->head->nb_thread);
@@ -20,8 +21,8 @@ static void init_database_save(database_save_t *db)
 
 static bool is_empty_database_save_null(const database_save_t *db)
 {
-    return !db || !db->users || !db->teams || !db->channels || !db->threads
-        || !db->replies || !db->messages;
+    return !db || !db->users || !db->user_teams_list || !db->teams
+        || !db->channels || !db->threads || !db->replies || !db->messages;
 }
 
 static bool init_header(database_save_t *db, bin_header_t *buffer)
@@ -44,7 +45,6 @@ database_save_t *create_empty_database_save(bin_header_t *buffer)
         return NULL;
     if (!init_header(db, buffer))
         return NULL;
-    printf("ptr: %p\n", db);
     printf("users: %d\n", db->head->nb_user);
     printf("teams: %d\n", db->head->nb_team);
     printf("threads: %d\n", db->head->nb_thread);

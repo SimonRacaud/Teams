@@ -37,7 +37,7 @@ static database_save_t *read_database_save(int fd)
     buffer = malloc(st.st_size);
     if (buffer == NULL)
         return NULL;
-    if (read(fd, buffer, st.st_size) <= 0)
+    if (read(fd, buffer, st.st_size) < st.st_size)
         return NULL;
     db = create_empty_database_save(buffer);
     if (db == NULL)
