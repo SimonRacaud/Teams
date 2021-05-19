@@ -7,13 +7,17 @@
 
 #include "database.h"
 
-static bool already_exist(database_t *db, const char *username)
+static bool already_exist(
+    database_t *db, const char *username, uuid_selector_t *params)
 {
     user_t *node = NULL;
 
-    LIST_FOREACH(node, &db->users, entries) {
-        if (!strcmp(node->username, username))
+    LIST_FOREACH(node, &db->users, entries)
+    {
+        if (!strcmp(node->username, username)) {
+            uuid_copy(params->uuid_user, node->uuid);
             return true;
+        }
     }
     return false;
 }
@@ -30,8 +34,8 @@ static void init_user_node(user_t *node, const char *username)
     server_event_user_created(uuid, username);
 }
 
-rcode_e create_user(database_t *db,
-const char *username, uuid_selector_t *params)
+rcode_e create_user(
+    database_t *db, const char *username, uuid_selector_t *params)
 {
     user_t *node = NULL;
 
@@ -39,7 +43,7 @@ const char *username, uuid_selector_t *params)
         return ERROR;
     if (strlen(username) > SIZE_NAME)
         return ERROR;
-    if (already_exist(db, username))
+    if (already_exist(db, username, params))
         return ERR_ALREADY_EXIST;
     node = malloc(sizeof(user_t));
     if (!node)

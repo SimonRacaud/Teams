@@ -83,6 +83,7 @@ team_t *get_team(const database_t *db, uuid_selector_t *params);
 reply_t *get_reply(const database_t *db, uuid_selector_t *params);
 thread_t *get_thread(const database_t *db, uuid_selector_t *params);
 channel_t *get_channel(const database_t *db, uuid_selector_t *params);
+/// Params : uuid_user + uuid_private_msg
 private_msg_t *get_private_msg(const database_t *db, uuid_selector_t *params);
 
 /*

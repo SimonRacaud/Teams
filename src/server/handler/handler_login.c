@@ -42,7 +42,7 @@ int handler_login(server_t *server, request_t *request, client_t *client)
         return reply_str(ERROR, request, "Bad argument value");
     }
     code = create_user(&server->database, username, &selector);
-    if (code == SUCCESS) {
+    if (code == SUCCESS || code == ERR_ALREADY_EXIST) {
         return do_login(server, request, client, &selector);
     } else {
         printf("login: fail to create user\n");
