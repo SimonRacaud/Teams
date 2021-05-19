@@ -64,6 +64,7 @@ static bool fill_user_private_msg(
             if (!uuid_compare(user->uuid, pm_list[i]->receiver->uuid))
                 LIST_INSERT_HEAD(&user->messages, pm_list[i], entries);
         }
+    free(pm_list);
     return true;
 }
 

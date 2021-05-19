@@ -55,6 +55,7 @@ static bool fill_channels_threads(
             if (!uuid_compare(
                     result[i]->uuid, threads[k]->parent_channel->uuid))
                 LIST_INSERT_HEAD(&result[i]->threads, threads[k], entries);
+    free(threads);
     return true;
 }
 

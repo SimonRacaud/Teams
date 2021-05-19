@@ -49,6 +49,7 @@ static bool fill_threads_replies(
         for (uint k = 0; k < db_save->head->nb_reply; k++)
             if (!uuid_compare(result[i]->uuid, replies[k]->parent_thread->uuid))
                 LIST_INSERT_HEAD(&result[i]->replies, replies[k], entries);
+    free(replies);
     return true;
 }
 

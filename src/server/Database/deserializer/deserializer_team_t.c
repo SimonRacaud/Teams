@@ -50,6 +50,6 @@ bool deserialize_all_teams(const database_save_t *db_save, database_t *db)
     for (uint i = 0; i < db_save->head->nb_channel; i++)
         if (!uuid_compare(team->uuid, channels[i]->parent_team->uuid))
             LIST_INSERT_HEAD(&team->channels, channels[i], entries);
-
+    free(channels);
     return true;
 }
