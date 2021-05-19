@@ -82,6 +82,7 @@ SRC_FILES_SRV	= 	server/main.c												\
 					network/body/body_maker_thread.c							\
 					network/body/body_maker_string.c							\
 					\
+					server/handler/handler_use.c								\
 					server/handler/handler_help.c								\
 					server/handler/handler_user.c								\
 					server/handler/handler_send.c								\
