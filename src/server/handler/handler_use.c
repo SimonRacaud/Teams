@@ -10,7 +10,8 @@
 #include "database.h"
 #include "request_handler_t.h"
 
-static int selector_verification(size_t args_size, selected_entity_t *selector, database_t *db)
+static int selector_verification(size_t args_size,
+selected_entity_t *selector, database_t *db)
 {
     void *(*verif[])(const database_t *db, uuid_selector_t *params) = {
         (void *(*)(const database_t *, uuid_selector_t *)) get_team,
