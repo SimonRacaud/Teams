@@ -49,6 +49,7 @@ SRC_UT 			= 	tests/tests_project.c											\
 					src/server/Database/loader/read/read_teams.c					\
 					src/server/Database/loader/read/read_threads.c					\
 					src/server/Database/loader/read/read_users.c					\
+					src/server/Database/destroy_database_t.c						\
 
 SRC_FILES_CLI	=	client/main.c							\
 					client/destroy/app_destroy.c			\
@@ -141,6 +142,7 @@ SRC_FILES_SRV	= 	server/main.c												\
 					server/Database/loader/read/read_teams.c					\
 					server/Database/loader/read/read_threads.c					\
 					server/Database/loader/read/read_users.c					\
+					server/Database/destroy_database_t.c						\
 
 SRC_CLI	=	$(addprefix $(DSRC), $(SRC_FILES_CLI))
 SRC_SRV	=	$(addprefix $(DSRC), $(SRC_FILES_SRV))

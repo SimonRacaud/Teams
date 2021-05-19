@@ -38,7 +38,7 @@ static void check_saved_users(database_t *db, const int nbr_users)
     char username[8];
     int users_size = 0;
 
-    free(db);
+    destroy_database_t(db);
     db = load_database();
     if (db == NULL)
         return;
@@ -50,7 +50,7 @@ static void check_saved_users(database_t *db, const int nbr_users)
         if (strcmp(user->username, username))
             exit(1);
     }
-    free(db);
+    destroy_database_t(db);
     if (users_size != nbr_users)
         exit(1);
 }
@@ -80,6 +80,7 @@ int main(int argc, char **argv)
         return 1;
     check_saved_users(db, nbr_users);
     return 0;
+
     server_t server = {0};
     uint port = 0;
 

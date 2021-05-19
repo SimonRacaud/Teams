@@ -161,14 +161,13 @@ Test(save_db, t01)
 }
 
 // Test save db with users & load it
-static void check_saved_users(database_t *db, const int nbr_users)
+static void check_saved_users(const int nbr_users)
 {
+    database_t *db = load_database();
     user_t *user;
     char username[8];
     size_t users_size = 0;
 
-    free(db);
-    db = load_database();
     cr_assert_neq(db, NULL);
     if (db == NULL)
         return;
@@ -180,7 +179,7 @@ static void check_saved_users(database_t *db, const int nbr_users)
         cr_assert_str_eq(user->username, username);
     }
     cr_assert_eq(users_size, nbr_users);
-    free(db);
+    destroy_database_t(db);
 }
 
 Test(save_load_db, t01)
@@ -199,10 +198,9 @@ Test(save_load_db, t01)
         cr_assert_eq(create_user(db, username, NULL), SUCCESS);
     }
     LIST_FOREACH(user, &db->users, entries)
-    {
-        users_size++;
-    }
+    users_size++;
     cr_assert_eq(users_size, nbr_users);
     cr_assert_eq(save_database(db), true);
-    check_saved_users(db, nbr_users);
+    destroy_database_t(db);
+    check_saved_users(nbr_users);
 }
