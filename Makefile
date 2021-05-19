@@ -7,14 +7,48 @@
 
 DSRC	=	./src/
 
-SRC_UT 			= 	tests/tests_project.c			\
-					src/utility/signal_manager.c	\
-					src/utility/strdup_format.c		\
-					src/utility/walloc.c			\
-					src/network/request_create.c	\
-					src/network/request_destroy.c	\
-					src/network/request_parse.c		\
-					src/network/request_write.c		\
+SRC_UT 			= 	tests/tests_project.c											\
+					src/utility/signal_manager.c									\
+					src/utility/strdup_format.c										\
+					src/utility/walloc.c											\
+					src/network/request_create.c									\
+					src/network/request_destroy.c									\
+					src/network/request_parse.c										\
+					src/network/request_write.c										\
+					src/server/Database/factories/create_user.c						\
+					src/server/Database/factories/create_private_msg.c				\
+					src/server/Database/factories/create_thread.c					\
+					src/server/Database/factories/create_channel.c					\
+					src/server/Database/getter/get_team.c							\
+					src/server/Database/getter/get_user.c							\
+					src/server/Database/getter/get_thread.c							\
+					src/server/Database/serializer/serializer_channel_t.c			\
+					src/server/Database/serializer/serializer_private_msg_t.c		\
+					src/server/Database/serializer/serializer_reply_t.c				\
+					src/server/Database/serializer/serializer_team_t.c				\
+					src/server/Database/serializer/serializer_thread_t.c			\
+					src/server/Database/serializer/serializer_user_t.c				\
+					src/server/Database/serializer/serializer_header_t.c			\
+					src/server/Database/deserializer/deserializer_channel_t.c		\
+					src/server/Database/deserializer/deserializer_private_msg_t.c	\
+					src/server/Database/deserializer/deserializer_reply_t.c			\
+					src/server/Database/deserializer/deserializer_team_t.c			\
+					src/server/Database/deserializer/deserializer_thread_t.c		\
+					src/server/Database/deserializer/deserializer_user_t.c			\
+					src/server/Database/saver/saver.c								\
+					src/server/Database/saver/create_empty_database_save_t.c		\
+					src/server/Database/saver/create_database_save_t.c				\
+					src/server/Database/saver/fill_data/fill_data_length.c			\
+					src/server/Database/saver/fill_data/run_fill_data.c				\
+					src/server/Database/saver/fill_data/get_nb_team_from_user.c		\
+					src/server/Database/loader/loader.c								\
+					src/server/Database/loader/convert_database.c					\
+					src/server/Database/loader/read_channels.c						\
+					src/server/Database/loader/read_private_msg.c					\
+					src/server/Database/loader/read_replies.c						\
+					src/server/Database/loader/read_teams.c							\
+					src/server/Database/loader/read_threads.c						\
+					src/server/Database/loader/read_users.c							\
 
 SRC_FILES_CLI	=	client/main.c							\
 					client/destroy/app_destroy.c			\
@@ -151,8 +185,9 @@ fclean:	clean
 
 re:	fclean all
 
+tests_run: INCLUDE += -I./include/server
 tests_run:
-	gcc -o $(NAME_UT) $(SRC_UT) $(INCLUDE) -lcriterion --coverage && ./$(NAME_UT)
+	gcc -o $(NAME_UT) $(SRC_UT) $(INCLUDE) -lcriterion --coverage -luuid && ./$(NAME_UT)
 
 coverage:
 	@gcovr -r . --exclude-directories tests
