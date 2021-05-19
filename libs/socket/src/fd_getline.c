@@ -19,7 +19,7 @@ static char *allocator(char *previous, size_t inc)
     char *res;
 
     if (!previous) {
-        res = malloc(sizeof(char) * inc);
+        res = malloc(sizeof(char) * (inc + 1));
         res[0] = '\0';
         return res;
     } else {
