@@ -125,6 +125,7 @@ OBJ_SRV	=	$(SRC_SRV:.c=.o)
 NAME_CLI	=	myteams_cli
 NAME_SRV	=	myteams_server
 NAME_UT 	=	test.out
+NAME_LIB_TEAMS = libmyteams.so
 
 INCLUDE = -I./include -I./libs/myteams -I./libs/socket/include -I./libs/
 CFLAGS	+= -Wall -Wextra -W $(INCLUDE) #-Werror
@@ -147,23 +148,25 @@ server: socket $(OBJ_SRV)
 
 socket:
 	@make -C libs/socket
-	@ln -sf ./libs/myteams/libmyteams.so libmyteams.so
+	@ln -sf ./libs/myteams/$(NAME_LIB_TEAMS) $(NAME_LIB_TEAMS)
 
 clean:
 	make clean -C libs/socket
-	$(RM) -f  $(OBJ_CLI) $(OBJ_SRV)
+	@$(RM) -f  $(OBJ_CLI) $(OBJ_SRV)
 	@$(RM) -f *.gcda
 	@$(RM) -f *.gcno
 
 fclean:	clean
 	$(RM) -f $(NAME_CLI) $(NAME_SRV) $(NAME_UT)
+	$(RM) -f $(NAME_LIB_TEAMS)
 
 re:	fclean all
 
 tests_run: socket
 	gcc -o $(NAME_UT) $(SRC_UT) $(INCLUDE) $(LD_FLAGS) -Wl,-rpath=$(PWD) -lcriterion --coverage && ./$(NAME_UT)
 
-coverage:
+
+coverage: tests_run
 	@gcovr -r . --exclude-directories tests
 	@gcovr -b --exclude-directories tests
 
