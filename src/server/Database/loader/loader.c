@@ -88,7 +88,7 @@ database_t *load_database(void)
     database_save_t *db_save;
 
     if (fd < 0) {
-        return NULL;
+        return create_empty_database();
     }
     db_save = read_database_save(fd);
     if (db_save == NULL) {
@@ -99,5 +99,5 @@ database_t *load_database(void)
         printf("load_database => close: %s\n", strerror(errno));
         return NULL;
     }
-    return convert_to_database(db_save);
+    return convert_saved_db_to_release_db(db_save);
 }

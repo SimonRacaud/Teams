@@ -26,7 +26,7 @@
 #include "save/database_save_t.h"
 #include "save/bin_private_msg_t.h"
 
-#define DB_FILEPATH "database"
+#define DB_FILEPATH "database.myteams"
 
 /*
 **
@@ -138,7 +138,8 @@ bool deserialize_all_users(const database_save_t *db_save, database_t *db);
 
 bool save_database(const database_t *db);
 database_t *load_database(void);
-database_t *convert_to_database(const database_save_t *db_save);
+database_t *create_empty_database(void);
+database_t *convert_saved_db_to_release_db(const database_save_t *db_save);
 bool read_users(bin_header_t *header, database_save_t *db, size_t *offset);
 void read_teams(bin_header_t *header, database_save_t *db, size_t *offset);
 void read_channels(bin_header_t *header, database_save_t *db, size_t *offset);
