@@ -9,6 +9,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <stdio.h>
 #include "database.h"
 
 static void init_database_save(database_save_t *db)

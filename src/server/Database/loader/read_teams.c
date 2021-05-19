@@ -10,7 +10,8 @@
 void read_teams(bin_header_t *header, database_save_t *db, size_t *offset)
 {
     for (uint i = 0; i < header->nb_team; i++) {
-        memcpy(&db->teams[i], (size_t) header + *offset, sizeof(bin_team_t));
+        memcpy(&db->teams[i], (void *) ((size_t) header + *offset),
+            sizeof(bin_team_t));
         *offset += sizeof(bin_team_t);
     }
 }
