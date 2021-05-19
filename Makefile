@@ -98,7 +98,15 @@ SRC_FILES_SRV	= 	server/main.c												\
 					server/Database/saver/fill_data/get_nb_team_from_user.c		\
 					server/Database/saver/create_database_save_t.c				\
 					server/Database/saver/saver.c								\
+					server/Database/saver/create_empty_database_save_t.c		\
+					server/Database/loader/loader.c								\
 					server/Database/loader/convert_database.c					\
+					server/Database/loader/read_channels.c						\
+					server/Database/loader/read_private_msg.c					\
+					server/Database/loader/read_replies.c						\
+					server/Database/loader/read_teams.c							\
+					server/Database/loader/read_threads.c						\
+					server/Database/loader/read_users.c							\
 
 SRC_CLI	=	$(addprefix $(DSRC), $(SRC_FILES_CLI))
 SRC_SRV	=	$(addprefix $(DSRC), $(SRC_FILES_SRV))

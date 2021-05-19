@@ -8,8 +8,10 @@
 #ifndef DATABASE_H_
 #define DATABASE_H_
 
-#include <string.h>
+#define _GNU_SOURCE
+
 #include <stdlib.h>
+#include <string.h>
 #include <stdbool.h>
 #include "client_t.h"
 #include "data/thread_t.h"
@@ -45,6 +47,7 @@ channel_t *get_channel_by_uuid(
 thread_t *get_thread_by_uuid(thread_t **threads, uint size, const uuid_t uuid);
 bool run_fill_data(
     const database_t *db, bin_header_t *dest, database_save_t *db_save);
+database_t *create_empty_database(void);
 
 /*
 **
@@ -79,6 +82,7 @@ reply_t *get_reply(const database_t *db, uuid_selector_t *params);
 thread_t *get_thread(const database_t *db, uuid_selector_t *params);
 channel_t *get_channel(const database_t *db, uuid_selector_t *params);
 private_msg_t *get_private_msg(const database_t *db, uuid_selector_t *params);
+size_t get_nb_subscribed_teams(const database_t *db);
 
 /*
 **
@@ -138,7 +142,7 @@ bool deserialize_all_users(const database_save_t *db_save, database_t *db);
 
 bool save_database(const database_t *db);
 database_t *load_database(void);
-database_t *create_empty_database(void);
+database_save_t *create_empty_database_save(bin_header_t *buffer);
 database_t *convert_saved_db_to_release_db(const database_save_t *db_save);
 bool read_users(bin_header_t *header, database_save_t *db, size_t *offset);
 void read_teams(bin_header_t *header, database_save_t *db, size_t *offset);

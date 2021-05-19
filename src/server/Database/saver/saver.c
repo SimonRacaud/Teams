@@ -23,6 +23,8 @@ static bool write_database(int fd, database_save_t *db)
 {
     size_t offset = 0;
 
+    if (write(fd, db->head, sizeof(bin_header_t)) == -1)
+        return false;
     for (uint i = 0; i < db->head->nb_user; i++) {
         if (write(fd, db->users[i], sizeof(bin_user_t)) == -1)
             return false;
