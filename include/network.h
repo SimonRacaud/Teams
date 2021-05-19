@@ -13,12 +13,12 @@
 #include "socket.h"
 #include "network/request_t.h"
 #include "network/response_t.h"
-#include "save/bin_user_t.h"
-#include "save/bin_team_t.h"
-#include "save/bin_reply_t.h"
-#include "save/bin_thread_t.h"
 #include "save/bin_channel_t.h"
 #include "save/bin_private_msg_t.h"
+#include "save/bin_reply_t.h"
+#include "save/bin_team_t.h"
+#include "save/bin_thread_t.h"
+#include "save/bin_user_t.h"
 
 typedef struct request_stack_s request_stack_t;
 
@@ -53,6 +53,8 @@ private_msg_t *private_msg_copy(private_msg_t *input);
 
 /// UTILITY
 char *strconcat_suffix(char *str, const char *add, const char *suffix);
+
+/// DEBUG
 void debug_response(response_t *response);
 
 #endif // NETWORK_H

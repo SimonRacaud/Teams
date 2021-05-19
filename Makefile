@@ -62,21 +62,27 @@ SRC_UT 			= 	tests/tests_project.c											\
 					src/server/database/destroy_database_t.c						\
 
 SRC_FILES_CLI	=	client/main.c							\
+					\
 					client/destroy/app_destroy.c			\
 					client/init/app_init.c					\
 					client/init/connect_to_server.c			\
 					client/init/parse_args.c				\
+					\
 					client/loop/app_loop.c					\
 					client/loop/process_read.c				\
 					client/loop/process_write.c				\
 					client/loop/prompt.c					\
+					\
 					client/logger/logger.c					\
+					client/logger/log_string.c				\
+					\
 					utility/is_ip.c							\
 					utility/is_number.c						\
 					utility/signal_manager.c				\
 					utility/walloc.c						\
 					utility/strdup_format.c					\
 					utility/strconcat.c						\
+					\
 					network/request_create.c				\
 					network/request_destroy.c				\
 					network/request_write.c					\
