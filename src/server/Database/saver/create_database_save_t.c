@@ -59,17 +59,29 @@ database_save_t *create_database_save_t(const database_t *db)
     return dest;
 }
 
+static void free_bin_list(const void **list, uint size)
+{
+    for (uint i = 0; list && i < size; i++)
+        free((void *) list[i]);
+    free((void *) list);
+}
+
 void destroy_database_save_t(const database_save_t *db)
 {
-    free(db->head);
-    free(db->users);
-    for (uint i = 0; i < db->head->nb_user; i++)
-        free(db->user_teams_list[i]);
+    size_t team_offset = 0;
+
+    for (uint i = 0; db->user_teams_list && db->users && i < db->head->nb_user;
+         i++)
+        for (uint k = 0; k < db->users[i]->nb_subscribed_teams;
+             k++, team_offset++)
+            free(db->user_teams_list[team_offset]);
     free(db->user_teams_list);
-    free(db->teams);
-    free(db->channels);
-    free(db->threads);
-    free(db->replies);
-    free(db->messages);
+    free_bin_list((const void **) db->users, db->head->nb_user);
+    free_bin_list((const void **) db->teams, db->head->nb_team);
+    free_bin_list((const void **) db->channels, db->head->nb_channel);
+    free_bin_list((const void **) db->threads, db->head->nb_thread);
+    free_bin_list((const void **) db->replies, db->head->nb_reply);
+    free_bin_list((const void **) db->messages, db->head->nb_private_msg);
+    free(db->head);
     free((database_save_t *) db);
 }

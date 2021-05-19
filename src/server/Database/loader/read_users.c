@@ -16,12 +16,13 @@ bool read_users(bin_header_t *header, database_save_t *db, size_t *offset)
             sizeof(bin_user_t));
         *offset += sizeof(bin_user_t);
 
-        for (uint k = 0; k < db->users[i]->nb_subscribed_teams; k++) {
-            db->user_teams_list[i] =
+        for (uint k = 0; k < db->users[i]->nb_subscribed_teams;
+             k++, teams_offset++) {
+            db->user_teams_list[teams_offset] =
                 malloc(sizeof(uuid_t) * db->users[i]->nb_subscribed_teams);
-            if (!db->user_teams_list[i])
+            if (!db->user_teams_list[teams_offset])
                 return false;
-            memcpy(&db->user_teams_list[i],
+            memcpy(db->user_teams_list[teams_offset],
                 (void *) ((size_t) header + *offset), sizeof(uuid_t));
             *offset += sizeof(uuid_t);
         }
