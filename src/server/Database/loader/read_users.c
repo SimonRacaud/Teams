@@ -10,7 +10,10 @@
 bool read_users(bin_header_t *header, database_save_t *db, size_t *offset)
 {
     for (uint i = 0; i < header->nb_user; i++) {
-        memcpy(&db->users[i], (void *) ((size_t) header + *offset),
+        db->users[i] = malloc(sizeof(bin_user_t));
+        if (db->users[i] == NULL)
+            return false;
+        memcpy(db->users[i], (void *) ((size_t) header + *offset),
             sizeof(bin_user_t));
         *offset += sizeof(bin_user_t);
 
