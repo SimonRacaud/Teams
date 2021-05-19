@@ -9,6 +9,16 @@
 #include "server.h"
 #include "network/response_t.h"
 
+private_msg_t *private_msg_copy(private_msg_t *input)
+{
+    private_msg_t *copy = malloc(sizeof(private_msg_t));
+
+    if (!copy)
+        return NULL;
+    memcpy(copy, input, sizeof(private_msg_t));
+    return copy;
+}
+
 static size_t get_list_size(private_msg_t *ptr, bool is_list)
 {
     size_t size = 0;

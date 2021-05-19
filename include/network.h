@@ -48,6 +48,9 @@ void *body_maker_private_msg(private_msg_t *private_msg, bool is_list);
 void *body_maker_channel(channel_t *channel, bool is_list);
 void *body_maker_string(const char *str);
 
+/// COPY
+private_msg_t *private_msg_copy(private_msg_t *input);
+
 /// UTILITY
 char *strconcat_suffix(char *str, const char *add, const char *suffix);
 void debug_response(response_t *response);

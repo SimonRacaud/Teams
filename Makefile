@@ -48,6 +48,7 @@ SRC_FILES_CLI	=	client/main.c							\
 					network/debug_response.c				\
 
 SRC_FILES_SRV	= 	server/main.c												\
+					\
 					utility/signal_manager.c									\
 					utility/strdup_format.c										\
 					utility/walloc.c											\
@@ -55,6 +56,7 @@ SRC_FILES_SRV	= 	server/main.c												\
 					utility/strconcat.c											\
 					utility/walen.c												\
 					utility/is_empty.c											\
+					\
 					server/app/app_create.c										\
 					server/app/app_destroy.c									\
 					server/app/app_loop.c										\
@@ -62,6 +64,7 @@ SRC_FILES_SRV	= 	server/main.c												\
 					server/app/client.c											\
 					server/app/process_request.c								\
 					server/request/request_execute.c							\
+					\
 					network/request_create.c									\
 					network/request_destroy.c									\
 					network/request_parse.c										\
@@ -78,12 +81,15 @@ SRC_FILES_SRV	= 	server/main.c												\
 					network/body/body_maker_reply.c								\
 					network/body/body_maker_thread.c							\
 					network/body/body_maker_string.c							\
+					\
 					server/handler/handler_help.c								\
 					server/handler/handler_user.c								\
 					server/handler/handler_users.c								\
 					server/handler/handler_login.c								\
 					server/handler/handler_logout.c								\
+					server/handler/handler_messages.c							\
 					server/handler/handler_tools/handler_tools.c				\
+					\
 					server/Database/factories/create_team.c						\
 					server/Database/factories/create_user.c						\
 					server/Database/factories/create_reply.c					\
@@ -165,13 +171,16 @@ re:	fclean all
 tests_run: socket
 	gcc -o $(NAME_UT) $(SRC_UT) $(INCLUDE) $(LD_FLAGS) -Wl,-rpath=$(PWD) -lcriterion --coverage && ./$(NAME_UT)
 
-
 coverage: tests_run
 	@gcovr -r . --exclude-directories tests
 	@gcovr -b --exclude-directories tests
 
 debug: CFLAGS += -g
 debug: re
+	@make debug -C libs/socket
+
+debugall: CFLAGS += -g
+debugall: all
 
 .PHONY:	client server clean socket fclean re tests_run coverage debug
 
