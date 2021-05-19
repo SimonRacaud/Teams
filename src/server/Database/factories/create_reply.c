@@ -30,7 +30,7 @@ static void event(uuid_t thread, uuid_t user, const char *body)
 
     uuid_unparse(thread, uuid_thread);
     uuid_unparse(user, uuid_user);
-    server_event_thread_new_reply(uuid_thread, uuid_user, body);
+    server_event_reply_created(uuid_thread, uuid_user, body);
 }
 
 static int init_replay_node(
