@@ -6,7 +6,7 @@
 bootstrap
 myteams_cli
 myteams_server
-libmyteams.so
+/libmyteams.so
 ### C ###
 # Prerequisites
 *.d
