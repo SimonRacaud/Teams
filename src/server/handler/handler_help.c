@@ -51,7 +51,7 @@ static void *get_body(void)
     return body;
 }
 
-int handler_help(server_t *srv, request_t *request)
+int handler_help(server_t *srv, request_t *request, UNUSED client_t *client)
 {
     response_t *response = NULL;
     int return_value = 0;

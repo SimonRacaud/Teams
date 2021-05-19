@@ -9,12 +9,17 @@
 
 static int subscription_add(database_t *db, uuid_selector_t *params)
 {
+    char team_uuid[UUID_STR];
+    char user_uuid[UUID_STR];
     team_t *team = get_team(db, params);
     user_t *user = get_user(db, params);
 
     if (!team || !user)
         return (!team) ? ERR_UNKNOWN_TEAM : ERR_UNKNOWN_USER;
     LIST_INSERT_HEAD(&user->teams, team, entries);
+    uuid_unparse(team->uuid, team_uuid);
+    uuid_unparse(user->uuid, user_uuid);
+    server_event_user_subscribed(team_uuid, user_uuid);
     return SUCCESS;
 }
 

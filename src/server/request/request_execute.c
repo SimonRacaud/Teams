@@ -10,8 +10,8 @@
 
 const request_handler_t HANDLERS[] = {
     {.label = "help", .handler = handler_help},
-    {.label = "login", .handler = NULL},
-    {.label = "logout", .handler = NULL},
+    {.label = "login", .handler = &handler_login},
+    {.label = "logout", .handler = &handler_logout},
     {.label = "users", .handler = handler_users},
     {.label = "user", .handler = handler_user},
     {.label = "send", .handler = NULL},
@@ -26,20 +26,12 @@ const request_handler_t HANDLERS[] = {
     {.label = NULL, .handler = NULL}};
 
 static int call_handler(
-    request_t *request, server_t *server, handler_t handler)
+    request_t *request, server_t *server, handler_t handler, client_t *client)
 {
     if (handler) {
-        return handler(server, request);
+        return handler(server, request, client);
     }
     return EXIT_SUCCESS;
-}
-
-static void command_not_found(request_t *request)
-{
-    void *body = body_maker_string("Command not found");
-
-    reply(ERROR, request, body);
-    printf("WARNING: command not found.\n");
 }
 
 int request_execute(request_t *request, server_t *server, client_t *client)
@@ -47,9 +39,10 @@ int request_execute(request_t *request, server_t *server, client_t *client)
     request->receiver = &client->socket;
     for (size_t i = 0; HANDLERS[i].label != NULL; i++) {
         if (strcmp(HANDLERS[i].label, request->label) == 0) {
-            return call_handler(request, server, HANDLERS[i].handler);
+            return call_handler(request, server, HANDLERS[i].handler, client);
         }
     }
-    command_not_found(request);
+    if (reply_str(ERROR, request, "Command not found") == EXIT_FAILURE)
+        return EXIT_FAILURE;
     return EXIT_SUCCESS;
 }

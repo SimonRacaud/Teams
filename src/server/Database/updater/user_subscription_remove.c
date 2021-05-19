@@ -9,6 +9,8 @@
 
 static int subscription_remove(database_t *db, uuid_selector_t *params)
 {
+    char team_uuid[UUID_STR];
+    char user_uuid[UUID_STR];
     team_t *team = NULL;
     user_t *user = get_user(db, params);
 
@@ -19,6 +21,9 @@ static int subscription_remove(database_t *db, uuid_selector_t *params)
             LIST_REMOVE(team, entries);
         }
     }
+    uuid_unparse(team->uuid, team_uuid);
+    uuid_unparse(user->uuid, user_uuid);
+    server_event_user_unsubscribed(team_uuid, user_uuid);
     return SUCCESS;
 }
 

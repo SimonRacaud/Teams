@@ -8,23 +8,24 @@
 #ifndef DATABASE_H_
 #define DATABASE_H_
 
-#include <string.h>
-#include <stdlib.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
 #include "client_t.h"
-#include "data/thread_t.h"
 #include "data/database_t.h"
-#include "uuid_selector_t.h"
+#include "data/thread_t.h"
 #include "network/response_t.h"
+#include "uuid_selector_t.h"
 
-#include "save/bin_user_t.h"
-#include "save/bin_team_t.h"
-#include "save/bin_reply_t.h"
-#include "save/bin_thread_t.h"
-#include "save/bin_header_t.h"
+#include "logging_server.h"
 #include "save/bin_channel_t.h"
-#include "save/database_save_t.h"
+#include "save/bin_header_t.h"
 #include "save/bin_private_msg_t.h"
+#include "save/bin_reply_t.h"
+#include "save/bin_team_t.h"
+#include "save/bin_thread_t.h"
+#include "save/bin_user_t.h"
+#include "save/database_save_t.h"
 
 /*
 **
@@ -36,29 +37,40 @@ size_t get_nb_team_from_user(user_t *user);
 void fill_data_length(const database_t *db, bin_header_t *dest);
 team_t *get_match_team(const database_t *db, uuid_selector_t *params);
 user_t *get_user_from_uuid(const database_t *db, const uuid_t uuid);
-channel_t *get_channel_from_uuid(const database_t *db,
-uuid_selector_t *params, int *err);
-bool run_fill_data(const database_t *db,
-    bin_header_t *dest, database_save_t *db_save);
+channel_t *get_channel_from_uuid(
+    const database_t *db, uuid_selector_t *params, int *err);
+bool run_fill_data(
+    const database_t *db, bin_header_t *dest, database_save_t *db_save);
 
 /*
 **
 ** FACTORIES
 **
 */
+/// INFO : after call, the created entity uuid is set in params
 
-int create_reply(database_t *db,
-user_t *sender, const char *body, uuid_selector_t *params);
-int create_private_msg(database_t *db,
-const char *msg, user_t *sender, uuid_selector_t *params);
-int create_team(database_t *db,
-const char *teamname, const char *desc, uuid_selector_t *params);
-int create_channel(database_t *db,
-const char *channelname, const char *desc, uuid_selector_t *params);
-int create_user(database_t *db,
-const char *username, __attribute__((unused)) uuid_selector_t *params);
-int create_thread(database_t *db,
-const char *title, const char *msg, uuid_selector_t *params);
+/// WARNING : you must set the current team, channel, thread uuid in params
+rcode_e create_reply(
+    database_t *db, user_t *sender, const char *body, uuid_selector_t *params);
+
+/// WARNING : you must set the current user uuid in params
+rcode_e create_private_msg(
+    database_t *db, const char *msg, user_t *sender, uuid_selector_t *params);
+
+/// WARNING : you must set the current user uuid in params
+rcode_e create_team(database_t *db, const char *teamname, const char *desc,
+    uuid_selector_t *params);
+
+/// WARNING : you must set the current team uuid in params
+rcode_e create_channel(database_t *db, const char *channelname,
+    const char *desc, uuid_selector_t *params);
+
+rcode_e create_user(
+    database_t *db, const char *username, uuid_selector_t *params);
+
+/// WARNING : you must set the current user + channel uuid in params
+rcode_e create_thread(database_t *db, const char *title, const char *msg,
+    uuid_selector_t *params);
 
 /*
 **
@@ -79,7 +91,9 @@ private_msg_t *get_private_msg(const database_t *db, uuid_selector_t *params);
 **
 */
 
+/// params needs uuid_user and uuid_teams
 int user_subscription_add(database_t *db, uuid_selector_t *params);
+/// params needs uuid_user and uuid_teams
 int user_subscription_remove(database_t *db, uuid_selector_t *params);
 
 /*

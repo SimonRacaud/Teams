@@ -77,7 +77,7 @@ static response_t *get_response(server_t *srv, request_t *request)
     return response;
 }
 
-int handler_user(server_t *srv, request_t *request)
+int handler_user(server_t *srv, request_t *request, UNUSED client_t *client)
 {
     response_t *response = NULL;
     int return_value = 0;

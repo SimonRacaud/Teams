@@ -12,5 +12,6 @@
 #define SIZE_DESC 255
 #define SIZE_BODY 512
 #define END_COM "\r\n"
+#define UUID_STR  37
 
 #endif // ENV_H

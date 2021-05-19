@@ -20,14 +20,18 @@ static bool already_exist(database_t *db, const char *username)
 
 static void init_user_node(user_t *node, const char *username)
 {
+    char uuid[UUID_STR];
+
     memset(node, 0, sizeof(user_t));
     memcpy(node->username, username, strlen(username));
     node->status = DISCONNECTED;
     uuid_generate(node->uuid);
+    uuid_unparse(node->uuid, uuid);
+    server_event_user_created(uuid, username);
 }
 
-int create_user(database_t *db,
-const char *username, __attribute__((unused)) uuid_selector_t *params)
+rcode_e create_user(database_t *db,
+const char *username, uuid_selector_t *params)
 {
     user_t *node = NULL;
 
@@ -42,5 +46,6 @@ const char *username, __attribute__((unused)) uuid_selector_t *params)
         return ERROR;
     init_user_node(node, username);
     LIST_INSERT_HEAD(&db->users, node, entries);
+    uuid_copy(params->uuid_user, node->uuid);
     return SUCCESS;
 }
