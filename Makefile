@@ -18,6 +18,7 @@ SRC_UT 			= 	tests/tests_project.c											\
 					src/network/request_write.c										\
 					src/server/Database/factories/create_team.c						\
 					src/server/Database/factories/create_user.c						\
+					src/server/Database/factories/create_reply.c					\
 					src/server/Database/factories/create_private_msg.c				\
 					src/server/Database/factories/create_thread.c					\
 					src/server/Database/factories/create_channel.c					\
