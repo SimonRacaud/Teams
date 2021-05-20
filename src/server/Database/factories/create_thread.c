@@ -75,7 +75,6 @@ static void event(
 rcode_e create_thread(database_t *db, const char *title, const char *body,
     uuid_selector_t *params)
 {
-    int err = ERROR;
     thread_t *node;
 
     if (!db || !title || !body || !params)
