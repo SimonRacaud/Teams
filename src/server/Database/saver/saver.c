@@ -11,15 +11,15 @@
 #include <unistd.h>
 #include "database.h"
 
-static bool write_list(int fd, const void *list, uint n, int size)
+static bool write_list(int fd, const void **list, uint n, int size)
 {
     for (uint i = 0; i < n; i++)
-        if (write(fd, list + i, size) == -1)
+        if (write(fd, *(list + i), size) == -1)
             return false;
     return true;
 }
 
-static bool write_user(int fd, const database_save_t *db)
+static bool write_users(int fd, const database_save_t *db)
 {
     for (uint i = 0; i < db->head->nb_user; i++) {
         if (write(fd, db->users[i], sizeof(bin_user_t)) == -1)
@@ -35,16 +35,18 @@ static bool write_database(int fd, const database_save_t *db)
 {
     if (write(fd, db->head, sizeof(bin_header_t)) == -1)
         return false;
-    if (!write_user(fd, db))
+    if (!write_users(fd, db))
         return false;
-    if (!write_list(fd, db->teams, db->head->nb_team, sizeof(bin_team_t))
-        || !write_list(
-            fd, db->channels, db->head->nb_channel, sizeof(bin_channel_t))
-        || !write_list(
-            fd, db->threads, db->head->nb_thread, sizeof(bin_thread_t))
-        || !write_list(fd, db->replies, db->head->nb_reply, sizeof(bin_reply_t))
-        || !write_list(fd, db->messages, db->head->nb_private_msg,
-            sizeof(bin_private_msg_t)))
+    if (!write_list(fd, (const void **) db->teams, db->head->nb_team,
+            sizeof(bin_team_t))
+        || !write_list(fd, (const void **) db->channels, db->head->nb_channel,
+            sizeof(bin_channel_t))
+        || !write_list(fd, (const void **) db->threads, db->head->nb_thread,
+            sizeof(bin_thread_t))
+        || !write_list(fd, (const void **) db->replies, db->head->nb_reply,
+            sizeof(bin_reply_t))
+        || !write_list(fd, (const void **) db->messages,
+            db->head->nb_private_msg, sizeof(bin_private_msg_t)))
         return false;
     return true;
 }
