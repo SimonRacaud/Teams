@@ -156,8 +156,7 @@ static void check_saved_teams(const int nbr_teams, const int nbr_channels)
     cr_assert_neq(db, NULL);
     if (db == NULL)
         return;
-    LIST_FOREACH(team, &db->teams, entries)
-    {
+    LIST_FOREACH(team, &db->teams, entries) {
         sprintf(teamname, "TEAM%d", ++teams_size);
         sprintf(teamdesc, "%s description", teamname);
         cr_assert_str_eq(team->name, teamname);
