@@ -7,11 +7,15 @@
 
 #include "database.h"
 
-void read_private_msg(bin_header_t *header, database_save_t *db, size_t *offset)
+bool read_private_msg(bin_header_t *header, database_save_t *db, size_t *offset)
 {
     for (uint i = 0; i < header->nb_private_msg; i++) {
-        memcpy(&db->messages[i], (void *) ((size_t) header + *offset),
+        db->messages[i] = malloc(sizeof(bin_private_msg_t));
+        if (db->messages[i] == NULL)
+            return false;
+        memcpy(db->messages[i], (void *) ((size_t) header + *offset),
             sizeof(bin_private_msg_t));
         *offset += sizeof(bin_private_msg_t);
     }
+    return true;
 }

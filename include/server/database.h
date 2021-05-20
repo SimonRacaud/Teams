@@ -150,11 +150,11 @@ database_t *load_database(void);
 database_save_t *create_empty_database_save(bin_header_t *buffer);
 database_t *convert_saved_db_to_release_db(const database_save_t *db_save);
 bool read_users(bin_header_t *header, database_save_t *db, size_t *offset);
-void read_teams(bin_header_t *header, database_save_t *db, size_t *offset);
-void read_channels(bin_header_t *header, database_save_t *db, size_t *offset);
-void read_threads(bin_header_t *header, database_save_t *db, size_t *offset);
-void read_replies(bin_header_t *header, database_save_t *db, size_t *offset);
-void read_private_msg(
+bool read_teams(bin_header_t *header, database_save_t *db, size_t *offset);
+bool read_channels(bin_header_t *header, database_save_t *db, size_t *offset);
+bool read_threads(bin_header_t *header, database_save_t *db, size_t *offset);
+bool read_replies(bin_header_t *header, database_save_t *db, size_t *offset);
+bool read_private_msg(
     bin_header_t *header, database_save_t *db, size_t *offset);
 
 #endif

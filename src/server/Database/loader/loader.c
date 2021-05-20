@@ -18,11 +18,16 @@ static bool fill_database(bin_header_t *header, database_save_t *db)
 
     if (!read_users(header, db, &offset))
         return false;
-    read_teams(header, db, &offset);
-    read_channels(header, db, &offset);
-    read_threads(header, db, &offset);
-    read_replies(header, db, &offset);
-    read_private_msg(header, db, &offset);
+    if (!read_teams(header, db, &offset))
+        return false;
+    if (!read_channels(header, db, &offset))
+        return false;
+    if (!read_threads(header, db, &offset))
+        return false;
+    if (!read_replies(header, db, &offset))
+        return false;
+    if (!read_private_msg(header, db, &offset))
+        return false;
     return true;
 }
 
