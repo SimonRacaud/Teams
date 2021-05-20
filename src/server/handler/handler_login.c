@@ -20,7 +20,7 @@ static int do_login(server_t *server, request_t *request, client_t *client,
     if (!user)
         return EXIT_FAILURE;
     client->user_ptr = user;
-    res_body = body_maker_user(user, false);
+    res_body = body_maker_user(user, false, "logging");
     if (!res_body)
         return EXIT_FAILURE;
     uuid_unparse(user->uuid, uuid);

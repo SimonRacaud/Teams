@@ -14,6 +14,6 @@ void debug_response(response_t *response)
         printf("\tARG %lu : [%s]\n", i, response->req_args[i]);
     }
     printf("\tBODY Type: %s, Element size: %u, List size: %u\n",
-        response->header->type, response->header->elem_size,
+        response->header->entity, response->header->elem_size,
         response->header->list_size);
 }

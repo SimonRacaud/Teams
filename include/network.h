@@ -38,15 +38,20 @@ response_t *response_read(int fd, buffer_t *buffer);
 
 int reply(rcode_e code, request_t *request, void *body);
 int reply_str(rcode_e code, request_t *request, const char *str);
+int reply_error(rcode_e code, request_t *request, uuid_t target);
 
 /// BODY
-void *body_maker_team(team_t *team, bool is_list);
-void *body_maker_reply(reply_t *reply, bool is_list);
-void *body_maker_thread(thread_t *thread, bool is_list);
-void *body_maker_user(user_t *user, bool is_list);
-void *body_maker_private_msg(private_msg_t *private_msg, bool is_list);
-void *body_maker_channel(channel_t *channel, bool is_list);
+void *body_maker_team(team_t *team, bool is_list, const char *logger);
+void *body_maker_reply(reply_t *reply, bool is_list, const char *logger);
+void *body_maker_thread(thread_t *thread, bool is_list, const char *logger);
+void *body_maker_user(user_t *user, bool is_list, const char *logger);
+void *body_maker_private_msg(
+    private_msg_t *private_msg, bool is_list, const char *logger);
+void *body_maker_channel(channel_t *channel, bool is_list, const char *logger);
 void *body_maker_string(const char *str);
+void *body_maker_uuid(uuid_t uuid, const char *logger);
+void *body_maker_subscription(uuid_t user, uuid_t team);
+void *body_maker_reply_event(reply_t *reply, uuid_t team);
 
 /// COPY
 private_msg_t *private_msg_copy(private_msg_t *input);

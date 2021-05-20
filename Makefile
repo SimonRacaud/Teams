@@ -127,6 +127,9 @@ SRC_FILES_SRV	= 	server/main.c												\
 					network/body/body_maker_reply.c								\
 					network/body/body_maker_thread.c							\
 					network/body/body_maker_string.c							\
+					network/body/body_maker_uuid.c								\
+					network/body/body_maker_subscription.c						\
+					network/body/body_maker_reply_event.c						\
 					\
 					server/handler/handler_use.c								\
 					server/handler/handler_info.c								\

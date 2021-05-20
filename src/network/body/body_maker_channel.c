@@ -27,7 +27,7 @@ static void write_content(void *body, channel_t *channel, bool is_list)
     bin_channel_t *ptr = NULL;
     bin_channel_t *packet = NULL;
 
-    ptr = (bin_channel_t *)((char *)body + sizeof(body_header_t));
+    ptr = (bin_channel_t *) ((char *) body + sizeof(body_header_t));
     for (channel_t *node = channel; node; node = LIST_NEXT(node, entries)) {
         packet = serializer_channel_t(node);
         *ptr = *packet;
@@ -38,18 +38,19 @@ static void write_content(void *body, channel_t *channel, bool is_list)
     }
 }
 
-void *body_maker_channel(channel_t *channel, bool is_list)
+void *body_maker_channel(channel_t *channel, bool is_list, const char *logger)
 {
     size_t size = get_list_size(channel, is_list);
     void *body = NULL;
+    body_header_t *head;
 
     body = malloc(sizeof(body_header_t) + sizeof(bin_channel_t) * size);
     if (!body)
         return NULL;
-    *((body_header_t *) body) =
-        (body_header_t){.elem_size = sizeof(bin_channel_t),
-            .list_size = size,
-            .type = "channel"};
+    head = body;
+    *head = (body_header_t){.elem_size = sizeof(bin_channel_t),
+        .list_size = size, .entity = "channel", .logger = ""};
+    strncpy(head->logger, logger, SIZE_NAME);
     write_content(body, channel, is_list);
     return body;
 }

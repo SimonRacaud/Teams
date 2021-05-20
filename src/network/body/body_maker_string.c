@@ -18,8 +18,8 @@ void *body_maker_string(const char *str)
     body = malloc(sizeof(body_header_t) + (len + 1));
     if (!body)
         return NULL;
-    *((body_header_t *) body) = (body_header_t){
-        .elem_size = 1, .list_size = (len + 1), .type = "string"};
+    *((body_header_t *) body) = (body_header_t){ .elem_size = 1,
+        .list_size = (len + 1), .entity = "string", .logger = "string"};
     content = (body + sizeof(body_header_t));
     strcpy(content, str);
     return body;

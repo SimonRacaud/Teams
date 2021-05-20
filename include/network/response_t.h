@@ -26,7 +26,8 @@ typedef enum response_error_code {
 typedef struct body_header_s {
     uint elem_size;
     uint list_size;
-    char type[SIZE_NAME];
+    char entity[SIZE_NAME];
+    char logger[SIZE_NAME];
 } body_header_t;
 
 typedef struct response_s {

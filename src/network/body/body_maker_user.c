@@ -22,18 +22,11 @@ static size_t get_list_size(user_t *ptr, bool is_list)
     }
 }
 
-void *body_maker_user(user_t *user, bool is_list)
+static void write_content(void *body, user_t *user, bool is_list)
 {
-    size_t size = get_list_size(user, is_list);
     bin_user_t *packet = NULL;
     bin_user_t *ptr = NULL;
-    void *body = NULL;
 
-    body = malloc(sizeof(body_header_t) + sizeof(bin_user_t) * size);
-    if (!body)
-        return NULL;
-    *((body_header_t *) body) = (body_header_t){
-        .elem_size = sizeof(bin_user_t), .list_size = size, .type = "user"};
     ptr = (bin_user_t *) ((char *) body + sizeof(body_header_t));
     for (user_t *node = user; node; node = LIST_NEXT(node, entries), ptr++) {
         packet = serializer_user_t(node);
@@ -42,5 +35,21 @@ void *body_maker_user(user_t *user, bool is_list)
         if (!is_list)
             break;
     }
+}
+
+void *body_maker_user(user_t *user, bool is_list, const char *logger)
+{
+    size_t size = get_list_size(user, is_list);
+    void *body = NULL;
+    body_header_t *head;
+
+    body = malloc(sizeof(body_header_t) + sizeof(bin_user_t) * size);
+    if (!body)
+        return NULL;
+    head = body;
+    *head = (body_header_t) {.elem_size = sizeof(bin_user_t),
+        .list_size = size, .entity = "user", .logger = ""};
+    strncpy(head->logger, logger, SIZE_NAME);
+    write_content(body, user, is_list);
     return body;
 }

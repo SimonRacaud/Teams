@@ -12,7 +12,7 @@ const char *FIELD_END = "\n\n";
 
 static void send_response_with_body(response_t *response, int fd, char *buffer)
 {
-    const body_header_t empty_header = {0, 0, ""};
+    const body_header_t empty_header = {0, 0, "", ""};
     size_t buffer_len = strlen(buffer);
     char *response_buffer = NULL;
     body_header_t *header = NULL;
