@@ -9,14 +9,14 @@
 #include <criterion/redirect.h>
 #include "database.h"
 
+const int nbr_threads_per_channel = 4;
+
 // Test save empty db
 Test(save_db, t01)
 {
     database_t *db = create_empty_database();
 
     cr_assert_neq(db, NULL);
-    if (db == NULL)
-        return;
     cr_assert_eq(save_database(db), true);
     free(db);
 }
@@ -64,6 +64,30 @@ static void create_channels(database_t *db, const int nbr_channel_per_team)
     }
 }
 
+static void create_threads(database_t *db)
+{
+    team_t *team;
+    channel_t *channel;
+    uuid_selector_t params;
+    char title[32];
+    char msg[64];
+
+    bzero(&params, sizeof(uuid_selector_t));
+    uuid_copy(params.uuid_user, LIST_FIRST(&db->users)->uuid);
+    LIST_FOREACH(team, &db->teams, entries) {
+        uuid_copy(params.uuid_team, team->uuid);
+        LIST_FOREACH(channel, &team->channels, entries) {
+            uuid_copy(params.uuid_channel, channel->uuid);
+            for (int n = 0; n < nbr_threads_per_channel; n++) {
+                sprintf(
+                    title, "%s %s THREAD%d", team->name, channel->name, n);
+                sprintf(msg, "%s message", title);
+                cr_assert_eq(create_thread(db, title, msg, &params), SUCCESS);
+            }
+        }
+    }
+}
+
 static void check_users_size(const database_t *db, const int expected_users)
 {
     user_t *user;
@@ -100,6 +124,23 @@ static void check_channels_size(
     }
 }
 
+static void check_threads_size(const database_t *db)
+{
+    team_t *team;
+    channel_t *channel;
+    thread_t *thread;
+    int threads_size = 0;
+
+    LIST_FOREACH(team, &db->teams, entries)
+    LIST_FOREACH(channel, &team->channels, entries)
+    {
+        threads_size = 0;
+        LIST_FOREACH(thread, &channel->threads, entries)
+        threads_size++;
+        cr_assert_eq(threads_size, nbr_threads_per_channel);
+    }
+}
+
 static void check_saved_users(const int nbr_users)
 {
     database_t *db = load_database();
@@ -108,8 +149,6 @@ static void check_saved_users(const int nbr_users)
     int users_size = 0;
 
     cr_assert_neq(db, NULL);
-    if (db == NULL)
-        return;
 
     LIST_FOREACH(user, &db->users, entries)
     {
@@ -121,8 +160,28 @@ static void check_saved_users(const int nbr_users)
     destroy_database_t(db);
 }
 
-static void check_saved_channels(const team_t *team, int *channels_size,
-    const int nbr_teams, const int nbr_channels_per_team)
+static void check_saved_threads(const team_t *team, const channel_t *channel)
+{
+    thread_t *thread;
+    uuid_selector_t selector;
+    char title[32];
+    char message[64];
+    int threads_size = 0;
+
+    bzero(&selector, sizeof(uuid_selector_t));
+    LIST_FOREACH(thread, &channel->threads, entries)
+    {
+        sprintf(title, "%s %s THREAD%d", team->name, channel->name,
+            threads_size++);
+        sprintf(message, "%s message", title);
+        cr_assert_str_eq(thread->title, title);
+        cr_assert_str_eq(thread->body, message);
+    }
+    cr_assert_eq(threads_size, nbr_threads_per_channel);
+}
+
+static void check_saved_channels(
+    const team_t *team, int *channels_size, const int nbr_channels_per_team)
 {
     channel_t *channel;
     uuid_selector_t selector;
@@ -140,6 +199,7 @@ static void check_saved_channels(const team_t *team, int *channels_size,
         cr_assert_str_eq(channel->name, name);
         cr_assert_str_eq(channel->description, description);
         n++;
+        check_saved_threads(team, channel);
     }
     cr_assert_eq(n, nbr_channels_per_team);
 }
@@ -154,14 +214,13 @@ static void check_saved_teams(const int nbr_teams, const int nbr_channels)
     int channels_size = nbr_channels * nbr_teams;
 
     cr_assert_neq(db, NULL);
-    if (db == NULL)
-        return;
-    LIST_FOREACH(team, &db->teams, entries) {
+    LIST_FOREACH(team, &db->teams, entries)
+    {
         sprintf(teamname, "TEAM%d", ++teams_size);
         sprintf(teamdesc, "%s description", teamname);
         cr_assert_str_eq(team->name, teamname);
         cr_assert_str_eq(team->description, teamdesc);
-        check_saved_channels(team, &channels_size, nbr_teams, nbr_channels);
+        check_saved_channels(team, &channels_size, nbr_channels);
     }
     cr_assert_eq(teams_size, nbr_teams);
     cr_assert_eq(channels_size, 0);
@@ -175,8 +234,6 @@ Test(save_load_db, t01)
     database_t *db = create_empty_database();
 
     cr_assert_neq(db, NULL);
-    if (db == NULL)
-        return;
     create_users(db, nbr_users);
     check_users_size(db, nbr_users);
     cr_assert_eq(save_database(db), true);
@@ -192,8 +249,6 @@ Test(save_load_db, t02)
     database_t *db = create_empty_database();
 
     cr_assert_neq(db, NULL);
-    if (db == NULL)
-        return;
     create_users(db, nbr_users);
     create_teams(db, nbr_teams);
     check_users_size(db, nbr_users);
@@ -204,7 +259,7 @@ Test(save_load_db, t02)
     check_saved_teams(nbr_teams, 0);
 }
 
-// Test save db with users & teams & channels & load them
+// Test save db with users & teams & channels & threads & load them
 Test(save_load_db, t03)
 {
     const int nbr_users = 5;
@@ -213,14 +268,14 @@ Test(save_load_db, t03)
     database_t *db = create_empty_database();
 
     cr_assert_neq(db, NULL);
-    if (db == NULL)
-        return;
     create_users(db, nbr_users);
     create_teams(db, nbr_teams);
     create_channels(db, nbr_channels);
+    create_threads(db);
     check_users_size(db, nbr_users);
     check_teams_size(db, nbr_teams);
     check_channels_size(db, nbr_channels);
+    check_threads_size(db);
 
     cr_assert_eq(save_database(db), true);
     destroy_database_t(db);
