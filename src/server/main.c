@@ -57,30 +57,6 @@ static void check_saved_users(database_t *db, const int nbr_users)
 
 int main(int argc, char **argv)
 {
-    const int nbr_users = 5;
-    database_t *db = create_empty_database();
-    int users_size = 0;
-    user_t *user;
-    char username[8];
-
-    if (db == NULL)
-        return 1;
-    for (int i = 1; i <= nbr_users; i++) {
-        sprintf(username, "USER%d", i);
-        if (create_user(db, username, NULL) != SUCCESS)
-            return 1;
-    }
-    LIST_FOREACH(user, &db->users, entries)
-    {
-        users_size++;
-    }
-    if (users_size != nbr_users)
-        return 1;
-    if (!save_database(db))
-        return 1;
-    check_saved_users(db, nbr_users);
-    return 0;
-
     server_t server = {0};
     uint port = 0;
 
