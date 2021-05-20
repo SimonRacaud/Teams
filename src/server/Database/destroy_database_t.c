@@ -59,21 +59,29 @@ void destroy_thread_t(thread_t *thread)
     free_zero(thread, sizeof(thread_t));
 }
 
+static inline void destroy_all_threads(channel_t *channel)
+{
+    thread_t *thread = NULL;
+    thread_t *last_thread = NULL;
+
+    LIST_FOREACH(thread, &channel->threads, entries)
+    {
+        destroy_thread_t(last_thread);
+        last_thread = thread;
+    }
+    destroy_thread_t(last_thread);
+}
+
 void destroy_team_t(team_t *team)
 {
     channel_t *channel = NULL;
     channel_t *last_channel = NULL;
-    thread_t *thread = NULL;
-    thread_t *last_thread = NULL;
 
     if (team == NULL)
         return;
-    LIST_FOREACH(channel, &team->channels, entries) {
-        LIST_FOREACH(thread, &channel->threads, entries) {
-            destroy_thread_t(last_thread);
-            last_thread = thread;
-        }
-        destroy_thread_t(last_thread);
+    LIST_FOREACH(channel, &team->channels, entries)
+    {
+        destroy_all_threads(channel);
         if (last_channel)
             LIST_REMOVE(last_channel, entries);
         free_zero(last_channel, sizeof(channel_t));
