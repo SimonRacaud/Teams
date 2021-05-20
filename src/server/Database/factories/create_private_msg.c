@@ -11,15 +11,16 @@ user_t *get_user_from_uuid(const database_t *db, const uuid_t uuid)
 {
     user_t *node = NULL;
 
-    LIST_FOREACH(node, &db->users, entries) {
+    LIST_FOREACH(node, &db->users, entries)
+    {
         if (!uuid_compare(node->uuid, uuid))
             return node;
     }
     return NULL;
 }
 
-static int init_msg_node(database_t *db,
-const char *msg, user_t *sender, uuid_selector_t *params)
+static int init_msg_node(
+    database_t *db, const char *msg, user_t *sender, uuid_selector_t *params)
 {
     user_t *receiver = get_user_from_uuid(db, params->uuid_user);
     private_msg_t *node = malloc(sizeof(private_msg_t));
@@ -36,11 +37,12 @@ const char *msg, user_t *sender, uuid_selector_t *params)
     node->timestamp = time(NULL);
     node->receiver = receiver;
     node->sender = sender;
+    LIST_INSERT_HEAD(&sender->messages, node, entries);
     return SUCCESS;
 }
 
-int create_private_msg(database_t *db,
-const char *msg, user_t *sender, uuid_selector_t *params)
+int create_private_msg(
+    database_t *db, const char *msg, user_t *sender, uuid_selector_t *params)
 {
     if (!db || !msg || !params)
         return ERROR;
