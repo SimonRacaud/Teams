@@ -7,7 +7,6 @@
 
 #include "server.h"
 #include "utility.h"
-#include "database.h"
 
 static int usage(const char *bin, int status)
 {
@@ -30,29 +29,6 @@ static int arg_parser(char **argv, int argc, uint *port_ptr)
     }
     *port_ptr = (uint) atoi(argv[1]);
     return EXIT_SUCCESS;
-}
-
-static void check_saved_users(database_t *db, const int nbr_users)
-{
-    user_t *user;
-    char username[8];
-    int users_size = 0;
-
-    destroy_database_t(db);
-    db = load_database();
-    if (db == NULL)
-        return;
-
-    LIST_FOREACH(user, &db->users, entries)
-    {
-        users_size++;
-        sprintf(username, "USER%d", users_size);
-        if (strcmp(user->username, username))
-            exit(1);
-    }
-    destroy_database_t(db);
-    if (users_size != nbr_users)
-        exit(1);
 }
 
 int main(int argc, char **argv)
