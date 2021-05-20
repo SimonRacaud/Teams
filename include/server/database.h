@@ -11,6 +11,7 @@
 #define _GNU_SOURCE
 
 #include <stdlib.h>
+#include <strings.h>
 #include <string.h>
 #include <stdbool.h>
 #include "client_t.h"

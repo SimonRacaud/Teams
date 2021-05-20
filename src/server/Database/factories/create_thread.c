@@ -46,6 +46,7 @@ static void init_thread_node(
     memcpy(node->title, title, strlen(title));
     memcpy(node->body, body, strlen(body));
     node->timestamp = time(NULL);
+    node->parent_channel = channel;
     uuid_generate(node->uuid);
     LIST_INSERT_HEAD(&channel->threads, node, entries);
 }
