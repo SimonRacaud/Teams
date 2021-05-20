@@ -7,6 +7,7 @@
 
 #include "client.h"
 #include "logging_client.h"
+#include "logger.h"
 
 static const body_handler_t HANDLERS[] = {
     {.label = "string", .handler = &log_string},
@@ -29,13 +30,13 @@ static const body_handler_t HANDLERS[] = {
 static void call_handler(response_t *response)
 {
     for (size_t i = 0; HANDLERS[i].label; i++) {
-        if (!strcmp(HANDLERS[i].label, response->header->type)
+        if (!strcmp(HANDLERS[i].label, response->header->entity)
             && HANDLERS[i].handler) {
             HANDLERS[i].handler(response);
             return;
         }
     }
-    printf("WARNING: logger, no handler found %s\n", response->header->type);
+    printf("WARNING: logger, no handler found %s\n", response->header->entity);
 }
 
 int logger(response_t *response)

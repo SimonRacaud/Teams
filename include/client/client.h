@@ -37,13 +37,4 @@ int process_write(client_t *client);
 int process_read(client_t *client);
 char *prompt(char **buffer_ptr, bool *disconnect);
 
-/// LOGGER
-typedef struct body_handler_s {
-    const char *label;
-    void (* handler)(response_t *response);
-} body_handler_t;
-int logger(response_t *response);
-void log_string(response_t *response);
-
-
 #endif /* !APP_H_ */
