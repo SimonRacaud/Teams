@@ -194,8 +194,8 @@ tests_run:
 	gcc -o $(NAME_UT) $(SRC_UT) $(INCLUDE) -lcriterion --coverage -luuid && ./$(NAME_UT)
 
 coverage:
-	@gcovr -r . --exclude-directories tests
-	@gcovr -b --exclude-directories tests
+	@gcovr -r . --exclude tests/
+	@gcovr -b --exclude tests/
 
 debug: CFLAGS += -g
 debug: re
