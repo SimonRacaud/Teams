@@ -20,6 +20,7 @@ typedef struct client_s {
     args_t args;
     selected_entity_t selector;
     select_t select;
+    buffer_t response_buffer;
     socket_t socket;
     bool loop;
     char *cli_buffer;

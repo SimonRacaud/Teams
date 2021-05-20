@@ -133,16 +133,36 @@ Test(request_write, t01)
     cr_assert_eq(request_write(&req), EXIT_SUCCESS);
     len = read(fds[0], buffer, 99);
     buffer[len] = '\0';
-    cr_assert_str_eq(buffer, "Hello");
-    cr_assert_eq(buffer[6], '\r');
-    cr_assert_eq(buffer[7], '\n');
+    cr_assert_str_eq(buffer, "Hello\r\r\r\n");
 }
 
 Test(request_parse, t01)
 {
-    request_t *req = request_parse("Hello\0World\0\r\n");
+    request_t *req = request_parse("Hello\r\rWorld\r\r");
 
     cr_assert_str_eq(req->label, "Hello");
     cr_assert_str_eq(req->args[0], "World");
     cr_assert_eq(req->args[1], NULL);
+}
+
+Test(response, t01)
+{
+    int fds[2];
+    int x = pipe(fds);
+    socket_t soc = {.fd = fds[1]};
+    request_t *req = request_create("/help \"bob\"  \"KOK\"  ");
+    response_t *res = response_create(ERROR, req, &soc, NULL);
+    buffer_t buffer = {0};
+
+    cr_assert_neq(res, NULL);
+    cr_assert_str_eq(res->req_label, "help");
+    cr_assert_str_eq(res->req_args[0], "bob");
+    cr_assert_eq(res->err_code, ERROR);
+    cr_assert_eq(response_send(res), EXIT_SUCCESS);
+    res = response_read(fds[0], &buffer);
+    cr_assert_neq(res, NULL);
+    cr_assert_eq(res->err_code, ERROR);
+    cr_assert_str_eq(res->req_label, "help");
+    cr_assert_str_eq(res->req_args[0], "bob");
+    cr_assert_str_eq(res->req_args[1], "KOK");
 }

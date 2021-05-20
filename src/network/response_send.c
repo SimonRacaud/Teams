@@ -5,48 +5,67 @@
 ** 13/05/2021 response_send.c
 */
 
-#include "network.h"
 #include <unistd.h>
+#include "network.h"
 
-static const char *RESPONSE_END = "\r\n";
+const char *FIELD_END = "\n\n";
 
-static void send_body(response_t *response, int fd)
+static void send_response_with_body(response_t *response, int fd, char *buffer)
 {
-    size_t size = 0;
-    body_header_t *header = (body_header_t *)response->body;
+    const body_header_t empty_header = {0, 0, ""};
+    size_t buffer_len = strlen(buffer);
+    char *response_buffer = NULL;
+    body_header_t *header = NULL;
+    size_t body_size = 0;
 
-    size = header->elem_size * header->list_size + sizeof(body_header_t);
-    write(fd, response->body, size);
+    if (response->body) {
+        header = (body_header_t *) response->body;
+        body_size =
+            header->elem_size * header->list_size + sizeof(body_header_t);
+        response_buffer = realloc(buffer, buffer_len + body_size);
+        memcpy(&response_buffer[buffer_len], response->body, body_size);
+    } else {
+        body_size = sizeof(body_header_t);
+        response_buffer = realloc(buffer, buffer_len + body_size);
+        memcpy(&response_buffer[buffer_len], &empty_header, body_size);
+    }
+    write(fd, response_buffer, body_size + buffer_len);
+    free(response_buffer);
 }
 
-static void send_request(response_t *response, int fd)
+static char *set_request_fields(response_t *response, char *buffer)
 {
     uint arg_size = 0;
+    char size_str[3] = "00";
 
-    write(fd, response->req_label, strlen(response->req_label) + 1);
+    buffer = strconcat_suffix(buffer, response->req_label, FIELD_END);
     while (response->req_args && response->req_args[arg_size]) {
         arg_size++;
     }
-    write(fd, &arg_size, sizeof(uint));
-    for (size_t i = 0; response->req_args && response->req_args[i]; i++) {
-        write(fd, response->req_args[i], strlen(response->req_args[i]) + 1);
+    if (sprintf(size_str, "%02u", arg_size) == -1) {
+        strcpy(size_str, "00");
     }
+    buffer = strconcat_suffix(buffer, size_str, FIELD_END);
+    for (size_t i = 0; response->req_args && response->req_args[i]; i++) {
+        buffer = strconcat_suffix(buffer, response->req_args[i], FIELD_END);
+    }
+    return buffer;
 }
 
 int response_send(response_t *response)
 {
     int fd = (response->receiver) ? response->receiver->fd : -1;
-    char buffer[4] = "000";
+    char code[4] = "000";
+    char *buffer = NULL;
 
     if (!response->receiver)
         return EXIT_FAILURE;
-    if (sscanf(buffer, "%03u", (uint *)&response->err_code) == -1)
+    if (sprintf(code, "%03u", (uint) response->err_code) == -1)
         return EXIT_FAILURE;
-    write(fd, buffer, 4);
-    send_request(response, fd);
-    if (response->body) {
-        send_body(response, fd);
-    }
-    write(fd, RESPONSE_END, strlen(RESPONSE_END));
+    buffer = strconcat_suffix(NULL, code, FIELD_END);
+    buffer = set_request_fields(response, buffer);
+    if (!buffer)
+        return EXIT_FAILURE;
+    send_response_with_body(response, fd, buffer);
     return EXIT_SUCCESS;
 }

@@ -12,10 +12,16 @@ SRC_UT 			= 	tests/tests_project.c											\
 					src/utility/signal_manager.c									\
 					src/utility/strdup_format.c										\
 					src/utility/walloc.c											\
+					src/utility/strconcat.c											\
+					src/utility/is_number.c											\
 					src/network/request_create.c									\
 					src/network/request_destroy.c									\
 					src/network/request_parse.c										\
 					src/network/request_write.c										\
+					src/network/response_create.c									\
+					src/network/response_destroy.c									\
+					src/network/response_send.c										\
+					src/network/response_read.c										\
 					src/server/Database/factories/create_team.c						\
 					src/server/Database/factories/create_user.c						\
 					src/server/Database/factories/create_reply.c					\
@@ -75,14 +81,20 @@ SRC_FILES_CLI	=	client/main.c							\
 					network/request_write.c					\
 					network/response_destroy.c				\
 					network/response_read.c					\
+					network/response_send.c					\
 					network/request_push.c					\
+					network/debug_response.c				\
 
 SRC_FILES_SRV	= 	server/main.c												\
+					\
 					utility/signal_manager.c									\
 					utility/strdup_format.c										\
 					utility/walloc.c											\
 					utility/is_number.c											\
 					utility/strconcat.c											\
+					utility/walen.c												\
+					utility/is_empty.c											\
+					\
 					server/app/app_create.c										\
 					server/app/app_destroy.c									\
 					server/app/app_loop.c										\
@@ -90,6 +102,7 @@ SRC_FILES_SRV	= 	server/main.c												\
 					server/app/client.c											\
 					server/app/process_request.c								\
 					server/request/request_execute.c							\
+					\
 					network/request_create.c									\
 					network/request_destroy.c									\
 					network/request_parse.c										\
@@ -98,12 +111,25 @@ SRC_FILES_SRV	= 	server/main.c												\
 					network/response_destroy.c									\
 					network/response_read.c										\
 					network/response_send.c										\
+					network/reply.c												\
 					network/body/body_maker_team.c								\
 					network/body/body_maker_channel.c							\
 					network/body/body_maker_user.c								\
 					network/body/body_maker_private_msg.c						\
 					network/body/body_maker_reply.c								\
 					network/body/body_maker_thread.c							\
+					network/body/body_maker_string.c							\
+					\
+					server/handler/handler_use.c								\
+					server/handler/handler_help.c								\
+					server/handler/handler_user.c								\
+					server/handler/handler_send.c								\
+					server/handler/handler_users.c								\
+					server/handler/handler_login.c								\
+					server/handler/handler_create.c								\
+					server/handler/handler_logout.c								\
+					server/handler/handler_messages.c							\
+					\
 					server/Database/factories/create_team.c						\
 					server/Database/factories/create_user.c						\
 					server/Database/factories/create_reply.c					\
@@ -156,43 +182,46 @@ OBJ_SRV	=	$(SRC_SRV:.c=.o)
 NAME_CLI	=	myteams_cli
 NAME_SRV	=	myteams_server
 NAME_UT 	=	test.out
+NAME_LIB_TEAMS = libmyteams.so
 
 INCLUDE = -I./include -I./libs/myteams -I./libs/socket/include -I./libs/
 CFLAGS	+= -Wall -Wextra -W $(INCLUDE) #-Werror
 
-LD_FLAGS += -lmysocket -L./libs/socket -lmyteams -L./libs/myteams -luuid
+LD_FLAGS += -lmysocket -L./libs/socket -lmyteams -L./libs/myteams -luuid -lm
 
 all:  client server
-	ln -sf ./libs/myteams/libmyteams.so libmyteams.so
 
 client: CFLAGS += -I./include/client
-client: $(OBJ_CLI)
-	make -C libs/socket
+client: socket $(OBJ_CLI)
 	@$(CC) -o $(NAME_CLI) $(OBJ_CLI) $(LD_FLAGS) -Wl,-rpath=$(PWD) && \
 		$(ECHO) $(BOLD_T)$(GREEN_C)"\n[✔] COMPILED:" $(DEFAULT)$(LIGHT_GREEN) "$(NAME_CLI)\n"$(DEFAULT) || \
 		($(ECHO) $(BOLD_T)$(RED_C)"[✘] "$(UNDLN_T)"BUILD FAILED:" $(LIGHT_RED) "$(NAME_CLI)\n"$(DEFAULT) && exit 1)
 
 server: CFLAGS += -I./include/server
-server: $(OBJ_SRV)
-	make -C libs/socket
+server: socket $(OBJ_SRV)
 	@$(CC) -o $(NAME_SRV) $(OBJ_SRV) $(LD_FLAGS) -Wl,-rpath=$(PWD) && \
 		$(ECHO) $(BOLD_T)$(GREEN_C)"\n[✔] COMPILED:" $(DEFAULT)$(LIGHT_GREEN) "$(NAME_SRV)\n"$(DEFAULT) || \
 		($(ECHO) $(BOLD_T)$(RED_C)"[✘] "$(UNDLN_T)"BUILD FAILED:" $(LIGHT_RED) "$(NAME_SRV)\n"$(DEFAULT) && exit 1)
 
+socket:
+	@make -C libs/socket
+	@ln -sf ./libs/myteams/$(NAME_LIB_TEAMS) $(NAME_LIB_TEAMS)
+
 clean:
 	make clean -C libs/socket
-	$(RM) -f  $(OBJ_CLI) $(OBJ_SRV)
+	@$(RM) -f  $(OBJ_CLI) $(OBJ_SRV)
 	@$(RM) -f *.gcda
 	@$(RM) -f *.gcno
 
 fclean:	clean
 	$(RM) -f $(NAME_CLI) $(NAME_SRV) $(NAME_UT)
+	$(RM) -f $(NAME_LIB_TEAMS)
 
 re:	fclean all
 
 tests_run: INCLUDE += -I./include/server
-tests_run:
-	gcc -o $(NAME_UT) $(SRC_UT) $(INCLUDE) -lcriterion --coverage -luuid && ./$(NAME_UT)
+tests_run: socket
+	gcc -o $(NAME_UT) $(SRC_UT) $(INCLUDE) $(LD_FLAGS) -Wl,-rpath=$(PWD) -lcriterion --coverage && ./$(NAME_UT)
 
 coverage:
 	@gcovr -r . --exclude tests/
@@ -200,8 +229,12 @@ coverage:
 
 debug: CFLAGS += -g
 debug: re
+	@make debug -C libs/socket
 
-.PHONY:	client server clean fclean re tests_run coverage debug
+debugall: CFLAGS += -g
+debugall: all
+
+.PHONY:	client server clean socket fclean re tests_run coverage debug
 
 ECHO	=	/bin/echo -e
 DEFAULT	=	"\e[0m"

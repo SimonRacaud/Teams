@@ -14,20 +14,23 @@
 #include <strings.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
 #include "client_t.h"
-#include "data/thread_t.h"
 #include "data/database_t.h"
-#include "uuid_selector_t.h"
+#include "data/thread_t.h"
 #include "network/response_t.h"
+#include "uuid_selector_t.h"
 
-#include "save/bin_user_t.h"
-#include "save/bin_team_t.h"
-#include "save/bin_reply_t.h"
-#include "save/bin_thread_t.h"
-#include "save/bin_header_t.h"
+#include "logging_server.h"
 #include "save/bin_channel_t.h"
-#include "save/database_save_t.h"
+#include "save/bin_header_t.h"
 #include "save/bin_private_msg_t.h"
+#include "save/bin_reply_t.h"
+#include "save/bin_team_t.h"
+#include "save/bin_thread_t.h"
+#include "save/bin_user_t.h"
+#include "save/database_save_t.h"
 
 #define DB_FILEPATH "database.myteams"
 
@@ -60,19 +63,31 @@ void destroy_thread_t(thread_t *thread);
 ** FACTORIES
 **
 */
+/// INFO : after call, the created entity uuid is set in params
 
-int create_reply(
+/// WARNING : you must set the current team, channel, thread uuid in params
+rcode_e create_reply(
     database_t *db, user_t *sender, const char *body, uuid_selector_t *params);
-int create_private_msg(
+
+/// WARNING : you must set the current user uuid in params
+rcode_e create_private_msg(
     database_t *db, const char *msg, user_t *sender, uuid_selector_t *params);
-int create_team(database_t *db, const char *teamname, const char *desc,
+
+/// WARNING : you must set the current user uuid in params
+rcode_e create_team(database_t *db, const char *teamname, const char *desc,
     uuid_selector_t *params);
-int create_channel(database_t *db, const char *channelname, const char *desc,
+
+/// WARNING : you must set the current team uuid in params
+rcode_e create_channel(database_t *db, const char *channelname,
+    const char *desc, uuid_selector_t *params);
+
+rcode_e create_user(
+    database_t *db, const char *username, uuid_selector_t *params);
+
+/// WARNING : you must set the current user + channel uuid in params
+rcode_e create_thread(database_t *db, const char *title, const char *msg,
     uuid_selector_t *params);
-int create_user(database_t *db, const char *username,
-    __attribute__((unused)) uuid_selector_t *params);
-int create_thread(database_t *db, const char *title, const char *msg,
-    uuid_selector_t *params);
+
 database_save_t *create_database_save_t(const database_t *db);
 void destroy_database_save_t(const database_save_t *db);
 
@@ -87,6 +102,7 @@ team_t *get_team(const database_t *db, uuid_selector_t *params);
 reply_t *get_reply(const database_t *db, uuid_selector_t *params);
 thread_t *get_thread(const database_t *db, uuid_selector_t *params);
 channel_t *get_channel(const database_t *db, uuid_selector_t *params);
+/// Params : uuid_user + uuid_private_msg
 private_msg_t *get_private_msg(const database_t *db, uuid_selector_t *params);
 size_t get_nb_subscribed_teams(const database_t *db);
 
@@ -96,7 +112,9 @@ size_t get_nb_subscribed_teams(const database_t *db);
 **
 */
 
+/// params needs uuid_user and uuid_teams
 int user_subscription_add(database_t *db, uuid_selector_t *params);
+/// params needs uuid_user and uuid_teams
 int user_subscription_remove(database_t *db, uuid_selector_t *params);
 
 /*

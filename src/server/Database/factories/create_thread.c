@@ -37,27 +37,46 @@ channel_t *get_channel_from_uuid(
     return NULL;
 }
 
-static void init_thread_node(
-    channel_t *channel, user_t *user, const char *title, const char *body)
+static thread_t *init_thread_node(database_t *db, const char *title,
+    const char *body, uuid_selector_t *params)
 {
     thread_t *node = malloc(sizeof(thread_t));
 
-    memset(node, 0, sizeof(thread_t));
+    if (node == NULL)
+        return NULL;
+    bzero(node, sizeof(thread_t));
+    node->parent_channel = get_channel_from_uuid(db, params, NULL);
+    node->user = get_user_from_uuid(db, params->uuid_user);
+    if (!node->parent_channel || !node->user)
+        return NULL;
     memcpy(node->title, title, strlen(title));
     memcpy(node->body, body, strlen(body));
     node->timestamp = time(NULL);
-    node->parent_channel = channel;
-    node->user = user;
     uuid_generate(node->uuid);
-    LIST_INSERT_HEAD(&channel->threads, node, entries);
+    LIST_INSERT_HEAD(&node->parent_channel->threads, node, entries);
+    uuid_copy(params->uuid_thread, node->uuid);
+    return node;
 }
 
-int create_thread(database_t *db, const char *title, const char *body,
+static void event(
+    uuid_selector_t *params, uuid_t thread, const char *title, const char *body)
+{
+    char uuid_channel[UUID_STR];
+    char uuid_thread[UUID_STR];
+    char uuid_user[UUID_STR];
+
+    uuid_unparse(params->uuid_channel, uuid_channel);
+    uuid_unparse(params->uuid_user, uuid_user);
+    uuid_unparse(thread, uuid_thread);
+    server_event_thread_created(
+        uuid_channel, uuid_thread, uuid_user, title, body);
+}
+
+rcode_e create_thread(database_t *db, const char *title, const char *body,
     uuid_selector_t *params)
 {
     int err = ERROR;
-    channel_t *channel = NULL;
-    user_t *user = NULL;
+    thread_t *node;
 
     if (!db || !title || !body || !params)
         return ERROR;
@@ -65,12 +84,9 @@ int create_thread(database_t *db, const char *title, const char *body,
         return ERROR;
     if (uuid_is_null(params->uuid_team) || uuid_is_null(params->uuid_channel))
         return ERROR;
-    channel = get_channel_from_uuid(db, params, &err);
-    if (!channel)
-        return err;
-    user = get_user_from_uuid(db, params->uuid_user);
-    if (user == NULL)
+    node = init_thread_node(db, title, body, params);
+    if (node == NULL)
         return ERROR;
-    init_thread_node(channel, user, title, body);
+    event(params, node->uuid, title, body);
     return SUCCESS;
 }

@@ -17,6 +17,8 @@ typedef struct private_msg_list_header pm_list_t;
 
 typedef struct user_s user_t;
 
+/// MEMO : the receiver stock the message
+
 typedef struct private_msg_s {
     uuid_t uuid;
     user_t *receiver;

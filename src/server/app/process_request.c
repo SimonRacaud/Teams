@@ -11,8 +11,8 @@ request_t *get_request(client_t *client, bool *cancel)
 {
     request_t *request = NULL;
     bool is_empty = false;
-    char *input =
-        fd_getline(client->socket.fd, &client->read_buffer, &is_empty);
+    char *input = fd_getline_delim(
+        client->socket.fd, &client->buffer, END_COM, &is_empty);
 
     if (!input && is_empty) {
         disconnect_client(client);
@@ -21,7 +21,7 @@ request_t *get_request(client_t *client, bool *cancel)
     } else if (!input) {
         return NULL;
     }
-    request = request_create(input);
+    request = request_parse(input);
     free(input);
     if (!request) {
         printf("ERROR: invalid input command\n");
@@ -39,7 +39,7 @@ int process_request(server_t *server, client_t *client)
     if (cancel) {
         return EXIT_SUCCESS;
     } else if (!request) {
-        return EXIT_FAILURE;
+        return EXIT_SUCCESS;
     }
     if (request_execute(request, server, client) == EXIT_FAILURE)
         return EXIT_FAILURE;

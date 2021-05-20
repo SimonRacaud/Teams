@@ -18,16 +18,14 @@ int connect_client(server_t *server)
         return EXIT_FAILURE;
     }
     client->user_ptr = NULL;
-    client->read_buffer = NULL;
+    client->buffer.buff = NULL;
     LIST_INSERT_HEAD(&server->clients, client, entries);
     return EXIT_SUCCESS;
 }
 
 void disconnect_client(client_t *client)
 {
-    if (client->read_buffer) {
-        free(client->read_buffer);
-    }
+    free(client->buffer.buff);
     socket_close(&client->socket);
     LIST_REMOVE(client, entries);
 }

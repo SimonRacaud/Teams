@@ -7,36 +7,41 @@
 
 #include "socket.h"
 
-static void init_buffer(char **buffer_ptr, char *buffer, size_t size)
+static char *init_buffer(buffer_t *buffer, char *result, size_t size)
 {
-    strncpy(buffer, *buffer_ptr, size);
-    if (strlen(*buffer_ptr) > size) {
-        strcpy(*buffer_ptr, &(*buffer_ptr)[size]);
+    size_t copy_size = buffer->data_size;
+
+    if (copy_size > size)
+        copy_size = size;
+    memcpy(result, buffer->buff, copy_size);
+    if (buffer->data_size > size) {
+        buffer->data_size -= copy_size;
+        memcpy(buffer->buff, &buffer->buff[copy_size], buffer->data_size);
     } else {
-        free(*buffer_ptr);
-        *buffer_ptr = NULL;
+        free(buffer->buff);
+        buffer->buff = NULL;
+        buffer->data_size = 0;
     }
+    return result;
 }
 
-char *fd_read(int fd, char **buffer_ptr, size_t size)
+char *fd_read(int fd, buffer_t *buffer, size_t size)
 {
-    char *buffer = malloc(sizeof(char) * (size + 1));
-    size_t content_len = !(*buffer_ptr) ? 0 : strlen(*buffer_ptr);
+    char *result = malloc(size);
+    size_t content_len = !buffer->buff ? 0 : buffer->data_size;
     ssize_t len = 0;
 
-    if (!buffer)
+    if (!result)
         return NULL;
-    buffer[0] = '\0';
-    buffer[size] = '\0';
-    if (*buffer_ptr) {
-        init_buffer(buffer_ptr, buffer, size);
+    if (buffer->buff) {
+        result = init_buffer(buffer, result, size);
     }
     if (content_len < size) {
-        len = read(fd, &buffer[content_len], (size - content_len));
+        len = read(fd, &result[content_len], (size - content_len));
         if (len == -1 || content_len + len != size) {
-            free(buffer);
+            free(result);
             return NULL;
         }
     }
-    return buffer;
+    return result;
 }

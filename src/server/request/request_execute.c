@@ -8,43 +8,30 @@
 #include "server.h"
 #include "request_handler_t.h"
 
-static const request_handler_t HANDLERS[] = {
-    {.label = "help", .handler = NULL},
-    {.label = "login", .handler = NULL},
-    {.label = "logout", .handler = NULL},
-    {.label = "users", .handler = NULL},
-    {.label = "user", .handler = NULL},
-    {.label = "send", .handler = NULL},
-    {.label = "messages", .handler = NULL},
+const request_handler_t HANDLERS[] = {
+    {.label = "help", .handler = handler_help},
+    {.label = "login", .handler = &handler_login},
+    {.label = "logout", .handler = &handler_logout},
+    {.label = "users", .handler = handler_users},
+    {.label = "user", .handler = handler_user},
+    {.label = "send", .handler = handler_send},
+    {.label = "messages", .handler = handler_messages},
     {.label = "subscribe", .handler = NULL},
     {.label = "subscribed", .handler = NULL},
     {.label = "unsubscribe", .handler = NULL},
-    {.label = "use", .handler = NULL},
-    {.label = "create", .handler = NULL},
+    {.label = "use", .handler = handler_use},
+    {.label = "create", .handler = handler_create},
     {.label = "list", .handler = NULL},
     {.label = "info", .handler = NULL},
     {.label = NULL, .handler = NULL}};
 
 static int call_handler(
-    request_t *request, server_t *server, handler_t handler)
+    request_t *request, server_t *server, handler_t handler, client_t *client)
 {
     if (handler) {
-        return handler(server, request);
+        return handler(server, request, client);
     }
     return EXIT_SUCCESS;
-}
-
-static void command_not_found(request_t *request, client_t *client)
-{
-    response_t *response = NULL;
-
-    response = response_create(ERROR, request, &client->socket, NULL);
-    printf("WARNING: command not found.\n");
-    if (!response) {
-        return;
-    }
-    response_send(response);
-    response_destroy(response);
 }
 
 int request_execute(request_t *request, server_t *server, client_t *client)
@@ -52,9 +39,10 @@ int request_execute(request_t *request, server_t *server, client_t *client)
     request->receiver = &client->socket;
     for (size_t i = 0; HANDLERS[i].label != NULL; i++) {
         if (strcmp(HANDLERS[i].label, request->label) == 0) {
-            return call_handler(request, server, HANDLERS[i].handler);
+            return call_handler(request, server, HANDLERS[i].handler, client);
         }
     }
-    command_not_found(request, client);
+    if (reply_str(ERROR, request, "Command not found") == EXIT_FAILURE)
+        return EXIT_FAILURE;
     return EXIT_SUCCESS;
 }

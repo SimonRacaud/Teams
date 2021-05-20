@@ -31,13 +31,20 @@ static bool is_correct_params(
     return true;
 }
 
-static void init_channel_node(
-    channel_t *node, const char *channelname, const char *desc)
+static void init_channel_node(channel_t *node, const char *channelname,
+    const char *desc, uuid_selector_t *params)
 {
+    char uuid_team[UUID_STR];
+    char uuid_channel[UUID_STR];
+
     bzero(node, sizeof(channel_t));
     memcpy(node->name, channelname, strlen(channelname));
     memcpy(node->description, desc, strlen(desc));
     uuid_generate(node->uuid);
+    uuid_copy(params->uuid_channel, node->uuid);
+    uuid_unparse(params->uuid_team, uuid_team);
+    uuid_unparse(node->uuid, uuid_channel);
+    server_event_channel_created(uuid_team, uuid_channel, channelname);
 }
 
 static int inset_channel(
@@ -52,8 +59,8 @@ static int inset_channel(
     return SUCCESS;
 }
 
-int create_channel(database_t *db, const char *channelname, const char *desc,
-    uuid_selector_t *params)
+rcode_e create_channel(database_t *db, const char *channelname,
+    const char *desc, uuid_selector_t *params)
 {
     int err_val = ERROR;
     channel_t *node = NULL;
@@ -69,6 +76,6 @@ int create_channel(database_t *db, const char *channelname, const char *desc,
     node = malloc(sizeof(channel_t));
     if (!node)
         return ERROR;
-    init_channel_node(node, channelname, desc);
+    init_channel_node(node, channelname, desc, params);
     return inset_channel(node, db, params);
 }

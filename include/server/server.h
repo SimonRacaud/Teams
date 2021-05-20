@@ -8,6 +8,7 @@
 #ifndef APP_H_
 #define APP_H_
 
+#define _GNU_SOURCE
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,6 +17,7 @@
 #include "server_t.h"
 #include "socket.h"
 #include "network.h"
+#include "handler.h"
 
 #define SERVER_MAX_CLIENT 42
 
@@ -25,6 +27,8 @@
     FD_ISSET(el->socket.fd, &server->select.read_fds)
 #define FD_WRITE_ISSET(el, server) \
     FD_ISSET(el->receiver->fd, &server->select.write_fds)
+
+#define UNUSED __attribute__((unused))
 
 ///     APP
 int app_create(server_t *server, uint port);

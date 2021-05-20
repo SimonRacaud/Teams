@@ -29,13 +29,11 @@
 /*
 ** To receive team related events you MUST be subscribed to the team
 ** Ex: to receive client_event_thread_reply_received you must be subscribed to
-** the team, that have the channel, that have the thread, that got the new
-*reply
+** the team, that have the channel, that have the thread, that got the new reply
 */
 
 /*
-** To get team information or team modifications (list threads, create
-*reply...)
+** To get team information or team modifications (list threads, create reply...)
 ** you MUST be subscribed to the team.
 */
 
@@ -52,8 +50,7 @@ int client_event_logged_in(char const *user_uuid, const char *user_name);
 
 /**
 ** @brief Must be called when a user logged out (/logout or lost connexion).
-** When you log out (/logout) you should also receive the event before
-*quitting.
+** When you log out (/logout) you should also receive the event before quitting.
 ** @param user_uuid The id of the user who logged out
 ** @param user_name The name of the user who logged out
 **
@@ -63,8 +60,7 @@ int client_event_logged_in(char const *user_uuid, const char *user_name);
 int client_event_logged_out(char const *user_uuid, const char *user_name);
 
 /**
-** @brief Must be called when the current logged user receives a private
-*message
+** @brief Must be called when the current logged user receives a private message
 ** @param user_uuid The id of the user that sent the private message
 ** @param message_body The body of the private message
 **
@@ -72,7 +68,8 @@ int client_event_logged_out(char const *user_uuid, const char *user_name);
 ** /send "user_uuid" "message_body"
 **/
 int client_event_private_message_received(
-    char const *user_uuid, char const *message_body);
+    char const *user_uuid,
+    char const *message_body);
 
 /**
 ** @brief Must be called when a new reply is posted in a thread
@@ -84,8 +81,11 @@ int client_event_private_message_received(
 ** Commands:
 ** /create "reply_body"
 **/
-int client_event_thread_reply_received(char const *team_uuid,
-    char const *thread_uuid, char const *user_uuid, char const *reply_body);
+int client_event_thread_reply_received(
+    char const *team_uuid,
+    char const *thread_uuid,
+    char const *user_uuid,
+    char const *reply_body);
 
 /**
 ** @brief Must be called when a new team is created
@@ -97,7 +97,9 @@ int client_event_thread_reply_received(char const *team_uuid,
 ** Commands:
 ** /create "team_name" "team_description"
 **/
-int client_event_team_created(char const *team_uuid, char const *team_name,
+int client_event_team_created(
+    char const *team_uuid,
+    char const *team_name,
     char const *team_description);
 
 /**
@@ -109,8 +111,10 @@ int client_event_team_created(char const *team_uuid, char const *team_name,
 ** Commands:
 ** /create "channel_name" "channel_description"
 **/
-int client_event_channel_created(char const *channel_uuid,
-    char const *channel_name, char const *channel_description);
+int client_event_channel_created(
+    char const *channel_uuid,
+    char const *channel_name,
+    char const *channel_description);
 
 /**
 ** @brief Must be called when a thread is created inside of a channel
@@ -123,8 +127,11 @@ int client_event_channel_created(char const *channel_uuid,
 ** Commands:
 ** /create "thread_title" "thread_body"
 **/
-int client_event_thread_created(char const *thread_uuid, char const *user_uuid,
-    time_t thread_timestamp, char const *thread_title,
+int client_event_thread_created(
+    char const *thread_uuid,
+    char const *user_uuid,
+    time_t thread_timestamp,
+    char const *thread_title,
     char const *thread_body);
 
 /**
@@ -142,12 +149,13 @@ int client_event_thread_created(char const *thread_uuid, char const *user_uuid,
 ** /subscribed "team_uuid"
 **/
 int client_print_users(
-    char const *user_uuid, char const *user_name, int user_status);
+    char const *user_uuid,
+    char const *user_name,
+    int user_status);
 
 /**
 ** @brief Must be called when you requested a list of teams from the server
-** ex: asking the teams you are subscribed to or the available teams in a
-*domain
+** ex: asking the teams you are subscribed to or the available teams in a domain
 ** This function should be called once per team in the list
 ** This function should be called even if the list only has one entry
 ** @param team_uuid The id of a team
@@ -158,7 +166,9 @@ int client_print_users(
 ** /list
 ** /subscribed
 **/
-int client_print_teams(char const *team_uuid, char const *team_name,
+int client_print_teams(
+    char const *team_uuid,
+    char const *team_name,
     char const *team_description);
 
 /**
@@ -173,8 +183,10 @@ int client_print_teams(char const *team_uuid, char const *team_name,
 ** Commands:
 ** /list
 **/
-int client_team_print_channels(char const *channel_uuid,
-    char const *channel_name, char const *channel_description);
+int client_team_print_channels(
+    char const *channel_uuid,
+    char const *channel_name,
+    char const *channel_description);
 
 /**
 ** @brief Must be called when you requested a list of threads from the server
@@ -190,8 +202,11 @@ int client_team_print_channels(char const *channel_uuid,
 ** Commands:
 ** /list
 **/
-int client_channel_print_threads(char const *thread_uuid,
-    char const *user_uuid, time_t thread_timestamp, char const *thread_title,
+int client_channel_print_threads(
+    char const *thread_uuid,
+    char const *user_uuid,
+    time_t thread_timestamp,
+    char const *thread_title,
     char const *thread_body);
 
 /**
@@ -207,8 +222,11 @@ int client_channel_print_threads(char const *thread_uuid,
 ** Commands:
 ** /list
 **/
-int client_thread_print_replies(char const *thread_uuid, char const *user_uuid,
-    time_t reply_timestamp, char const *reply_body);
+int client_thread_print_replies(
+    char const *thread_uuid,
+    char const *user_uuid,
+    time_t reply_timestamp,
+    char const *reply_body);
 
 /**
 ** @brief Must be called when you requested a list of private messages
@@ -222,8 +240,10 @@ int client_thread_print_replies(char const *thread_uuid, char const *user_uuid,
 ** Commands:
 ** /messages "user_uuid"
 **/
-int client_private_message_print_messages(char const *sender_uuid,
-    time_t message_timestamp, char const *message_body);
+int client_private_message_print_messages(
+    char const *sender_uuid,
+    time_t message_timestamp,
+    char const *message_body);
 
 /**
 ** @brief Must be called when the user try to do an action
@@ -315,7 +335,9 @@ int client_error_already_exist(void);
 ** /info
 **/
 int client_print_user(
-    char const *user_uuid, char const *user_name, int user_status);
+    char const *user_uuid,
+    char const *user_name,
+    int user_status);
 
 /**
 ** @brief Must be called when you requested an individual team
@@ -327,7 +349,9 @@ int client_print_user(
 ** Commands:
 ** /info
 **/
-int client_print_team(char const *team_uuid, char const *team_name,
+int client_print_team(
+    char const *team_uuid,
+    char const *team_name,
     char const *team_description);
 
 /**
@@ -340,7 +364,9 @@ int client_print_team(char const *team_uuid, char const *team_name,
 ** Commands:
 ** /info
 **/
-int client_print_channel(char const *channel_uuid, char const *channel_name,
+int client_print_channel(
+    char const *channel_uuid,
+    char const *channel_name,
     char const *channel_description);
 
 /**
@@ -355,8 +381,11 @@ int client_print_channel(char const *channel_uuid, char const *channel_name,
 ** Commands:
 ** /info
 **/
-int client_print_thread(char const *thread_uuid, char const *user_uuid,
-    time_t thread_timestamp, char const *thread_title,
+int client_print_thread(
+    char const *thread_uuid,
+    char const *user_uuid,
+    time_t thread_timestamp,
+    char const *thread_title,
     char const *thread_body);
 
 /**
@@ -368,7 +397,9 @@ int client_print_thread(char const *thread_uuid, char const *user_uuid,
 ** Commands:
 ** /create "team_name" "team_description"
 **/
-int client_print_team_created(char const *team_uuid, char const *team_name,
+int client_print_team_created(
+    char const *team_uuid,
+    char const *team_name,
     char const *team_description);
 
 /**
@@ -380,8 +411,10 @@ int client_print_team_created(char const *team_uuid, char const *team_name,
 ** Commands:
 ** /create "channel_name" "channel_description"
 **/
-int client_print_channel_created(char const *channel_uuid,
-    char const *channel_name, char const *channel_description);
+int client_print_channel_created(
+    char const *channel_uuid,
+    char const *channel_name,
+    char const *channel_description);
 
 /**
 ** @brief Must be called when you create a thread successfully
@@ -394,8 +427,11 @@ int client_print_channel_created(char const *channel_uuid,
 ** Commands:
 ** /create "thread_title" "thread_body"
 **/
-int client_print_thread_created(char const *thread_uuid, char const *user_uuid,
-    time_t thread_timestamp, char const *thread_title,
+int client_print_thread_created(
+    char const *thread_uuid,
+    char const *user_uuid,
+    time_t thread_timestamp,
+    char const *thread_title,
     char const *thread_body);
 
 /**
@@ -408,8 +444,11 @@ int client_print_thread_created(char const *thread_uuid, char const *user_uuid,
 ** Commands:
 ** /create "reply_body"
 **/
-int client_print_reply_created(char const *thread_uuid, char const *user_uuid,
-    time_t reply_timestamp, char const *reply_body);
+int client_print_reply_created(
+    char const *thread_uuid,
+    char const *user_uuid,
+    time_t reply_timestamp,
+    char const *reply_body);
 
 /**
 ** @brief Must be called when you subscribe to a team successfully

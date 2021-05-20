@@ -8,7 +8,7 @@
 #ifndef REQUEST_HANDLER_T_H
 #define REQUEST_HANDLER_T_H
 
-typedef int (* handler_t)(server_t *, request_t *);
+typedef int (* handler_t)(server_t *, request_t *, client_t *);
 
 typedef struct request_handler_s {
     const char *label;
