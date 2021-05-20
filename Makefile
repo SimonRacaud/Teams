@@ -8,6 +8,7 @@
 DSRC	=	./src/
 
 SRC_UT 			= 	tests/tests_project.c											\
+					tests/tests_database.c											\
 					src/utility/signal_manager.c									\
 					src/utility/strdup_format.c										\
 					src/utility/walloc.c											\
@@ -15,6 +16,7 @@ SRC_UT 			= 	tests/tests_project.c											\
 					src/network/request_destroy.c									\
 					src/network/request_parse.c										\
 					src/network/request_write.c										\
+					src/server/Database/factories/create_team.c						\
 					src/server/Database/factories/create_user.c						\
 					src/server/Database/factories/create_private_msg.c				\
 					src/server/Database/factories/create_thread.c					\
