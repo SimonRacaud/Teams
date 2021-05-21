@@ -25,3 +25,29 @@ private_msg_t *deserializer_private_msg_t(
     memcpy(dest->body, src->body, strlen(src->body));
     return dest;
 }
+
+static inline void destroy_created_result(
+    private_msg_t **result, uint max_index)
+{
+    for (uint i = 0; i < max_index; i++)
+        free(result[i]);
+    free(result);
+}
+
+private_msg_t **deserialize_all_private_msg(
+    const database_save_t *db_save, const database_t *db)
+{
+    private_msg_t **result =
+        calloc(db_save->head->nb_private_msg, sizeof(private_msg_t *));
+
+    if (result == NULL)
+        return NULL;
+    for (uint i = 0; i < db_save->head->nb_private_msg; i++) {
+        result[i] = deserializer_private_msg_t(db_save->messages[i], db);
+        if (result[i] == NULL) {
+            destroy_created_result(result, i);
+            return NULL;
+        }
+    }
+    return result;
+}

@@ -27,7 +27,7 @@ static int arg_parser(char **argv, int argc, uint *port_ptr)
     if (argc != 2 || is_number(argv[1]) == false) {
         return usage(argv[0], EXIT_FAILURE);
     }
-    *port_ptr = (uint)atoi(argv[1]);
+    *port_ptr = (uint) atoi(argv[1]);
     return EXIT_SUCCESS;
 }
 

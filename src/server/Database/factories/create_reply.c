@@ -44,6 +44,7 @@ static int init_replay_node(
     memcpy(reply->body, body, strlen(body));
     reply->timestamp = time(NULL);
     reply->user = user;
+    reply->parent_thread = thread;
     uuid_generate(reply->uuid);
     LIST_INSERT_HEAD(&thread->replies, reply, entries);
     uuid_copy(params->uuid_reply, reply->uuid);

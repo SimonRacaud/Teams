@@ -7,6 +7,15 @@
 
 #include "database.h"
 
+channel_t *get_channel_by_uuid(
+    channel_t **channels, uint size, const uuid_t uuid)
+{
+    for (uint i = 0; i < size; i++)
+        if (!uuid_compare(channels[i]->uuid, uuid))
+            return channels[i];
+    return NULL;
+}
+
 channel_t *get_channel_from_uuid(
     const database_t *db, uuid_selector_t *params, int *err)
 {
@@ -14,7 +23,8 @@ channel_t *get_channel_from_uuid(
     channel_t *channel = NULL;
 
     if (!team) {
-        *err = ERR_UNKNOWN_TEAM;
+        if (err)
+            *err = ERR_UNKNOWN_TEAM;
         return NULL;
     }
     LIST_FOREACH(channel, &team->channels, entries)
@@ -22,27 +32,34 @@ channel_t *get_channel_from_uuid(
         if (!uuid_compare(channel->uuid, params->uuid_channel))
             return channel;
     }
-    *err = ERR_UNKNOWN_CHANNEL;
+    if (err)
+        *err = ERR_UNKNOWN_CHANNEL;
     return NULL;
 }
 
-static thread_t *init_thread_node(channel_t *channel, const char *title,
+static thread_t *init_thread_node(database_t *db, const char *title,
     const char *body, uuid_selector_t *params)
 {
     thread_t *node = malloc(sizeof(thread_t));
 
-    memset(node, 0, sizeof(thread_t));
+    if (node == NULL)
+        return NULL;
+    bzero(node, sizeof(thread_t));
+    node->parent_channel = get_channel_from_uuid(db, params, NULL);
+    node->user = get_user_from_uuid(db, params->uuid_user);
+    if (!node->parent_channel || !node->user)
+        return NULL;
     memcpy(node->title, title, strlen(title));
     memcpy(node->body, body, strlen(body));
     node->timestamp = time(NULL);
     uuid_generate(node->uuid);
-    LIST_INSERT_HEAD(&channel->threads, node, entries);
+    LIST_INSERT_HEAD(&node->parent_channel->threads, node, entries);
     uuid_copy(params->uuid_thread, node->uuid);
     return node;
 }
 
-static void event(uuid_selector_t *params, uuid_t thread, const char *title,
-    const char *body)
+static void event(
+    uuid_selector_t *params, uuid_t thread, const char *title, const char *body)
 {
     char uuid_channel[UUID_STR];
     char uuid_thread[UUID_STR];
@@ -58,8 +75,6 @@ static void event(uuid_selector_t *params, uuid_t thread, const char *title,
 rcode_e create_thread(database_t *db, const char *title, const char *body,
     uuid_selector_t *params)
 {
-    int err = ERROR;
-    channel_t *channel = NULL;
     thread_t *node;
 
     if (!db || !title || !body || !params)
@@ -68,10 +83,9 @@ rcode_e create_thread(database_t *db, const char *title, const char *body,
         return ERROR;
     if (uuid_is_null(params->uuid_team) || uuid_is_null(params->uuid_channel))
         return ERROR;
-    channel = get_channel_from_uuid(db, params, &err);
-    if (!channel)
-        return err;
-    node = init_thread_node(channel, title, body, params);
+    node = init_thread_node(db, title, body, params);
+    if (node == NULL)
+        return ERROR;
     event(params, node->uuid, title, body);
     return SUCCESS;
 }

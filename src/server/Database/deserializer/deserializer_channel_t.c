@@ -32,5 +32,50 @@ channel_t *deserializer_channel_t(
         return NULL;
     memcpy(dest->name, src->name, strlen(src->name));
     memcpy(dest->description, src->description, strlen(src->description));
+    LIST_INIT(&dest->threads);
     return dest;
+}
+
+static inline void destroy_created_result(channel_t **result, uint max_index)
+{
+    for (uint i = 0; i < max_index; i++)
+        free(result[i]);
+    free(result);
+}
+
+static bool fill_channels_threads(
+    const database_save_t *db_save, const database_t *db, channel_t **result)
+{
+    thread_t **threads = deserialize_all_threads(db_save, db, result);
+
+    if (threads == NULL)
+        return false;
+    for (uint i = 0; i < db_save->head->nb_channel; i++)
+        for (uint k = 0; k < db_save->head->nb_thread; k++)
+            if (!uuid_compare(
+                    result[i]->uuid, threads[k]->parent_channel->uuid))
+                LIST_INSERT_HEAD(&result[i]->threads, threads[k], entries);
+    free(threads);
+    return true;
+}
+
+channel_t **deserialize_all_channels(
+    const database_save_t *db_save, const database_t *db)
+{
+    channel_t **result = calloc(db_save->head->nb_channel, sizeof(channel_t *));
+
+    if (result == NULL)
+        return NULL;
+    for (uint i = 0; i < db_save->head->nb_channel; i++) {
+        result[i] = deserializer_channel_t(db_save->channels[i], db);
+        if (result[i] == NULL) {
+            destroy_created_result(result, i);
+            return NULL;
+        }
+    }
+    if (!fill_channels_threads(db_save, db, result)) {
+        destroy_created_result(result, db_save->head->nb_channel);
+        return NULL;
+    }
+    return result;
 }

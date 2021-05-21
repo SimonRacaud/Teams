@@ -16,7 +16,7 @@ static void redirect_all_stdout(void)
     cr_redirect_stderr();
 }
 
-//Test(function, t01, .init = redirect_all_stdout)
+// Test(function, t01, .init = redirect_all_stdout)
 //{
 //    cr_assert_stderr_eq_str("");
 //}
