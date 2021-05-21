@@ -19,4 +19,19 @@
 #define CMD_SUBSCRIBE "subscribe"
 #define CMD_UNSUBSCRIBE "unsubscribe"
 
+#define LOG_T_STRING "string"
+#define LOG_T_LOGGING "logging"
+#define LOG_T_EVT_TEAM "event_team"
+#define LOG_T_EVT_REPLY "event_reply"
+#define LOG_T_EVT_CHAN "event_channel"
+#define LOG_T_EVT_THREAD "event_thread"
+#define LOG_T_PRT_USER "print_user"
+#define LOG_T_PRT_TEAM "print_team"
+#define LOG_T_PRT_CHAN "print_channel"
+#define LOG_T_PRT_THREAD "print_thread"
+#define LOG_T_PRT_REPLY "print_reply"
+#define LOG_T_PRT_PRIV_MSG "print_private_msg"
+#define LOG_T_ERROR "error"
+#define LOG_T_SUBSCRIPTION "subscription"
+
 #endif // ENV_H
