@@ -25,6 +25,7 @@ LIST_HEAD(mp_list_s, private_msg_s);
 */
 
 int handler_use(server_t *srv, request_t *request, client_t *client);
+int handler_list(server_t *srv, request_t *request, client_t *client);
 int handler_send(server_t *srv, request_t *request, client_t *client);
 int handler_help(server_t *srv, request_t *request, client_t *client);
 int handler_user(server_t *srv, request_t *request, client_t *client);
