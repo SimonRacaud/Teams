@@ -239,7 +239,7 @@ static void check_saved_private_messages(
 {
     private_msg_t *private_msg;
     uuid_selector_t selector;
-    char message[32];
+    char message[64];
     int n = 1;
 
     bzero(&selector, sizeof(uuid_selector_t));
@@ -271,8 +271,7 @@ static void check_saved_users(const int nbr_users, const int nbr_private_msgs)
     destroy_database_t(&db);
 }
 
-static void check_saved_replies(
-    const team_t *team, const channel_t *channel, const thread_t *thread)
+static void check_saved_replies(const thread_t *thread)
 {
     reply_t *reply;
     char msg[500];
@@ -289,8 +288,8 @@ static void check_saved_replies(
 static void check_saved_threads(const team_t *team, const channel_t *channel)
 {
     thread_t *thread;
-    char title[32];
-    char message[64];
+    char title[128];
+    char message[256];
     int threads_size = 0;
 
     LIST_FOREACH(thread, &channel->threads, entries)
@@ -300,7 +299,7 @@ static void check_saved_threads(const team_t *team, const channel_t *channel)
         sprintf(message, "%s message", title);
         cr_assert_str_eq(thread->title, title);
         cr_assert_str_eq(thread->body, message);
-        check_saved_replies(team, channel, thread);
+        check_saved_replies(thread);
     }
     cr_assert_eq(threads_size, nbr_threads_per_channel);
 }
@@ -309,8 +308,8 @@ static void check_saved_channels(
     const team_t *team, const int nbr_channels_per_team)
 {
     channel_t *channel;
-    char name[32];
-    char description[64];
+    char name[64];
+    char description[128];
     int n = 1;
 
     LIST_FOREACH(channel, &team->channels, entries)
