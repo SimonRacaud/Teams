@@ -13,6 +13,7 @@
 static int create_team_manage(server_t *srv,
 request_t *request, client_t *client)
 {
+    void *body = NULL;
     uuid_selector_t params = {0};
     int err = SUCCESS;
 
@@ -21,12 +22,16 @@ request_t *request, client_t *client)
     uuid_copy(params.uuid_user, client->user_ptr->uuid);
     err =
     create_team(&srv->database, request->args[0], request->args[1], &params);
-    return reply_str(err, request, (err == SUCCESS) ? "OK" : "KO");
+    body = body_maker_team(get_team(&srv->database, &params), false);
+    if (!body)
+        return EXIT_FAILURE;
+    return reply(err, request, body);
 }
 
 static int create_channel_manage(server_t *srv,
 request_t *request, client_t *client)
 {
+    void *body = NULL;
     uuid_selector_t params = {0};
     int err = SUCCESS;
 
@@ -36,12 +41,16 @@ request_t *request, client_t *client)
     uuid_copy(params.uuid_team, client->selector.team);
     err =
     create_channel(&srv->database, request->args[0], request->args[1], &params);
-    return reply_str(err, request, (err == SUCCESS) ? "OK" : "KO");
+    body = body_maker_channel(get_channel(&srv->database, &params), false);
+    if (!body)
+        return EXIT_FAILURE;
+    return reply(err, request, body);
 }
 
 static int create_thread_manage(server_t *srv,
 request_t *request, client_t *client)
 {
+    void *body = NULL;
     uuid_selector_t params = {0};
     int err = SUCCESS;
 
@@ -52,12 +61,16 @@ request_t *request, client_t *client)
     uuid_copy(params.uuid_channel, client->selector.channel);
     err =
     create_thread(&srv->database, request->args[0], request->args[1], &params);
-    return reply_str(err, request, (err == SUCCESS) ? "OK" : "KO");
+    body = body_maker_thread(get_thread(&srv->database, &params), false);
+    if (!body)
+        return EXIT_FAILURE;
+    return reply(err, request, body);
 }
 
 static int create_reply_manage(server_t *srv,
 request_t *request, client_t *client)
 {
+    void *body = NULL;
     uuid_selector_t params = {0};
     int err = SUCCESS;
 
@@ -69,7 +82,10 @@ request_t *request, client_t *client)
     uuid_copy(params.uuid_thread, client->selector.thread);
     err =
     create_reply(&srv->database, client->user_ptr, request->args[0], &params);
-    return reply_str(err, request, (err == SUCCESS) ? "OK" : "KO");
+    body = body_maker_reply(get_reply(&srv->database, &params), false);
+    if (!body)
+        return EXIT_FAILURE;
+    return reply(err, request, body);
 }
 
 int handler_create(server_t *srv, request_t *request, client_t *client)
