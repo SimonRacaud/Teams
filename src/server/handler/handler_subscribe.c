@@ -10,13 +10,15 @@
 #include "database.h"
 #include "request_handler_t.h"
 
-static int subscribe_manage(server_t *srv, request_t *request, client_t *client, uuid_selector_t *selector)
+static int subscribe_manage(server_t *srv,
+request_t *request, client_t *client, uuid_selector_t *selector)
 {
     team_t *team = get_team(&srv->database, selector);
 
     if (!team)
         return reply_str(ERR_UNKNOWN_TEAM, request, "Bad argument value");
     LIST_INSERT_HEAD(&client->user_ptr->teams, team, entries);
+    LIST_INSERT_HEAD(&team->users, client->user_ptr, entries);
     return reply_str(SUCCESS, request, "Correctly subscribe");
 }
 

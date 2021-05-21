@@ -10,18 +10,35 @@
 #include "database.h"
 #include "request_handler_t.h"
 
+static bool remove_from_user(team_t *team, uuid_t user_uuid)
+{
+    user_t *node = NULL;
+
+    LIST_FOREACH(node, &team->users, entries) {
+        if (!uuid_compare(node->uuid, user_uuid)) {
+            LIST_REMOVE(node, entries);
+            return true;
+        }
+    }
+    return false;
+}
+
 static int unsubscribe_manage(request_t *request,
 client_t *client, uuid_selector_t *selector)
 {
+    bool ret_val = false;
     team_t *node = NULL;
 
     LIST_FOREACH(node, &client->user_ptr->teams, entries) {
         if (!uuid_compare(node->uuid, selector->uuid_team)) {
+            ret_val = remove_from_user(node, client->user_ptr->uuid);
             LIST_REMOVE(node, entries);
-            return reply_str(SUCCESS, request, "Correctly unsubscribe");
+            break;
         }
     }
-    return  reply_str(ERR_UNKNOWN_TEAM, request, "Bad argument value");
+    if (ret_val)
+        return reply_str(SUCCESS, request, "Correctly unsubscribe");
+    return reply_str(ERR_UNKNOWN_TEAM, request, "Bad argument value");
 }
 
 int handler_unsubscribe(UNUSED server_t *srv,
