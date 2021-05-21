@@ -37,7 +37,4 @@ int process_write(client_t *client);
 int process_read(client_t *client);
 char *prompt(char **buffer_ptr, bool *disconnect);
 
-/// LOGGER
-int logger(response_t *response);
-
 #endif /* !APP_H_ */

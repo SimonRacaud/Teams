@@ -5,10 +5,10 @@
 ** 19/05/2021 handler_messages.c
 */
 
-#include "server.h"
-#include "uuid_selector_t.h"
-#include "utility.h"
 #include "database.h"
+#include "server.h"
+#include "utility.h"
+#include "uuid_selector_t.h"
 
 static mp_list_t create_list(user_t *user_alpha, user_t *user_beta)
 {
@@ -34,7 +34,8 @@ static mp_list_t create_list(user_t *user_alpha, user_t *user_beta)
 
 static int send_reply(mp_list_t *list, request_t *request)
 {
-    void *body = body_maker_private_msg(LIST_FIRST(list), true);
+    void *body =
+        body_maker_private_msg(LIST_FIRST(list), true, "print_private_msg");
 
     if (!body)
         return EXIT_FAILURE;

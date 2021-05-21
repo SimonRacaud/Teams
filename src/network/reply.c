@@ -25,19 +25,18 @@ int reply(rcode_e code, request_t *request, void *body)
 
 int reply_str(rcode_e code, request_t *request, const char *str)
 {
-    response_t *response;
     void *body = body_maker_string(str);
 
     if (!body)
         return EXIT_FAILURE;
-    response = response_create(code, request, request->receiver, body);
-    if (!response) {
+    return reply(code, request, body);
+}
+
+int reply_error(rcode_e code, request_t *request, uuid_t target)
+{
+    void *body = body_maker_uuid(target, "error");
+
+    if (!body)
         return EXIT_FAILURE;
-    }
-    if (response_send(response) == EXIT_FAILURE) {
-        response_destroy(response);
-        return EXIT_FAILURE;
-    }
-    response_destroy(response);
-    return EXIT_SUCCESS;
+    return reply(code, request, body);
 }

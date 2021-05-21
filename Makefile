@@ -14,6 +14,7 @@ SRC_UT 			= 	tests/tests_project.c											\
 					src/utility/walloc.c											\
 					src/utility/strconcat.c											\
 					src/utility/is_number.c											\
+					src/utility/free_zero.c											\
 					src/network/request_create.c									\
 					src/network/request_destroy.c									\
 					src/network/request_parse.c										\
@@ -61,21 +62,40 @@ SRC_UT 			= 	tests/tests_project.c											\
 					src/server/database/destroy_database_t.c						\
 
 SRC_FILES_CLI	=	client/main.c							\
+					\
 					client/destroy/app_destroy.c			\
 					client/init/app_init.c					\
 					client/init/connect_to_server.c			\
 					client/init/parse_args.c				\
+					\
 					client/loop/app_loop.c					\
 					client/loop/process_read.c				\
 					client/loop/process_write.c				\
 					client/loop/prompt.c					\
+					\
 					client/logger/logger.c					\
+					client/logger/log_string.c				\
+					client/logger/log_logging.c				\
+					client/logger/log_event_team.c			\
+					client/logger/log_error.c				\
+					client/logger/log_event_channel.c		\
+					client/logger/log_event_reply.c			\
+					client/logger/log_event_thread.c		\
+					client/logger/log_print_channel.c		\
+					client/logger/log_print_private_msg.c	\
+					client/logger/log_print_reply.c			\
+					client/logger/log_print_team.c			\
+					client/logger/log_print_thread.c		\
+					client/logger/log_print_user.c			\
+					client/logger/log_subscription.c		\
+					\
 					utility/is_ip.c							\
 					utility/is_number.c						\
 					utility/signal_manager.c				\
 					utility/walloc.c						\
 					utility/strdup_format.c					\
 					utility/strconcat.c						\
+					\
 					network/request_create.c				\
 					network/request_destroy.c				\
 					network/request_write.c					\
@@ -94,6 +114,7 @@ SRC_FILES_SRV	= 	server/main.c												\
 					utility/strconcat.c											\
 					utility/walen.c												\
 					utility/is_empty.c											\
+					utility/free_zero.c											\
 					\
 					server/app/app_create.c										\
 					server/app/app_destroy.c									\
@@ -119,6 +140,9 @@ SRC_FILES_SRV	= 	server/main.c												\
 					network/body/body_maker_reply.c								\
 					network/body/body_maker_thread.c							\
 					network/body/body_maker_string.c							\
+					network/body/body_maker_uuid.c								\
+					network/body/body_maker_subscription.c						\
+					network/body/body_maker_reply_event.c						\
 					\
 					server/handler/handler_use.c								\
 					server/handler/handler_info.c								\

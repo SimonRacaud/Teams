@@ -30,4 +30,6 @@ bool is_number(const char *str);
 size_t walen(char **word_array);
 char *strconcat(char *a, const char *b);
 
+void free_zero(void *ptr, size_t size);
+
 #endif // UTILITY_H

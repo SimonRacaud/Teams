@@ -38,19 +38,21 @@ static void write_content(void *body, thread_t *thread, bool is_list)
     }
 }
 
-void *body_maker_thread(thread_t *thread, bool is_list)
+void *body_maker_thread(thread_t *thread, bool is_list, const char *logger)
 {
     size_t size = get_list_size(thread, is_list);
+    body_header_t *head;
 
     void *body = NULL;
 
     body = malloc(sizeof(body_header_t) + sizeof(bin_thread_t) * size);
     if (!body)
         return NULL;
-    *((body_header_t *) body) =
-        (body_header_t){.elem_size = sizeof(bin_thread_t),
+    head = body;
+    *head = (body_header_t){.elem_size = sizeof(bin_thread_t),
             .list_size = size,
-            .type = "thread"};
+            .entity = "thread", .logger = ""};
+    strncpy(head->logger, logger, SIZE_NAME);
     write_content(body, thread, is_list);
     return body;
 }

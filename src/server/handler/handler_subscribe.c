@@ -10,8 +10,8 @@
 #include "database.h"
 #include "request_handler_t.h"
 
-static int subscribe_manage(server_t *srv,
-request_t *request, client_t *client, uuid_selector_t *selector)
+static int subscribe_manage(server_t *srv, request_t *request, client_t *client,
+    uuid_selector_t *selector)
 {
     team_t *team = get_team(&srv->database, selector);
 

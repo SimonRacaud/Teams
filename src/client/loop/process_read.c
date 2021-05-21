@@ -6,6 +6,7 @@
 */
 
 #include "client.h"
+#include "logger.h"
 #include <sys/select.h>
 
 static int process_cli(client_t *client)

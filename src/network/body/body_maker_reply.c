@@ -22,18 +22,11 @@ static size_t get_list_size(reply_t *ptr, bool is_list)
     }
 }
 
-void *body_maker_reply(reply_t *reply, bool is_list)
+static void write_content(void *body, bool is_list, reply_t *reply)
 {
-    size_t size = get_list_size(reply, is_list);
     bin_reply_t *packet = NULL;
     bin_reply_t *ptr = NULL;
-    void *body = NULL;
 
-    body = malloc(sizeof(body_header_t) + sizeof(bin_reply_t) * size);
-    if (!body)
-        return NULL;
-    *((body_header_t *) body) = (body_header_t){
-        .elem_size = sizeof(bin_reply_t), .list_size = size, .type = "reply"};
     ptr = (bin_reply_t *)((char *)body + sizeof(body_header_t));
     for (reply_t *node = reply; node; node = LIST_NEXT(node, entries)) {
         packet = serializer_reply_t(node);
@@ -43,5 +36,21 @@ void *body_maker_reply(reply_t *reply, bool is_list)
         if (!is_list)
             break;
     }
+}
+
+void *body_maker_reply(reply_t *reply, bool is_list, const char *logger)
+{
+    size_t size = get_list_size(reply, is_list);
+    void *body = NULL;
+    body_header_t *head;
+
+    body = malloc(sizeof(body_header_t) + sizeof(bin_reply_t) * size);
+    if (!body)
+        return NULL;
+    head = body;
+    *head = (body_header_t){.elem_size = sizeof(bin_reply_t),
+        .list_size = size, .entity = "reply", .logger = ""};
+    strncpy(head->logger, logger, SIZE_NAME);
+    write_content(body, is_list, reply);
     return body;
 }

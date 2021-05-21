@@ -7,14 +7,6 @@
 
 #include "database.h"
 
-inline void free_zero(void *ptr, size_t size)
-{
-    if (ptr == NULL)
-        return;
-    bzero(ptr, sizeof(size));
-    free(ptr);
-}
-
 void destroy_user_t(user_t *user)
 {
     private_msg_t *msg = NULL;
