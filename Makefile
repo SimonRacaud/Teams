@@ -254,7 +254,7 @@ re:	fclean all
 
 tests_run: INCLUDE += -I./include/server
 tests_run: socket
-	gcc -o $(NAME_UT) $(SRC_UT) $(INCLUDE) $(LD_FLAGS) -Wl,-rpath=$(PWD) -lcriterion --coverage && ./$(NAME_UT)
+	gcc -o $(NAME_UT) $(SRC_UT) $(CFLAGS) $(LD_FLAGS) -Wl,-rpath=$(PWD) -lcriterion --coverage && ./$(NAME_UT)
 
 coverage:
 	@gcovr -r . --exclude tests/
