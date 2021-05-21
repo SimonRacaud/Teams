@@ -1,0 +1,97 @@
+name: Check coding style
+
+on:
+  push:
+    branches:
+      - master
+
+
+jobs:
+  coding-style:
+    runs-on: ubuntu-20.04
+    env:
+      NORMEZ_PATH: ../../NormEZ/NormEZ.rb
+    defaults:
+      run:
+        working-directory: project/src
+    steps:
+      # Checkout codes
+      - name: Checkout project
+        uses: actions/checkout@v2
+        with:
+          path: project
+
+      - name: Checkout NormeEZ
+        uses: actions/checkout@v2
+        with:
+          repository: ronanboiteau/NormEZ
+          path: NormEZ
+
+      # Run checking style
+      - name: Check headers (in src/)
+        if: always()
+        run: (! $NORMEZ_PATH | grep "Missing or corrupted header")
+
+      - name: Check headers (in include/)
+        if: always()
+        working-directory: project/include
+        run: (! $NORMEZ_PATH | grep "Missing or corrupted header")
+
+      - name: Check indentation
+        if: always()
+        run: (! $NORMEZ_PATH | grep "Wrong indentation")
+
+      - name: Check too long lines (in src/)
+        if: always()
+        run: (! $NORMEZ_PATH | grep "Too many columns")
+
+      - name: Check too long lines (in include/)
+        if: always()
+        working-directory: project/include
+        run: (! $NORMEZ_PATH | grep "Too many columns")
+
+      - name: Check number of functions in the same file
+        if: always()
+        run: (! $NORMEZ_PATH | grep "More than 5 functions in the same file")
+
+      - name: Check snake_case convention
+        if: always()
+        run: (! $NORMEZ_PATH | grep "respect the snake_case naming convention")
+
+      - name: Check trailing spaces (in src/)
+        if: always()
+        run: (! $NORMEZ_PATH | grep "Trailing space")
+
+      - name: Check trailing spaces (in include/)
+        if: always()
+        working-directory: project/include
+        run: (! $NORMEZ_PATH | grep "Trailing space")
+
+      - name: Check trailing tabulations (in src/)
+        if: always()
+        run: (! $NORMEZ_PATH | grep "Trailing tabulation")
+
+      - name: Check trailing tabulations (in include/)
+        if: always()
+        working-directory: project/include
+        run: (! $NORMEZ_PATH | grep "Trailing tabulation")
+
+      - name: Check functions without parameter
+        if: always()
+        run: (! $NORMEZ_PATH | grep "This function takes no parameter, it should take 'void' as argument")
+
+      - name: Check functions with more than 4 parameters
+        if: always()
+        run: (! $NORMEZ_PATH | grep "Function shouldn't take more than 4 arguments")
+
+      - name: Check too many empty lines between functions
+        if: always()
+        run: (! $NORMEZ_PATH | grep "Too many empty lines between functions")
+
+      - name: Check missing empty line between functions
+        if: always()
+        run: (! $NORMEZ_PATH | grep "Missing empty line between functions")
+
+      - name: Check comments
+        if: always()
+        run: (! $NORMEZ_PATH | grep "Comment inside a function")
