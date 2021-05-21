@@ -10,7 +10,8 @@
 #include "database.h"
 #include "request_handler_t.h"
 
-static int parametting_manage(server_t *srv, request_t *request, uuid_selector_t *params)
+static int parametting_manage(
+    server_t *srv, request_t *request, uuid_selector_t *params)
 {
     void *body = NULL;
     team_t *team = get_team(&srv->database, params);

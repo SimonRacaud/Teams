@@ -39,7 +39,7 @@ static void write_content(void *body, private_msg_t *private_msg, bool is_list)
 
     ptr = (bin_private_msg_t *) ((char *) body + sizeof(body_header_t));
     for (private_msg_t *node = private_msg; node;
-         node = LIST_NEXT(node, entries)) {
+        node = LIST_NEXT(node, entries)) {
         packet = serializer_private_msg_t(node);
         *ptr = *packet;
         free(packet);

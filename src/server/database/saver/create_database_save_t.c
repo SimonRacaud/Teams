@@ -69,7 +69,7 @@ static void free_bin_list(const void **list, uint size)
 void destroy_database_save_t(const database_save_t *db)
 {
     for (uint i = 0; db->users && db->user_teams_list && i < db->head->nb_user;
-         i++) {
+        i++) {
         for (uint k = 0; k < db->users[i]->nb_subscribed_teams; k++)
             free(db->user_teams_list[i][k]);
         free(db->user_teams_list[i]);

@@ -21,6 +21,7 @@
 #include "data/thread_t.h"
 #include "network/response_t.h"
 #include "uuid_selector_t.h"
+#include "utility.h"
 
 #include "logging_server.h"
 #include "save/bin_channel_t.h"
@@ -52,7 +53,6 @@ thread_t *get_thread_by_uuid(thread_t **threads, uint size, const uuid_t uuid);
 bool run_fill_data(
     const database_t *db, bin_header_t *dest, database_save_t *db_save);
 void create_empty_database(database_t *db);
-void free_zero(void *ptr, size_t size);
 void destroy_database_t(database_t *db);
 void destroy_user_t(user_t *user);
 void destroy_team_t(team_t *team);

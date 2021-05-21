@@ -14,6 +14,7 @@ SRC_UT 			= 	tests/tests_project.c											\
 					src/utility/walloc.c											\
 					src/utility/strconcat.c											\
 					src/utility/is_number.c											\
+					src/utility/free_zero.c											\
 					src/network/request_create.c									\
 					src/network/request_destroy.c									\
 					src/network/request_parse.c										\
@@ -94,6 +95,7 @@ SRC_FILES_SRV	= 	server/main.c												\
 					utility/strconcat.c											\
 					utility/walen.c												\
 					utility/is_empty.c											\
+					utility/free_zero.c											\
 					\
 					server/app/app_create.c										\
 					server/app/app_destroy.c									\
