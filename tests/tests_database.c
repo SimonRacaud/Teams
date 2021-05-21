@@ -15,11 +15,10 @@ const int nbr_replies_per_thread = 6;
 // Test save empty db
 Test(save_db, t01)
 {
-    database_t *db = create_empty_database();
+    database_t db;
 
-    cr_assert_neq(db, NULL);
-    cr_assert_eq(save_database(db), true);
-    free(db);
+    create_empty_database(&db);
+    cr_assert_eq(save_database(&db), true);
 }
 
 static void create_users(database_t *db, const int nbr_users)
@@ -254,14 +253,14 @@ static void check_saved_private_messages(
 
 static void check_saved_users(const int nbr_users, const int nbr_private_msgs)
 {
-    database_t *db = load_database();
+    database_t db;
     user_t *user;
     char username[8];
     int users_size = 0;
 
-    cr_assert_neq(db, NULL);
+    cr_assert_eq(load_database(&db), true);
 
-    LIST_FOREACH(user, &db->users, entries)
+    LIST_FOREACH(user, &db.users, entries)
     {
         users_size++;
         sprintf(username, "USER%d", users_size);
@@ -269,7 +268,7 @@ static void check_saved_users(const int nbr_users, const int nbr_private_msgs)
         check_saved_private_messages(user, nbr_private_msgs);
     }
     cr_assert_eq(users_size, nbr_users);
-    destroy_database_t(db);
+    destroy_database_t(&db);
 }
 
 static void check_saved_replies(
@@ -327,14 +326,14 @@ static void check_saved_channels(
 
 static void check_saved_teams(const int nbr_teams, const int nbr_channels)
 {
-    database_t *db = load_database();
+    database_t db;
     team_t *team;
     char teamname[8];
     char teamdesc[32];
     int teams_size = 0;
 
-    cr_assert_neq(db, NULL);
-    LIST_FOREACH(team, &db->teams, entries)
+    cr_assert_eq(load_database(&db), true);
+    LIST_FOREACH(team, &db.teams, entries)
     {
         sprintf(teamname, "TEAM%d", ++teams_size);
         sprintf(teamdesc, "%s description", teamname);
@@ -343,20 +342,20 @@ static void check_saved_teams(const int nbr_teams, const int nbr_channels)
         check_saved_channels(team, nbr_channels);
     }
     cr_assert_eq(teams_size, nbr_teams);
-    destroy_database_t(db);
+    destroy_database_t(&db);
 }
 
 // Test save db with users & load it
 Test(save_load_db, t01)
 {
     const int nbr_users = 5;
-    database_t *db = create_empty_database();
+    database_t db;
 
-    cr_assert_neq(db, NULL);
-    create_users(db, nbr_users);
-    check_users_size(db, nbr_users);
-    cr_assert_eq(save_database(db), true);
-    destroy_database_t(db);
+    create_empty_database(&db);
+    create_users(&db, nbr_users);
+    check_users_size(&db, nbr_users);
+    cr_assert_eq(save_database(&db), true);
+    destroy_database_t(&db);
     check_saved_users(nbr_users, 0);
 }
 
@@ -365,15 +364,15 @@ Test(save_load_db, t02)
 {
     const int nbr_users = 5;
     const int nbr_private_msgs = 8;
-    database_t *db = create_empty_database();
+    database_t db;
 
-    cr_assert_neq(db, NULL);
-    create_users(db, nbr_users);
-    create_private_messages(db, nbr_private_msgs);
-    check_users_size(db, nbr_users);
-    check_private_messages_size(db, nbr_private_msgs);
-    cr_assert_eq(save_database(db), true);
-    destroy_database_t(db);
+    create_empty_database(&db);
+    create_users(&db, nbr_users);
+    create_private_messages(&db, nbr_private_msgs);
+    check_users_size(&db, nbr_users);
+    check_private_messages_size(&db, nbr_private_msgs);
+    cr_assert_eq(save_database(&db), true);
+    destroy_database_t(&db);
     check_saved_users(nbr_users, nbr_private_msgs);
 }
 
@@ -382,15 +381,15 @@ Test(save_load_db, t03)
 {
     const int nbr_users = 5;
     const int nbr_teams = 10;
-    database_t *db = create_empty_database();
+    database_t db;
 
-    cr_assert_neq(db, NULL);
-    create_users(db, nbr_users);
-    create_teams(db, nbr_teams);
-    check_users_size(db, nbr_users);
-    check_teams_size(db, nbr_teams);
-    cr_assert_eq(save_database(db), true);
-    destroy_database_t(db);
+    create_empty_database(&db);
+    create_users(&db, nbr_users);
+    create_teams(&db, nbr_teams);
+    check_users_size(&db, nbr_users);
+    check_teams_size(&db, nbr_teams);
+    cr_assert_eq(save_database(&db), true);
+    destroy_database_t(&db);
     check_saved_users(nbr_users, 0);
     check_saved_teams(nbr_teams, 0);
 }
@@ -401,21 +400,21 @@ Test(save_load_db, t04)
     const int nbr_users = 5;
     const int nbr_teams = 10;
     const int nbr_channels = 2;
-    database_t *db = create_empty_database();
+    database_t db;
 
-    cr_assert_neq(db, NULL);
-    create_users(db, nbr_users);
-    create_teams(db, nbr_teams);
-    create_channels(db, nbr_channels);
-    create_threads(db);
-    create_replies(db);
-    check_users_size(db, nbr_users);
-    check_teams_size(db, nbr_teams);
-    check_channels_size(db, nbr_channels);
-    check_threads_size(db);
-    check_replies_size(db);
-    cr_assert_eq(save_database(db), true);
-    destroy_database_t(db);
+    create_empty_database(&db);
+    create_users(&db, nbr_users);
+    create_teams(&db, nbr_teams);
+    create_channels(&db, nbr_channels);
+    create_threads(&db);
+    create_replies(&db);
+    check_users_size(&db, nbr_users);
+    check_teams_size(&db, nbr_teams);
+    check_channels_size(&db, nbr_channels);
+    check_threads_size(&db);
+    check_replies_size(&db);
+    cr_assert_eq(save_database(&db), true);
+    destroy_database_t(&db);
     check_saved_users(nbr_users, 0);
     check_saved_teams(nbr_teams, nbr_channels);
 }
@@ -427,23 +426,23 @@ const int nbr_channels = 3;
 const int nbr_private_messages = 7;
 Test(save_load_db, t05)
 {
-    database_t *db = create_empty_database();
+    database_t db;
 
-    cr_assert_neq(db, NULL);
-    create_users(db, nbr_users);
-    create_private_messages(db, nbr_private_messages);
-    create_teams(db, nbr_teams);
-    create_channels(db, nbr_channels);
-    create_threads(db);
-    create_replies(db);
-    check_users_size(db, nbr_users);
-    check_teams_size(db, nbr_teams);
-    check_channels_size(db, nbr_channels);
-    check_threads_size(db);
-    check_replies_size(db);
-    check_private_messages_size(db, nbr_private_messages);
-    cr_assert_eq(save_database(db), true);
-    destroy_database_t(db);
+    create_empty_database(&db);
+    create_users(&db, nbr_users);
+    create_private_messages(&db, nbr_private_messages);
+    create_teams(&db, nbr_teams);
+    create_channels(&db, nbr_channels);
+    create_threads(&db);
+    create_replies(&db);
+    check_users_size(&db, nbr_users);
+    check_teams_size(&db, nbr_teams);
+    check_channels_size(&db, nbr_channels);
+    check_threads_size(&db);
+    check_replies_size(&db);
+    check_private_messages_size(&db, nbr_private_messages);
+    cr_assert_eq(save_database(&db), true);
+    destroy_database_t(&db);
     check_saved_users(nbr_users, nbr_private_messages);
     check_saved_teams(nbr_teams, nbr_channels);
 }

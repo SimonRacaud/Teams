@@ -112,5 +112,5 @@ void destroy_database_t(database_t *db)
     }
     destroy_team_t(last_team);
 
-    free_zero(db, sizeof(database_t));
+    bzero(db, sizeof(database_t));
 }
