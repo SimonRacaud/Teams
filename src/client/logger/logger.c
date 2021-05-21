@@ -30,13 +30,13 @@ static const body_handler_t HANDLERS[] = {
 static void call_handler(response_t *response)
 {
     for (size_t i = 0; HANDLERS[i].label; i++) {
-        if (!strcmp(HANDLERS[i].label, response->header->entity)
+        if (!strcmp(HANDLERS[i].label, response->header->logger)
             && HANDLERS[i].handler) {
             HANDLERS[i].handler(response);
             return;
         }
     }
-    printf("WARNING: logger, no handler found %s\n", response->header->entity);
+    printf("WARNING: logger, no handler found %s\n", response->header->logger);
 }
 
 int logger(response_t *response)
