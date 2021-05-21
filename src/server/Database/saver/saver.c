@@ -51,12 +51,6 @@ static bool write_database(int fd, const database_save_t *db)
     return true;
 }
 
-/**
- * @brief Return true on successfully. Return false otherwise.
- *
- * @param db
- * @return boolean
- */
 bool save_database(const database_t *db)
 {
     int fd = open(DB_FILEPATH, O_WRONLY | O_CREAT, 0644);
