@@ -93,6 +93,7 @@ SRC_FILES_SRV	= 	server/main.c												\
 					server/handler/handler_create.c								\
 					server/handler/handler_logout.c								\
 					server/handler/handler_messages.c							\
+					server/handler/handler_subscribe.c							\
 					\
 					server/Database/factories/create_team.c						\
 					server/Database/factories/create_user.c						\
