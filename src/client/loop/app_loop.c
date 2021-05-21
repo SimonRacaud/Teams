@@ -21,9 +21,9 @@ int app_loop(client_t *client)
 {
     while (client->loop) {
         if (app_select(&client->select, &client->socket, &client->stack))
-            return EXIT_FAILURE;
+            return EXIT_SUCCESS;
         if (process_read(client) == EXIT_FAILURE)
-            return EXIT_FAILURE;
+            return EXIT_SUCCESS;
         if (process_write(client) == EXIT_FAILURE)
             return EXIT_FAILURE;
     }
