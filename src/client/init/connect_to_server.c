@@ -7,14 +7,18 @@
 
 #include "client.h"
 
-int connect_to_server(socket_t *sock, uint port, const char *ip)
+int connect_to_server(client_t *client, uint port, const char *ip)
 {
     for (size_t attempt = 0; attempt < CONNECT_ATTEMPT; attempt++) {
-        if (socket_client_ip_connect(sock, port, ip) == EXIT_SUCCESS) {
+        if (client->loop == false) {
+            break;
+        }
+        if (socket_client_ip_connect(&client->socket, port, ip)
+            == EXIT_SUCCESS) {
             return EXIT_SUCCESS;
         }
         sleep(1);
     }
     printf("Too many attempt. quit\n");
-    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
 }

@@ -25,7 +25,7 @@
 
 /// INIT
 int app_init(client_t *client, int argc, char **argv);
-int connect_to_server(socket_t *sock, uint port, const char *ip);
+int connect_to_server(client_t *client, uint port, const char *ip);
 int parse_args(args_t *args, int argc, char **argv);
 
 /// DESTROY
