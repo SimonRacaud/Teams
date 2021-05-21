@@ -25,10 +25,12 @@ Test(save_db, t01)
 static void create_users(database_t *db, const int nbr_users)
 {
     char username[8];
+    uuid_selector_t selector;
 
+    bzero(&selector, sizeof(uuid_selector_t));
     for (int i = 1; i <= nbr_users; i++) {
         sprintf(username, "USER%d", i);
-        cr_assert_eq(create_user(db, username, NULL), SUCCESS);
+        cr_assert_eq(create_user(db, username, &selector), SUCCESS);
     }
 }
 
@@ -54,11 +56,13 @@ static void create_teams(database_t *db, const int nbr_teams)
 {
     char name[16];
     char description[32];
+    uuid_selector_t selector;
 
+    bzero(&selector, sizeof(uuid_selector_t));
     for (int i = 1; i <= nbr_teams; i++) {
         sprintf(name, "TEAM%d", i);
         sprintf(description, "%s description", name);
-        cr_assert_eq(create_team(db, name, description, NULL), SUCCESS);
+        cr_assert_eq(create_team(db, name, description, &selector), SUCCESS);
     }
 }
 
