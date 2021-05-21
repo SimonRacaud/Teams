@@ -24,7 +24,7 @@ static int list_reply_manage(
     thread = get_thread(&srv->database, &params);
     if (!thread)
         return EXIT_FAILURE;
-    body = body_maker_reply(thread->replies.lh_first, true);
+    body = body_maker_reply(thread->replies.lh_first, true, LOG_T_PRT_REPLY);
     if (!body)
         return EXIT_FAILURE;
     return reply(SUCCESS, request, body);
@@ -43,7 +43,7 @@ static int list_thread_manage(
     channel = get_channel(&srv->database, &params);
     if (!channel)
         return EXIT_FAILURE;
-    body = body_maker_thread(channel->threads.lh_first, true);
+    body = body_maker_thread(channel->threads.lh_first, true, LOG_T_PRT_THREAD);
     if (!body)
         return EXIT_FAILURE;
     return reply(SUCCESS, request, body);
@@ -61,7 +61,7 @@ static int list_channel_manage(
     team = get_team(&srv->database, &params);
     if (!team)
         return EXIT_FAILURE;
-    body = body_maker_channel(team->channels.lh_first, true);
+    body = body_maker_channel(team->channels.lh_first, true, LOG_T_PRT_CHAN);
     if (!body)
         return EXIT_FAILURE;
     return reply(SUCCESS, request, body);
@@ -70,7 +70,8 @@ static int list_channel_manage(
 static int list_team_manage(
     server_t *srv, request_t *request, UNUSED client_t *client)
 {
-    void *body = body_maker_team(srv->database.teams.lh_first, true);
+    void *body =
+    body_maker_team(srv->database.teams.lh_first, true, LOG_T_PRT_TEAM);
 
     if (!body)
         return EXIT_FAILURE;

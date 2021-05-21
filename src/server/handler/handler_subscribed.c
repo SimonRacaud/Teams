@@ -18,7 +18,7 @@ static int parametting_manage(
 
     if (!team)
         return EXIT_FAILURE;
-    body = body_maker_user(team->users.lh_first, true);
+    body = body_maker_user(team->users.lh_first, true, LOG_T_PRT_USER);
     if (!body)
         return EXIT_FAILURE;
     return reply(SUCCESS, request, body);
@@ -30,7 +30,8 @@ static int noparametting_manage(request_t *request, client_t *client)
 
     if (LIST_EMPTY(&client->user_ptr->teams))
         return reply_str(ERROR, request, "No team subscribed");
-    body = body_maker_team(client->user_ptr->teams.lh_first, true);
+    body =
+    body_maker_team(client->user_ptr->teams.lh_first, true, LOG_T_PRT_TEAM);
     if (!body)
         return EXIT_FAILURE;
     return reply(SUCCESS, request, body);

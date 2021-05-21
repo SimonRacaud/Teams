@@ -24,7 +24,7 @@ static int info_thread_manage(
     thread = get_thread(&srv->database, &params);
     if (!thread)
         return EXIT_FAILURE;
-    body = body_maker_thread(thread, false);
+    body = body_maker_thread(thread, false, LOG_T_PRT_THREAD);
     if (!body)
         return EXIT_FAILURE;
     return reply(SUCCESS, request, body);
@@ -43,7 +43,7 @@ static int info_channel_manage(
     channel = get_channel(&srv->database, &params);
     if (!channel)
         return EXIT_FAILURE;
-    body = body_maker_channel(channel, false);
+    body = body_maker_channel(channel, false, LOG_T_PRT_CHAN);
     if (!body)
         return EXIT_FAILURE;
     return reply(SUCCESS, request, body);
@@ -61,7 +61,7 @@ static int info_team_manage(
     team = get_team(&srv->database, &params);
     if (!team)
         return EXIT_FAILURE;
-    body = body_maker_team(team, false);
+    body = body_maker_team(team, false, LOG_T_PRT_TEAM);
     if (!body)
         return EXIT_FAILURE;
     return reply(SUCCESS, request, body);
@@ -70,7 +70,7 @@ static int info_team_manage(
 static int info_user_manage(
     UNUSED server_t *srv, request_t *request, client_t *client)
 {
-    void *body = body_maker_user(client->user_ptr, false);
+    void *body = body_maker_user(client->user_ptr, false, LOG_T_PRT_USER);
 
     if (!body)
         return EXIT_FAILURE;
