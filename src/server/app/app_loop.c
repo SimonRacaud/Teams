@@ -49,12 +49,17 @@ static int process_write(server_t *server)
 int app_loop(server_t *server)
 {
     while (server->loop) {
-        if (app_select(server) == EXIT_FAILURE)
+        if (app_select(server) == EXIT_FAILURE) {
+            return EXIT_SUCCESS;
+        }
+        if (process_read(server) == EXIT_FAILURE) {
+            printf("process_read: fail\n");
             return EXIT_FAILURE;
-        if (process_read(server) == EXIT_FAILURE)
+        }
+        if (process_write(server) == EXIT_FAILURE) {
+            printf("process_write: fail\n");
             return EXIT_FAILURE;
-        if (process_write(server) == EXIT_FAILURE)
-            return EXIT_FAILURE;
+        }
     }
     return EXIT_SUCCESS;
 }
