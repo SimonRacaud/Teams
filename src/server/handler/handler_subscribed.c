@@ -21,7 +21,7 @@ static int parametting_manage(
     body = body_maker_user(team->users.lh_first, true, LOG_T_PRT_USER);
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 static int noparametting_manage(request_t *request, client_t *client)
@@ -34,7 +34,7 @@ static int noparametting_manage(request_t *request, client_t *client)
     body_maker_team(client->user_ptr->teams.lh_first, true, LOG_T_PRT_TEAM);
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 int handler_subscribed(server_t *srv, request_t *request, client_t *client)

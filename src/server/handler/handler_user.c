@@ -16,7 +16,7 @@ static int send_result(user_t *user, request_t *request)
 
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 int handler_user(server_t *srv, request_t *request, UNUSED client_t *client)
@@ -34,7 +34,7 @@ int handler_user(server_t *srv, request_t *request, UNUSED client_t *client)
     }
     user = get_user(&srv->database, &select);
     if (!user) {
-        return reply_str(ERR_UNKNOWN_USER, request, "Unknown user");
+        return reply_error(ERR_UNKNOWN_USER, request, select.uuid_user);
     }
     return send_result(user, request);
 }

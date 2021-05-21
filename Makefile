@@ -124,6 +124,7 @@ SRC_FILES_SRV	= 	server/main.c												\
 					server/app/process_request.c								\
 					server/request/request_execute.c							\
 					\
+					network/get_socket_user.c									\
 					network/request_create.c									\
 					network/request_destroy.c									\
 					network/request_parse.c										\
@@ -133,6 +134,7 @@ SRC_FILES_SRV	= 	server/main.c												\
 					network/response_read.c										\
 					network/response_send.c										\
 					network/reply.c												\
+					network/get_err_target.c									\
 					network/body/body_maker_team.c								\
 					network/body/body_maker_channel.c							\
 					network/body/body_maker_user.c								\

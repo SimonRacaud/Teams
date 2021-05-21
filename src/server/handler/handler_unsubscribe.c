@@ -42,7 +42,7 @@ client_t *client, uuid_selector_t *selector)
     body = body_maker_subscription(client->user_ptr->uuid, node->uuid);
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 int handler_unsubscribe(UNUSED server_t *srv,

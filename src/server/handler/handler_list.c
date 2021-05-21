@@ -27,7 +27,7 @@ static int list_reply_manage(
     body = body_maker_reply(thread->replies.lh_first, true, LOG_T_PRT_REPLY);
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 static int list_thread_manage(
@@ -46,7 +46,7 @@ static int list_thread_manage(
     body = body_maker_thread(channel->threads.lh_first, true, LOG_T_PRT_THREAD);
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 static int list_channel_manage(
@@ -64,7 +64,7 @@ static int list_channel_manage(
     body = body_maker_channel(team->channels.lh_first, true, LOG_T_PRT_CHAN);
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 static int list_team_manage(
@@ -75,7 +75,7 @@ static int list_team_manage(
 
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 int handler_list(server_t *srv, request_t *request, client_t *client)

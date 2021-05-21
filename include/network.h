@@ -19,6 +19,8 @@
 #include "save/bin_team_t.h"
 #include "save/bin_thread_t.h"
 #include "save/bin_user_t.h"
+#include "server/uuid_selector_t.h"
+#include "server/server_t.h"
 
 typedef struct request_stack_s request_stack_t;
 
@@ -36,9 +38,12 @@ void response_destroy(response_t *response);
 int response_send(response_t *response);
 response_t *response_read(int fd, buffer_t *buffer);
 
-int reply(rcode_e code, request_t *request, void *body);
+int reply(
+    rcode_e code, request_t *request, void *body, uuid_selector_t *params);
 int reply_str(rcode_e code, request_t *request, const char *str);
 int reply_error(rcode_e code, request_t *request, uuid_t target);
+int reply_target(
+    server_t *server, request_t *request, void *body, user_t *user);
 
 /// BODY
 void *body_maker_team(team_t *team, bool is_list, const char *logger);
@@ -58,6 +63,8 @@ private_msg_t *private_msg_copy(private_msg_t *input);
 
 /// UTILITY
 char *strconcat_suffix(char *str, const char *add, const char *suffix);
+void get_err_target(uuid_t *dest, uuid_selector_t *params, rcode_e code);
+socket_t *get_socket_user(server_t *server, user_t *user);
 
 /// DEBUG
 void debug_response(response_t *response);

@@ -41,5 +41,5 @@ int handler_send(server_t *srv, request_t *req, client_t *client)
         return EXIT_FAILURE;
     event(msg);
     body = body_maker_private_msg(msg, false, LOG_T_PRT_PRIV_MSG);
-    return reply(ret_value, req, body);
+    return reply(ret_value, req, body, &select);
 }

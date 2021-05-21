@@ -23,7 +23,7 @@ static int subscribe_manage(server_t *srv, request_t *request, client_t *client,
     body = body_maker_subscription(client->user_ptr->uuid, team->uuid);
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 int handler_subscribe(server_t *srv, request_t *request, client_t *client)

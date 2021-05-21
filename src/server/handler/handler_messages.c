@@ -39,7 +39,7 @@ static int send_reply(mp_list_t *list, request_t *request)
 
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 static int process_response(

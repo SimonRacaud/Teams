@@ -21,7 +21,7 @@ static int do_logout(request_t *request, client_t *client)
     uuid_unparse(user->uuid, uuid);
     server_event_user_logged_out(uuid);
     client->user_ptr = NULL;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 int handler_logout(

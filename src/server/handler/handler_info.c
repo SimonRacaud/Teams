@@ -27,7 +27,7 @@ static int info_thread_manage(
     body = body_maker_thread(thread, false, LOG_T_PRT_THREAD);
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 static int info_channel_manage(
@@ -46,7 +46,7 @@ static int info_channel_manage(
     body = body_maker_channel(channel, false, LOG_T_PRT_CHAN);
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 static int info_team_manage(
@@ -64,7 +64,7 @@ static int info_team_manage(
     body = body_maker_team(team, false, LOG_T_PRT_TEAM);
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 static int info_user_manage(
@@ -74,7 +74,7 @@ static int info_user_manage(
 
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 int handler_info(server_t *srv, request_t *request, client_t *client)
