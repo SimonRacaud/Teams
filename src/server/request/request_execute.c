@@ -9,21 +9,22 @@
 #include "request_handler_t.h"
 
 const request_handler_t HANDLERS[] = {
-    {.label = "help", .handler = handler_help},
-    {.label = "login", .handler = &handler_login},
-    {.label = "logout", .handler = &handler_logout},
-    {.label = "users", .handler = handler_users},
-    {.label = "user", .handler = handler_user},
-    {.label = "send", .handler = handler_send},
-    {.label = "messages", .handler = handler_messages},
-    {.label = "subscribe", .handler = handler_subscribe},
-    {.label = "subscribed", .handler = handler_subscribed},
-    {.label = "unsubscribe", .handler = handler_unsubscribe},
-    {.label = "use", .handler = handler_use},
-    {.label = "create", .handler = handler_create},
-    {.label = "list", .handler = handler_list},
-    {.label = "info", .handler = handler_info},
-    {.label = NULL, .handler = NULL}};
+    {.label = "help", .handler = handler_help, .connection = false},
+    {.label = "login", .handler = &handler_login, .connection = false},
+    {.label = "logout", .handler = &handler_logout, .connection = false},
+    {.label = "users", .handler = handler_users, .connection = true},
+    {.label = "user", .handler = handler_user, .connection = true},
+    {.label = "send", .handler = handler_send, .connection = true},
+    {.label = "messages", .handler = handler_messages, .connection = true},
+    {.label = "subscribe", .handler = handler_subscribe, .connection = true},
+    {.label = "subscribed", .handler = handler_subscribed, .connection = true},
+    {.label = "use", .handler = handler_use, .connection = true},
+    {.label = "create", .handler = handler_create, .connection = true},
+    {.label = "list", .handler = handler_list, .connection = true},
+    {.label = "info", .handler = handler_info, .connection = true},
+    {.label = "unsubscribe",
+    .handler = handler_unsubscribe, .connection = true},
+    {.label = NULL, .handler = NULL, .connection = false}};
 
 static int call_handler(
     request_t *request, server_t *server, handler_t handler, client_t *client)
@@ -36,10 +37,15 @@ static int call_handler(
 
 int request_execute(request_t *request, server_t *server, client_t *client)
 {
+    int cmp = 0;
+
     request->receiver = &client->socket;
     for (size_t i = 0; HANDLERS[i].label != NULL; i++) {
-        if (strcmp(HANDLERS[i].label, request->label) == 0) {
+        cmp = strcmp(HANDLERS[i].label, request->label);
+        if (cmp == 0 && (!HANDLERS[i].connection || client->user_ptr)) {
             return call_handler(request, server, HANDLERS[i].handler, client);
+        } else if (cmp == 0) {
+            return reply_str(ERROR, request, "Conection requirement");
         }
     }
     if (reply_str(ERROR, request, "Command not found") == EXIT_FAILURE)
