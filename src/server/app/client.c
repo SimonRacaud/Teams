@@ -17,6 +17,7 @@ int connect_client(server_t *server)
         free(client);
         return EXIT_FAILURE;
     }
+    memset(&client->selector, 0, sizeof(selected_entity_t));
     client->user_ptr = NULL;
     client->buffer.buff = NULL;
     LIST_INSERT_HEAD(&server->clients, client, entries);
