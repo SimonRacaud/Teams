@@ -160,6 +160,9 @@ socket:
 	@make -C libs/socket
 	@ln -sf ./libs/myteams/$(NAME_LIB_TEAMS) $(NAME_LIB_TEAMS)
 
+socket-debug:
+	@make debug -C libs/socket
+
 clean:
 	make clean -C libs/socket
 	@$(RM) -f  $(OBJ_CLI) $(OBJ_SRV)
@@ -180,8 +183,7 @@ coverage: tests_run
 	@gcovr -b --exclude-directories tests
 
 debug: CFLAGS += -g
-debug: re
-	@make debug -C libs/socket
+debug: socket-debug re
 
 debugall: CFLAGS += -g
 debugall: all

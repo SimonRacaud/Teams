@@ -10,8 +10,19 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 static const size_t READ_SIZE = 42;
+
+static bool is_empty(const char *str)
+{
+    for (size_t i = 0; str[i] != '\0'; i++) {
+        if (isgraph(str[i]) && !isblank(str[i])) {
+            return false;
+        }
+    }
+    return true;
+}
 
 static char *allocator(char *previous, size_t inc)
 {
@@ -64,8 +75,11 @@ char *fd_getline(int fd, char **buffer_ptr, bool *empty)
     if (!new_line_ptr) {
         *buffer_ptr = buffer;
         return NULL;
-    } else if (strlen(new_line_ptr + 1) > 0) {
+    } else if (is_empty(new_line_ptr + 1) == false) {
+        *new_line_ptr = '\0';
         *buffer_ptr = strdup(new_line_ptr + 1);
+    } else {
+        *buffer_ptr = NULL;
     }
     *new_line_ptr = '\0';
     return buffer;
