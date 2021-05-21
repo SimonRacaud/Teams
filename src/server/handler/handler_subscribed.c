@@ -25,8 +25,11 @@ static int parametting_manage(server_t *srv, request_t *request, uuid_selector_t
 
 static int noparametting_manage(request_t *request, client_t *client)
 {
-    void *body = body_maker_team(client->user_ptr->teams.lh_first, true);
+    void *body = NULL;
 
+    if (LIST_EMPTY(&client->user_ptr->teams))
+        return reply_str(ERROR, request, "No team subscribed");
+    body = body_maker_team(client->user_ptr->teams.lh_first, true);
     if (!body)
         return EXIT_FAILURE;
     return reply(SUCCESS, request, body);
