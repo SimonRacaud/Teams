@@ -22,7 +22,7 @@ const request_handler_t HANDLERS[] = {
     {.label = "use", .handler = handler_use},
     {.label = "create", .handler = handler_create},
     {.label = "list", .handler = handler_list},
-    {.label = "info", .handler = NULL},
+    {.label = "info", .handler = handler_info},
     {.label = NULL, .handler = NULL}};
 
 static int call_handler(
