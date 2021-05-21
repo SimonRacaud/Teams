@@ -18,6 +18,7 @@ static int subscribe_manage(server_t *srv, request_t *request, client_t *client,
     if (!team)
         return reply_str(ERR_UNKNOWN_TEAM, request, "Bad argument value");
     LIST_INSERT_HEAD(&client->user_ptr->teams, team, entries);
+    LIST_INSERT_HEAD(&team->users, client->user_ptr, entries);
     return reply_str(SUCCESS, request, "Correctly subscribe");
 }
 
