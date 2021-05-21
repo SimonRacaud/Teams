@@ -6,6 +6,7 @@
 */
 
 #include "server.h"
+#include "database.h"
 
 static void client_list_destroy(client_list_t *list_ptr)
 {
@@ -23,10 +24,15 @@ static void client_list_destroy(client_list_t *list_ptr)
 
 int app_destroy(server_t *server)
 {
-    if (socket_close(&server->socket))
+    if (socket_close(&server->socket)) {
+        destroy_database_t(&server->database);
         return EXIT_FAILURE;
+    }
     client_list_destroy(&server->clients);
-    // TODO : save database to file
-    // TODO : destroy database
+    if (!save_database(&server->database)) {
+        destroy_database_t(&server->database);
+        return EXIT_FAILURE;
+    }
+    destroy_database_t(&server->database);
     return EXIT_SUCCESS;
 }
