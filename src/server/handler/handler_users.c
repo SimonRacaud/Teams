@@ -52,7 +52,6 @@ static char *get_users_list(database_t *db)
 
 int handler_users(server_t *srv, request_t *request, UNUSED client_t *client)
 {
-    response_t *response = NULL;
     int return_value = 0;
     char *list = NULL;
 

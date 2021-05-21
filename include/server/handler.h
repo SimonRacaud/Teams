@@ -35,6 +35,7 @@ int handler_login(server_t *server, request_t *request, client_t *client);
 int handler_subscribe(server_t *srv, request_t *request, client_t *client);
 int handler_create(server_t *srv, request_t *req, UNUSED client_t *client);
 int handler_logout(server_t *server, request_t *request, client_t *client);
+int handler_subscribed(server_t *srv, request_t *request, client_t *client);
 int handler_unsubscribe(server_t *srv, request_t *request, client_t *client);
 int handler_messages(
     server_t *server, request_t *request, UNUSED client_t *client);
