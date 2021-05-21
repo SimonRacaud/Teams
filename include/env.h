@@ -14,4 +14,9 @@
 #define END_COM "\r\n"
 #define UUID_STR  37
 
+#define CMD_CREATE "create"
+#define CMD_SEND "send"
+#define CMD_SUBSCRIBE "subscribe"
+#define CMD_UNSUBSCRIBE "unsubscribe"
+
 #endif // ENV_H

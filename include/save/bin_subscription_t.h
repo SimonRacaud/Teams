@@ -9,6 +9,7 @@
 #define BIN_SUBSCRIPTION_T_H
 
 #include "uuid.h"
+#include "env.h"
 
 typedef struct bin_subscription_s {
     uuid_t user;

@@ -75,6 +75,19 @@ SRC_FILES_CLI	=	client/main.c							\
 					\
 					client/logger/logger.c					\
 					client/logger/log_string.c				\
+					client/logger/log_logging.c				\
+					client/logger/log_event_team.c			\
+					client/logger/log_error.c				\
+					client/logger/log_event_channel.c		\
+					client/logger/log_event_reply.c			\
+					client/logger/log_event_thread.c		\
+					client/logger/log_print_channel.c		\
+					client/logger/log_print_private_msg.c	\
+					client/logger/log_print_reply.c			\
+					client/logger/log_print_team.c			\
+					client/logger/log_print_thread.c		\
+					client/logger/log_print_user.c			\
+					client/logger/log_subscription.c		\
 					\
 					utility/is_ip.c							\
 					utility/is_number.c						\

@@ -18,5 +18,18 @@ typedef struct body_handler_s {
 int logger(response_t *response);
 
 void log_string(response_t *response);
+void log_logging(response_t *response);
+void log_event_team(response_t *response);
+void log_event_reply(response_t *response);
+void log_event_thread(response_t *response);
+void log_event_channel(response_t *response);
+void log_print_user(response_t *response);
+void log_print_team(response_t *response);
+void log_print_channel(response_t *response);
+void log_print_thread(response_t *response);
+void log_print_reply(response_t *response);
+void log_print_private_msg(response_t *response);
+void log_error(response_t *response);
+void log_subscription(response_t *response);
 
 #endif // LOGGER_H
