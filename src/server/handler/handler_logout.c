@@ -14,7 +14,7 @@ static int do_logout(request_t *request, client_t *client)
 {
     char uuid[UUID_STR];
     user_t *user = client->user_ptr;
-    void *body = body_maker_user(user, false, "logging");
+    void *body = body_maker_user(user, false, LOG_T_LOGGING);
 
     if (!body)
         return EXIT_FAILURE;
