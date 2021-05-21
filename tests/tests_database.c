@@ -23,12 +23,12 @@ Test(save_db, t01)
 
 static void create_users(database_t *db, const int nbr_users)
 {
-    char username[8];
+    char username[SIZE_NAME];
     uuid_selector_t selector;
 
     bzero(&selector, sizeof(uuid_selector_t));
     for (int i = 1; i <= nbr_users; i++) {
-        sprintf(username, "USER%d", i);
+        sprintf(username, "U%d", i);
         cr_assert_eq(create_user(db, username, &selector), SUCCESS);
     }
 }
@@ -37,14 +37,14 @@ static void create_private_messages(database_t *db, const int nbr_private_msg)
 {
     user_t *user;
     uuid_selector_t selector;
-    char message[64];
+    char message[SIZE_BODY];
 
     bzero(&selector, sizeof(uuid_selector_t));
     LIST_FOREACH(user, &db->users, entries)
     {
         uuid_copy(selector.uuid_user, LIST_FIRST(&db->users)->uuid);
         for (int n = 1; n <= nbr_private_msg; n++) {
-            sprintf(message, "%s MESSAGE%d", user->username, n);
+            sprintf(message, "%s M%d", user->username, n);
             cr_assert_eq(
                 create_private_msg(db, message, user, &selector), SUCCESS);
         }
@@ -53,13 +53,13 @@ static void create_private_messages(database_t *db, const int nbr_private_msg)
 
 static void create_teams(database_t *db, const int nbr_teams)
 {
-    char name[16];
-    char description[32];
+    char name[SIZE_NAME];
+    char description[SIZE_DESC];
     uuid_selector_t selector;
 
     bzero(&selector, sizeof(uuid_selector_t));
     for (int i = 1; i <= nbr_teams; i++) {
-        sprintf(name, "TEAM%d", i);
+        sprintf(name, "T%d", i);
         sprintf(description, "%s description", name);
         cr_assert_eq(create_team(db, name, description, &selector), SUCCESS);
     }
@@ -69,15 +69,15 @@ static void create_channels(database_t *db, const int nbr_channel_per_team)
 {
     team_t *team;
     uuid_selector_t selector;
-    char name[64];
-    char description[128];
+    char name[SIZE_NAME];
+    char description[SIZE_DESC];
 
     bzero(&selector, sizeof(uuid_selector_t));
     LIST_FOREACH(team, &db->teams, entries)
     {
         uuid_copy(selector.uuid_team, team->uuid);
         for (int n = 1; n <= nbr_channel_per_team; n++) {
-            sprintf(name, "%s CHANNEL%d", team->name, n);
+            sprintf(name, "C%d", n);
             sprintf(description, "%s description", name);
             cr_assert_eq(
                 create_channel(db, name, description, &selector), SUCCESS);
@@ -90,8 +90,8 @@ static void create_threads(database_t *db)
     team_t *team;
     channel_t *channel;
     uuid_selector_t params;
-    char title[128];
-    char msg[256];
+    char title[SIZE_NAME];
+    char msg[SIZE_BODY];
 
     bzero(&params, sizeof(uuid_selector_t));
     uuid_copy(params.uuid_user, LIST_FIRST(&db->users)->uuid);
@@ -102,7 +102,7 @@ static void create_threads(database_t *db)
         {
             uuid_copy(params.uuid_channel, channel->uuid);
             for (int n = 0; n < nbr_threads_per_channel; n++) {
-                sprintf(title, "%s %s THREAD%d", team->name, channel->name, n);
+                sprintf(title, "H%d", n);
                 sprintf(msg, "%s message", title);
                 cr_assert_eq(create_thread(db, title, msg, &params), SUCCESS);
             }
@@ -114,14 +114,14 @@ static void travel_threads_to_add_replies(
     database_t *db, uuid_selector_t *params, channel_t *channel)
 {
     thread_t *thread;
-    char msg[500];
+    char msg[SIZE_BODY];
 
     uuid_copy(params->uuid_channel, channel->uuid);
     LIST_FOREACH(thread, &channel->threads, entries)
     {
         uuid_copy(params->uuid_thread, thread->uuid);
         for (int n = 1; n <= nbr_replies_per_thread; n++) {
-            sprintf(msg, "%s REPLY%d", thread->title, n);
+            sprintf(msg, "%s R%d", thread->title, n);
             cr_assert_eq(
                 create_reply(db, LIST_FIRST(&db->users), msg, params), SUCCESS);
         }
@@ -239,13 +239,13 @@ static void check_saved_private_messages(
 {
     private_msg_t *private_msg;
     uuid_selector_t selector;
-    char message[64];
+    char message[SIZE_BODY];
     int n = 1;
 
     bzero(&selector, sizeof(uuid_selector_t));
     LIST_FOREACH(private_msg, &user->messages, entries)
     {
-        sprintf(message, "%s MESSAGE%d", user->username, n++);
+        sprintf(message, "%s M%d", user->username, n++);
         cr_assert_str_eq(private_msg->body, message);
     }
     cr_assert_eq(n - 1, nbr_pm_per_user);
@@ -255,7 +255,7 @@ static void check_saved_users(const int nbr_users, const int nbr_private_msgs)
 {
     database_t db;
     user_t *user;
-    char username[8];
+    char username[SIZE_NAME];
     int users_size = 0;
 
     cr_assert_eq(load_database(&db), true);
@@ -263,7 +263,7 @@ static void check_saved_users(const int nbr_users, const int nbr_private_msgs)
     LIST_FOREACH(user, &db.users, entries)
     {
         users_size++;
-        sprintf(username, "USER%d", users_size);
+        sprintf(username, "U%d", users_size);
         cr_assert_str_eq(user->username, username);
         check_saved_private_messages(user, nbr_private_msgs);
     }
@@ -274,28 +274,27 @@ static void check_saved_users(const int nbr_users, const int nbr_private_msgs)
 static void check_saved_replies(const thread_t *thread)
 {
     reply_t *reply;
-    char msg[500];
+    char msg[SIZE_BODY];
     int replies_size = 1;
 
     LIST_FOREACH(reply, &thread->replies, entries)
     {
-        sprintf(msg, "%s REPLY%d", thread->title, replies_size++);
+        sprintf(msg, "%s R%d", thread->title, replies_size++);
         cr_assert_str_eq(reply->body, msg);
     }
     cr_assert_eq(replies_size - 1, nbr_replies_per_thread);
 }
 
-static void check_saved_threads(const team_t *team, const channel_t *channel)
+static void check_saved_threads(const channel_t *channel)
 {
     thread_t *thread;
-    char title[128];
-    char message[256];
+    char title[SIZE_NAME];
+    char message[SIZE_BODY];
     int threads_size = 0;
 
     LIST_FOREACH(thread, &channel->threads, entries)
     {
-        sprintf(
-            title, "%s %s THREAD%d", team->name, channel->name, threads_size++);
+        sprintf(title, "H%d", threads_size++);
         sprintf(message, "%s message", title);
         cr_assert_str_eq(thread->title, title);
         cr_assert_str_eq(thread->body, message);
@@ -308,17 +307,17 @@ static void check_saved_channels(
     const team_t *team, const int nbr_channels_per_team)
 {
     channel_t *channel;
-    char name[64];
-    char description[128];
+    char name[SIZE_NAME];
+    char description[SIZE_DESC];
     int n = 1;
 
     LIST_FOREACH(channel, &team->channels, entries)
     {
-        sprintf(name, "%s CHANNEL%d", team->name, n++);
+        sprintf(name, "C%d", n++);
         sprintf(description, "%s description", name);
         cr_assert_str_eq(channel->name, name);
         cr_assert_str_eq(channel->description, description);
-        check_saved_threads(team, channel);
+        check_saved_threads(channel);
     }
     cr_assert_eq(n - 1, nbr_channels_per_team);
 }
@@ -327,14 +326,14 @@ static void check_saved_teams(const int nbr_teams, const int nbr_channels)
 {
     database_t db;
     team_t *team;
-    char teamname[8];
-    char teamdesc[32];
+    char teamname[SIZE_NAME];
+    char teamdesc[SIZE_DESC];
     int teams_size = 0;
 
     cr_assert_eq(load_database(&db), true);
     LIST_FOREACH(team, &db.teams, entries)
     {
-        sprintf(teamname, "TEAM%d", ++teams_size);
+        sprintf(teamname, "T%d", ++teams_size);
         sprintf(teamdesc, "%s description", teamname);
         cr_assert_str_eq(team->name, teamname);
         cr_assert_str_eq(team->description, teamdesc);
@@ -356,6 +355,7 @@ Test(save_load_db, t01)
     cr_assert_eq(save_database(&db), true);
     destroy_database_t(&db);
     check_saved_users(nbr_users, 0);
+    remove(DB_FILEPATH);
 }
 
 // Test save db with users & load it
@@ -373,13 +373,14 @@ Test(save_load_db, t02)
     cr_assert_eq(save_database(&db), true);
     destroy_database_t(&db);
     check_saved_users(nbr_users, nbr_private_msgs);
+    remove(DB_FILEPATH);
 }
 
 // Test save db with users & teams & load them
 Test(save_load_db, t03)
 {
     const int nbr_users = 5;
-    const int nbr_teams = 10;
+    const int nbr_teams = 6;
     database_t db;
 
     create_empty_database(&db);
@@ -391,13 +392,14 @@ Test(save_load_db, t03)
     destroy_database_t(&db);
     check_saved_users(nbr_users, 0);
     check_saved_teams(nbr_teams, 0);
+    remove(DB_FILEPATH);
 }
 
 // Test save db with users & teams & channels & threads & load them
 Test(save_load_db, t04)
 {
     const int nbr_users = 5;
-    const int nbr_teams = 10;
+    const int nbr_teams = 4;
     const int nbr_channels = 2;
     database_t db;
 
@@ -416,11 +418,12 @@ Test(save_load_db, t04)
     destroy_database_t(&db);
     check_saved_users(nbr_users, 0);
     check_saved_teams(nbr_teams, nbr_channels);
+    remove(DB_FILEPATH);
 }
 
 // Test save db with users & pv msg & teams & channels & threads & load them
 const int nbr_users = 5;
-const int nbr_teams = 10;
+const int nbr_teams = 4;
 const int nbr_channels = 3;
 const int nbr_private_messages = 7;
 Test(save_load_db, t05)
@@ -444,4 +447,5 @@ Test(save_load_db, t05)
     destroy_database_t(&db);
     check_saved_users(nbr_users, nbr_private_messages);
     check_saved_teams(nbr_teams, nbr_channels);
+    remove(DB_FILEPATH);
 }
