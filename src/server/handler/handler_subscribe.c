@@ -13,13 +13,17 @@
 static int subscribe_manage(server_t *srv, request_t *request, client_t *client,
     uuid_selector_t *selector)
 {
+    void *body = NULL;
     team_t *team = get_team(&srv->database, selector);
 
     if (!team)
         return reply_str(ERR_UNKNOWN_TEAM, request, "Bad argument value");
     LIST_INSERT_HEAD(&client->user_ptr->teams, team, entries);
     LIST_INSERT_HEAD(&team->users, client->user_ptr, entries);
-    return reply_str(SUCCESS, request, "Correctly subscribe");
+    body = body_maker_subscription(client->user_ptr->uuid, team->uuid);
+    if (!body)
+        return EXIT_FAILURE;
+    return reply(SUCCESS, request, body);
 }
 
 int handler_subscribe(server_t *srv, request_t *request, client_t *client)
