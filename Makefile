@@ -158,6 +158,7 @@ SRC_FILES_SRV	= 	server/main.c												\
 					server/handler/handler_subscribe.c							\
 					server/handler/handler_subscribed.c							\
 					server/handler/handler_unsubscribe.c						\
+					server/handler/handler_tools/is_subscribed.c				\
 					\
 					server/database/factories/create_team.c						\
 					server/database/factories/create_user.c						\
