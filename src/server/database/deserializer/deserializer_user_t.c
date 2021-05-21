@@ -51,12 +51,14 @@ static bool fill_user_private_msg(
 bool deserialize_all_users(const database_save_t *db_save, database_t *db)
 {
     user_t *user;
+    char uuid[UUID_STR];
 
     for (uint i = 0; i < db_save->head->nb_user; i++) {
         user = deserializer_user_t(db_save->users[i], db);
         if (user == NULL)
             return false;
-        server_event_user_loaded(&user->uuid, user->username);
+        uuid_unparse(user->uuid, uuid);
+        server_event_user_loaded(uuid, user->username);
         LIST_INSERT_HEAD(&db->users, user, entries);
     }
     if (!fill_user_private_msg(db_save, db))
