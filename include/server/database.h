@@ -51,7 +51,7 @@ channel_t *get_channel_by_uuid(
 thread_t *get_thread_by_uuid(thread_t **threads, uint size, const uuid_t uuid);
 bool run_fill_data(
     const database_t *db, bin_header_t *dest, database_save_t *db_save);
-database_t *create_empty_database(void);
+void create_empty_database(database_t *db);
 void free_zero(void *ptr, size_t size);
 void destroy_database_t(database_t *db);
 void destroy_user_t(user_t *user);
@@ -165,9 +165,10 @@ bool deserialize_all_users(const database_save_t *db_save, database_t *db);
 */
 
 bool save_database(const database_t *db);
-database_t *load_database(void);
+bool load_database(database_t *db);
 database_save_t *create_empty_database_save(bin_header_t *buffer);
-database_t *convert_saved_db_to_release_db(const database_save_t *db_save);
+bool convert_saved_db_to_release_db(
+    const database_save_t *db_save, database_t *db);
 bool read_users(bin_header_t *header, database_save_t *db, size_t *offset);
 bool read_teams(bin_header_t *header, database_save_t *db, size_t *offset);
 bool read_channels(bin_header_t *header, database_save_t *db, size_t *offset);

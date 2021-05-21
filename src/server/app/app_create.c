@@ -9,6 +9,7 @@
 #include "socket.h"
 #include "utility.h"
 #include <signal.h>
+#include "database.h"
 
 static void client_list_init(server_t *server)
 {
@@ -23,7 +24,7 @@ int app_create(server_t *server, uint port)
     if (socket_server_create(&server->socket, port, SERVER_MAX_CLIENT))
         return EXIT_FAILURE;
     client_list_init(server);
-    // TODO : init database
-    // TODO : load database from file
+    if (!load_database(&server->database))
+        return EXIT_FAILURE;
     return EXIT_SUCCESS;
 }

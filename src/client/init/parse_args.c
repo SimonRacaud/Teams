@@ -13,15 +13,15 @@ static const char *HELP = "-help";
 static int usage(const char *bin, int code)
 {
     printf("USAGE:\t%s ip port\n", bin);
-    printf("\tip\tis the server ip address on which the server socket"
-           " listens\n");
+    printf("\tip\tis the server ip address on which the server socket");
+    printf(" listens\n");
     printf("\tport\tis the port number on which the server socket listens\n");
     return code;
 }
 
 int parse_args(args_t *args, int argc, char **argv)
 {
-    for (size_t i = 0; i < (size_t)argc; i++) {
+    for (size_t i = 0; i < (size_t) argc; i++) {
         if (strcmp(argv[i], HELP) == 0) {
             exit(usage(argv[0], EXIT_SUCCESS));
         }
@@ -33,7 +33,7 @@ int parse_args(args_t *args, int argc, char **argv)
         printf("ERROR: invalid port value\n");
         return EXIT_FAILURE;
     }
-    args->port = (uint)atoi(argv[2]);
+    args->port = (uint) atoi(argv[2]);
     args->ip = argv[1];
     return EXIT_SUCCESS;
 }

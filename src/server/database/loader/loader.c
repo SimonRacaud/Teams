@@ -53,15 +53,15 @@ static database_save_t *read_database_save(int fd)
     return db;
 }
 
-database_t *load_database(void)
+bool load_database(database_t *db)
 {
     int fd = open(DB_FILEPATH, O_RDONLY);
     database_save_t *db_save;
-    database_t *db;
+    bool exit_value;
 
-    if (fd < 0) {
-        return create_empty_database();
-    }
+    create_empty_database(db);
+    if (fd < 0)
+        return true;
     db_save = read_database_save(fd);
     if (db_save == NULL) {
         printf("read_database_save: %s\n", strerror(errno));
@@ -71,7 +71,7 @@ database_t *load_database(void)
         printf("load_database => close: %s\n", strerror(errno));
         return NULL;
     }
-    db = convert_saved_db_to_release_db(db_save);
+    exit_value = convert_saved_db_to_release_db(db_save, db);
     destroy_database_save_t(db_save);
-    return db;
+    return exit_value;
 }
