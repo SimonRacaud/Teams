@@ -25,9 +25,9 @@ int app_init(client_t *client, int argc, char **argv)
     init_stack(client);
     if (parse_args(&client->args, argc, argv) == EXIT_FAILURE)
         return EXIT_FAILURE;
-    if (connect_to_server(&client->socket, client->args.port, client->args.ip))
-        return EXIT_FAILURE;
     if (signal_manager(SIGINT, &client->loop) == EXIT_FAILURE)
+        return EXIT_FAILURE;
+    if (connect_to_server(client, client->args.port, client->args.ip))
         return EXIT_FAILURE;
     return EXIT_SUCCESS;
 }
