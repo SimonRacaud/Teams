@@ -11,19 +11,19 @@
 
 static const body_handler_t HANDLERS[] = {
     {.label = "string", .handler = &log_string},
-    {.label = "logging", .handler = NULL},
-    {.label = "event_team", .handler = NULL},
-    {.label = "event_reply", .handler = NULL},
-    {.label = "event_channel", .handler = NULL},
-    {.label = "event_thread", .handler = NULL},
-    {.label = "print_user", .handler = NULL},
-    {.label = "print_team", .handler = NULL},
-    {.label = "print_channel", .handler = NULL},
-    {.label = "print_thread", .handler = NULL},
-    {.label = "print_reply", .handler = NULL},
-    {.label = "print_private_msg", .handler = NULL},
-    {.label = "error", .handler = NULL},
-    {.label = "subscription", .handler = NULL},
+    {.label = "logging", .handler = &log_logging},
+    {.label = "event_team", .handler = &log_event_team},
+    {.label = "event_reply", .handler = &log_event_reply},
+    {.label = "event_channel", .handler = &log_event_channel},
+    {.label = "event_thread", .handler = &log_event_thread},
+    {.label = "print_user", .handler = &log_print_user},
+    {.label = "print_team", .handler = &log_print_team},
+    {.label = "print_channel", .handler = &log_print_channel},
+    {.label = "print_thread", .handler = &log_print_thread},
+    {.label = "print_reply", .handler = &log_print_reply},
+    {.label = "print_private_msg", .handler = &log_print_private_msg},
+    {.label = "error", .handler = &log_error},
+    {.label = "subscription", .handler = &log_subscription},
     {.label = NULL, .handler = NULL}
 };
 
