@@ -40,6 +40,8 @@ request_t *request, client_t *client)
         return reply_str(ERROR, request, "Invalid argument count");
     uuid_copy(params.uuid_user, client->user_ptr->uuid);
     uuid_copy(params.uuid_team, client->selector.team);
+    if (!is_subscribed(client, client->selector.team))
+        return reply_str(ERROR, request, "You need to be subscribed");
     err =
     create_channel(&srv->database, request->args[0], request->args[1], &params);
     body = body_maker_channel(

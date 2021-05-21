@@ -20,6 +20,14 @@ LIST_HEAD(mp_list_s, private_msg_s);
 
 /*
 **
+** HANDLER TOOLS
+**
+*/
+
+bool is_subscribed(client_t *client, uuid_t uuid_team);
+
+/*
+**
 ** HANDLER
 **
 */
