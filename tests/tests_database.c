@@ -37,7 +37,7 @@ static void create_private_messages(database_t *db, const int nbr_private_msg)
 {
     user_t *user;
     uuid_selector_t selector;
-    char message[32];
+    char message[64];
 
     bzero(&selector, sizeof(uuid_selector_t));
     LIST_FOREACH(user, &db->users, entries)
@@ -69,8 +69,8 @@ static void create_channels(database_t *db, const int nbr_channel_per_team)
 {
     team_t *team;
     uuid_selector_t selector;
-    char name[32];
-    char description[64];
+    char name[64];
+    char description[128];
 
     bzero(&selector, sizeof(uuid_selector_t));
     LIST_FOREACH(team, &db->teams, entries)
@@ -90,8 +90,8 @@ static void create_threads(database_t *db)
     team_t *team;
     channel_t *channel;
     uuid_selector_t params;
-    char title[32];
-    char msg[64];
+    char title[128];
+    char msg[256];
 
     bzero(&params, sizeof(uuid_selector_t));
     uuid_copy(params.uuid_user, LIST_FIRST(&db->users)->uuid);
