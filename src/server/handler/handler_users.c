@@ -50,42 +50,17 @@ static char *get_users_list(database_t *db)
     return user_list;
 }
 
-static void *get_body(database_t *db)
-{
-    body_header_t body_struct = {0};
-    const char type[] = "string";
-    char *list = get_users_list(db);
-    void *body = NULL;
-
-    if (!list)
-        return NULL;
-    body = malloc(sizeof(body_header_t) + strlen(list) + 1);
-    if (!body)
-        return NULL;
-    body_struct.list_size = 1;
-    body_struct.elem_size = strlen(list) + 1;
-    memcpy(body_struct.type, type, strlen(type));
-    memcpy(body, &body_struct, sizeof(body_header_t));
-    memcpy(body + sizeof(body_header_t), list, body_struct.elem_size);
-    free(list);
-    return body;
-}
-
 int handler_users(server_t *srv, request_t *request, UNUSED client_t *client)
 {
-    response_t *response = NULL;
     int return_value = 0;
-    void *body = NULL;
+    char *list = NULL;
 
     if (!srv || !request)
         return EXIT_FAILURE;
-    body = get_body(&srv->database);
-    if (!body)
+    list = get_users_list(&srv->database);
+    if (!list)
         return EXIT_FAILURE;
-    response = response_create(SUCCESS, request, request->receiver, body);
-    if (!response)
-        return EXIT_FAILURE;
-    return_value = response_send(response);
-    response_destroy(response);
+    return_value = reply_str(SUCCESS, request, list);
+    free(list);
     return return_value;
 }

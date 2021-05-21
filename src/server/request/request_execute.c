@@ -16,13 +16,13 @@ const request_handler_t HANDLERS[] = {
     {.label = "user", .handler = handler_user},
     {.label = "send", .handler = handler_send},
     {.label = "messages", .handler = handler_messages},
-    {.label = "subscribe", .handler = NULL},
-    {.label = "subscribed", .handler = NULL},
-    {.label = "unsubscribe", .handler = NULL},
+    {.label = "subscribe", .handler = handler_subscribe},
+    {.label = "subscribed", .handler = handler_subscribed},
+    {.label = "unsubscribe", .handler = handler_unsubscribe},
     {.label = "use", .handler = handler_use},
     {.label = "create", .handler = handler_create},
-    {.label = "list", .handler = NULL},
-    {.label = "info", .handler = NULL},
+    {.label = "list", .handler = handler_list},
+    {.label = "info", .handler = handler_info},
     {.label = NULL, .handler = NULL}};
 
 static int call_handler(

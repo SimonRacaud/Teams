@@ -42,10 +42,10 @@ clean:
 fclean: clean
 	@$(RM) $(NAME)
 
+re: fclean all
+
 debug: CFLAGS += -g
 debug: re
-
-re: fclean all
 
 %.o: %.c
 	@$(CC) -c $(CFLAGS) -o $@ $< && \

@@ -121,6 +121,8 @@ SRC_FILES_SRV	= 	server/main.c												\
 					network/body/body_maker_string.c							\
 					\
 					server/handler/handler_use.c								\
+					server/handler/handler_info.c								\
+					server/handler/handler_list.c								\
 					server/handler/handler_help.c								\
 					server/handler/handler_user.c								\
 					server/handler/handler_send.c								\
@@ -129,6 +131,9 @@ SRC_FILES_SRV	= 	server/main.c												\
 					server/handler/handler_create.c								\
 					server/handler/handler_logout.c								\
 					server/handler/handler_messages.c							\
+					server/handler/handler_subscribe.c							\
+					server/handler/handler_subscribed.c							\
+					server/handler/handler_unsubscribe.c						\
 					\
 					server/Database/factories/create_team.c						\
 					server/Database/factories/create_user.c						\
@@ -207,6 +212,9 @@ socket:
 	@make -C libs/socket
 	@ln -sf ./libs/myteams/$(NAME_LIB_TEAMS) $(NAME_LIB_TEAMS)
 
+socket-debug:
+	@make debug -C libs/socket
+
 clean:
 	make clean -C libs/socket
 	@$(RM) -f  $(OBJ_CLI) $(OBJ_SRV)
@@ -228,8 +236,7 @@ coverage:
 	@gcovr -b --exclude tests/
 
 debug: CFLAGS += -g
-debug: re
-	@make debug -C libs/socket
+debug: socket-debug re
 
 debugall: CFLAGS += -g
 debugall: all
