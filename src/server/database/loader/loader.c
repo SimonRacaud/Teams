@@ -65,11 +65,11 @@ bool load_database(database_t *db)
     db_save = read_database_save(fd);
     if (db_save == NULL) {
         printf("read_database_save: %s\n", strerror(errno));
-        return NULL;
+        return false;
     }
     if (close(fd) == -1) {
         printf("load_database => close: %s\n", strerror(errno));
-        return NULL;
+        return false;
     }
     exit_value = convert_saved_db_to_release_db(db_save, db);
     destroy_database_save_t(db_save);
