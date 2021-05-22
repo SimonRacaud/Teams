@@ -19,7 +19,7 @@ int reply(
     if (code != SUCCESS) {
         free(body);
         get_err_target(&uuid, params, code);
-        return reply_error(code, request, uuid);
+        return reply_error(code, request, &uuid);
     }
     response = response_create(code, request, request->receiver, body);
     if (!response) {
@@ -49,11 +49,15 @@ int reply_str(
     return EXIT_SUCCESS;
 }
 
-int reply_error(rcode_e code, request_t *request, uuid_t target)
+int reply_error(rcode_e code, request_t *request, uuid_t *target)
 {
     response_t *response;
-    void *body = body_maker_uuid(target, LOG_T_ERROR);
+    void *body;
+    uuid_t arg = {0};
 
+    if (target)
+        uuid_copy(arg, *target);
+    body = body_maker_uuid(arg, LOG_T_ERROR);
     if (!body)
         return EXIT_FAILURE;
     response = response_create(code, request, request->receiver, body);

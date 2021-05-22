@@ -34,7 +34,7 @@ int handler_user(server_t *srv, request_t *request, UNUSED client_t *client)
     }
     user = get_user(&srv->database, &select);
     if (!user) {
-        return reply_error(ERR_UNKNOWN_USER, request, select.uuid_user);
+        return reply_error(ERR_UNKNOWN_USER, request, &select.uuid_user);
     }
     return send_result(user, request);
 }
