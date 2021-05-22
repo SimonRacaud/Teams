@@ -17,7 +17,7 @@ static int parametting_manage(
     team_t *team = get_team(&srv->database, params);
 
     if (!team)
-        return EXIT_FAILURE;
+        return reply_error(ERR_UNKNOWN_TEAM, request, &params->uuid_team);
     body = body_maker_user(team->users.lh_first, true, LOG_T_PRT_USER);
     if (!body)
         return EXIT_FAILURE;
