@@ -28,14 +28,14 @@ int handler_send(server_t *srv, request_t *req, client_t *client)
     private_msg_t *msg;
     void *body;
 
-    if (!srv || !req)
-        return EXIT_FAILURE;
     if (walen(req->args) != 2)
         return reply_str(srv, ERROR, req, "Invalid argument count");
     if (uuid_parse(req->args[0], select.uuid_user) == -1)
         return reply_str(srv, ERROR, req, "Invalid argument");
     ret_value = create_private_msg(
         &srv->database, req->args[1], client->user_ptr, &select);
+    if (ret_value == ERR_UNKNOWN_USER)
+        return reply_error(ret_value, req, &select.uuid_user);
     msg = get_private_msg(&srv->database, &select);
     if (!msg)
         return EXIT_FAILURE;
