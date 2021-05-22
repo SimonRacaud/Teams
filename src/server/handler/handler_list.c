@@ -5,9 +5,9 @@
 ** handler_list function
 */
 
+#include "database.h"
 #include "server.h"
 #include "utility.h"
-#include "database.h"
 #include "request_handler_t.h"
 
 static int list_reply_manage(
@@ -23,10 +23,8 @@ static int list_reply_manage(
     uuid_copy(params.uuid_thread, client->selector.thread);
     thread = get_thread(&srv->database, &params);
     if (!thread)
-        return EXIT_FAILURE;
+        return reply_error(ERR_UNKNOWN_THREAD, request, params.uuid_thread);
     body = body_maker_reply(thread->replies.lh_first, true, LOG_T_PRT_REPLY);
-    if (!body)
-        return EXIT_FAILURE;
     return reply(SUCCESS, request, body, NULL);
 }
 
@@ -42,10 +40,9 @@ static int list_thread_manage(
     uuid_copy(params.uuid_channel, client->selector.channel);
     channel = get_channel(&srv->database, &params);
     if (!channel)
-        return EXIT_FAILURE;
-    body = body_maker_thread(channel->threads.lh_first, true, LOG_T_PRT_THREAD);
-    if (!body)
-        return EXIT_FAILURE;
+        return reply_error(ERR_UNKNOWN_CHANNEL, request, params.uuid_channel);
+    body =
+        body_maker_thread(channel->threads.lh_first, true, LOG_T_PRT_THREAD);
     return reply(SUCCESS, request, body, NULL);
 }
 
@@ -60,10 +57,8 @@ static int list_channel_manage(
     uuid_copy(params.uuid_team, client->selector.team);
     team = get_team(&srv->database, &params);
     if (!team)
-        return EXIT_FAILURE;
+        return reply_error(ERR_UNKNOWN_TEAM, request, params.uuid_team);
     body = body_maker_channel(team->channels.lh_first, true, LOG_T_PRT_CHAN);
-    if (!body)
-        return EXIT_FAILURE;
     return reply(SUCCESS, request, body, NULL);
 }
 
@@ -71,10 +66,8 @@ static int list_team_manage(
     server_t *srv, request_t *request, UNUSED client_t *client)
 {
     void *body =
-    body_maker_team(srv->database.teams.lh_first, true, LOG_T_PRT_TEAM);
+        body_maker_team(srv->database.teams.lh_first, true, LOG_T_PRT_TEAM);
 
-    if (!body)
-        return EXIT_FAILURE;
     return reply(SUCCESS, request, body, NULL);
 }
 
