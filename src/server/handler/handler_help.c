@@ -39,5 +39,5 @@ int handler_help(server_t *srv, request_t *request, UNUSED client_t *client)
     content = get_help_msg();
     if (!content)
         return EXIT_FAILURE;
-    return reply_str(SUCCESS, request, content);
+    return reply_str(srv, SUCCESS, request, content);
 }

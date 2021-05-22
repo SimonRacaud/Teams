@@ -18,7 +18,7 @@ static int create_team_manage(
     int err = SUCCESS;
 
     if (walen(request->args) != 2)
-        return reply_str(ERROR, request, "Invalid argument count");
+        return reply_str(srv, ERROR, request, "Invalid argument count");
     uuid_copy(params.uuid_user, client->user_ptr->uuid);
     err = create_team(
         &srv->database, request->args[0], request->args[1], &params);
@@ -37,11 +37,11 @@ static int create_channel_manage(
     int err = SUCCESS;
 
     if (walen(request->args) != 2)
-        return reply_str(ERROR, request, "Invalid argument count");
+        return reply_str(srv, ERROR, request, "Invalid argument count");
     uuid_copy(params.uuid_user, client->user_ptr->uuid);
     uuid_copy(params.uuid_team, client->selector.team);
     if (!is_subscribed(client, client->selector.team))
-        return reply_str(ERROR, request, "You need to be subscribed");
+        return reply_str(srv, ERROR, request, "You need to be subscribed");
     err = create_channel(
         &srv->database, request->args[0], request->args[1], &params);
     body = body_maker_channel(
@@ -60,7 +60,7 @@ static int create_thread_manage(
     thread_t *thread;
 
     if (walen(request->args) != 2)
-        return reply_str(ERROR, request, "Invalid argument count");
+        return reply_str(srv, ERROR, request, "Invalid argument count");
     uuid_copy(params.uuid_user, client->user_ptr->uuid);
     uuid_copy(params.uuid_team, client->selector.team);
     uuid_copy(params.uuid_channel, client->selector.channel);
@@ -83,7 +83,7 @@ static int create_reply_manage(
     reply_t *ptr;
 
     if (walen(request->args) != 1)
-        return reply_str(ERROR, request, "Invalid argument count");
+        return reply_str(srv, ERROR, request, "Invalid argument count");
     uuid_copy(params.uuid_user, client->user_ptr->uuid);
     uuid_copy(params.uuid_team, client->selector.team);
     uuid_copy(params.uuid_channel, client->selector.channel);
@@ -94,7 +94,7 @@ static int create_reply_manage(
         return EXIT_SUCCESS;
     body = body_maker_reply_event(ptr, params.uuid_team);
     if (err == SUCCESS)
-        reply_target(srv, request, body, ptr->parent_thread->user);
+        reply_to_target(srv, request, body, ptr->parent_thread->user);
     body = body_maker_reply(ptr, false, LOG_T_PRT_REPLY);
     return reply(err, request, body, &params);
 }

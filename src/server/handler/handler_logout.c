@@ -28,10 +28,10 @@ int handler_logout(
     UNUSED server_t *server, request_t *request, client_t *client)
 {
     if (walen(request->args) != 0) {
-        return reply_str(ERROR, request, "Bad argument count");
+        return reply_str(server, ERROR, request, "Bad argument count");
     }
     if (client->user_ptr == NULL) {
-        return reply_str(ERROR, request, "User not logged");
+        return reply_str(server, ERROR, request, "User not logged");
     } else {
         return do_logout(request, client);
     }

@@ -60,7 +60,7 @@ int handler_users(server_t *srv, request_t *request, UNUSED client_t *client)
     list = get_users_list(&srv->database);
     if (!list)
         return EXIT_FAILURE;
-    return_value = reply_str(SUCCESS, request, list);
+    return_value = reply_str(srv, SUCCESS, request, list);
     free(list);
     return return_value;
 }

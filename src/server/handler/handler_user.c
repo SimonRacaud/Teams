@@ -27,10 +27,10 @@ int handler_user(server_t *srv, request_t *request, UNUSED client_t *client)
     if (!srv || !request)
         return EXIT_FAILURE;
     if (walen(request->args) != 1) {
-        return reply_str(ERROR, request, "Invalid argument count");
+        return reply_str(srv, ERROR, request, "Invalid argument count");
     }
     if (uuid_parse(request->args[0], select.uuid_user) == -1) {
-        return reply_str(ERROR, request, "Invalid argument");
+        return reply_str(srv, ERROR, request, "Invalid argument");
     }
     user = get_user(&srv->database, &select);
     if (!user) {

@@ -23,7 +23,7 @@ static bool remove_from_user(team_t *team, uuid_t user_uuid)
     return false;
 }
 
-static int unsubscribe_manage(request_t *request,
+static int unsubscribe_manage(server_t *srv, request_t *request,
 client_t *client, uuid_selector_t *selector)
 {
     void *body = NULL;
@@ -38,22 +38,22 @@ client_t *client, uuid_selector_t *selector)
         }
     }
     if (!ret_val)
-        return reply_str(ERR_UNKNOWN_TEAM, request, "Bad argument value");
+        return reply_str(srv, ERR_UNKNOWN_TEAM, request, "Bad argument value");
     body = body_maker_subscription(client->user_ptr->uuid, node->uuid);
     if (!body)
         return EXIT_FAILURE;
     return reply(SUCCESS, request, body, NULL);
 }
 
-int handler_unsubscribe(UNUSED server_t *srv,
+int handler_unsubscribe(server_t *srv,
 request_t *request, client_t *client)
 {
     uuid_selector_t selector = {0};
 
     if (walen(request->args) != 1)
-        return reply_str(ERROR, request, "Invalid argument count");
+        return reply_str(srv, ERROR, request, "Invalid argument count");
     if (uuid_parse(request->args[0], selector.uuid_team) == -1)
-        return reply_str(ERROR, request, "Bad argument value");
+        return reply_str(srv, ERROR, request, "Bad argument value");
     uuid_copy(selector.uuid_user, client->user_ptr->uuid);
-    return unsubscribe_manage(request, client, &selector);
+    return unsubscribe_manage(srv, request, client, &selector);
 }

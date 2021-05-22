@@ -70,14 +70,14 @@ int handler_messages(
     char *user_uuid = NULL;
 
     if (walen(request->args) != 1)
-        return reply_str(ERROR, request, "Bad argument count");
+        return reply_str(server, ERROR, request, "Bad argument count");
     if (user_alpha == NULL)
-        return reply_str(ERR_UNAUTHORISED, request, "Not logged");
+        return reply_str(server, ERR_UNAUTHORISED, request, "Not logged");
     user_uuid = request->args[0];
     if (uuid_parse(user_uuid, selector.uuid_user) == -1)
-        return reply_str(ERROR, request, "Bad argument value");
+        return reply_str(server, ERROR, request, "Bad argument value");
     user_beta = get_user(&server->database, &selector);
     if (!user_beta)
-        return reply_str(ERR_UNKNOWN_USER, request, "User not found");
+        return reply_str(server, ERR_UNKNOWN_USER, request, "User not found");
     return process_response(user_alpha, user_beta, request);
 }
