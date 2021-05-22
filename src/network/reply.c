@@ -8,7 +8,7 @@
 #include "network.h"
 #include "uuid_selector_t.h"
 
-int reply_target(
+int reply_to_target(
     server_t *server, request_t *request, void *body, user_t *user)
 {
     socket_t *sock = get_socket_user(server, user);
