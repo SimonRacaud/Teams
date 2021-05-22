@@ -49,6 +49,7 @@ int reply_to_target(
     server_t *server, request_t *request, void *body, user_t *user);
 int reply_to_members(
     server_t *server, request_t *request, void *body, uuid_t team_uuid);
+int reply_to_all(server_t *server, request_t *request, void *body);
 
 /// BODY
 void *body_maker_team(team_t *team, bool is_list, const char *logger);
