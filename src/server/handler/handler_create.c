@@ -22,10 +22,13 @@ static int create_team_manage(
     uuid_copy(params.uuid_user, client->user_ptr->uuid);
     err = create_team(
         &srv->database, request->args[0], request->args[1], &params);
+    if (err == SUCCESS) {
+        body = body_maker_team(
+            get_team(&srv->database, &params), false, LOG_T_EVT_TEAM);
+        reply_to_all(srv, request, body);
+    }
     body = body_maker_team(
         get_team(&srv->database, &params), false, LOG_T_PRT_TEAM);
-    if (!body)
-        return EXIT_FAILURE;
     return reply(err, request, body, &params);
 }
 
@@ -44,10 +47,13 @@ static int create_channel_manage(
         return reply_str(srv, ERROR, request, "You need to be subscribed");
     err = create_channel(
         &srv->database, request->args[0], request->args[1], &params);
+    if (err == SUCCESS) {
+        body = body_maker_channel(
+            get_channel(&srv->database, &params), false, LOG_T_EVT_CHAN);
+        reply_to_members(srv, request, body, params.uuid_team);
+    }
     body = body_maker_channel(
         get_channel(&srv->database, &params), false, LOG_T_PRT_CHAN);
-    if (!body)
-        return EXIT_FAILURE;
     return reply(err, request, body, &params);
 }
 
@@ -68,8 +74,10 @@ static int create_thread_manage(
         &srv->database, request->args[0], request->args[1], &params);
     if (!(thread = get_thread(&srv->database, &params)))
         return EXIT_SUCCESS;
-    body = body_maker_thread(thread, false, LOG_T_EVT_THREAD);
-    // TODO send to who ?
+    if (err == SUCCESS) {
+        body = body_maker_thread(thread, false, LOG_T_EVT_THREAD);
+        reply_to_members(srv, request, body, params.uuid_team);
+    }
     body = body_maker_thread(thread, false, LOG_T_PRT_THREAD);
     return reply(err, request, body, &params);
 }
