@@ -30,7 +30,9 @@ static int call_handler(
     request_t *request, server_t *server, handler_t handler, client_t *client)
 {
     if (handler) {
-        return handler(server, request, client);
+        if (handler(server, request, client) == EXIT_FAILURE) {
+            printf("An error occurred during the command execution\n");
+        }
     }
     return EXIT_SUCCESS;
 }
