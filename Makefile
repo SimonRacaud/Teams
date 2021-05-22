@@ -29,9 +29,14 @@ SRC_FILES_NETWORK_CLI = network/request_create.c				\
 SRC_FILES_NETWORK =	$(SRC_FILES_NETWORK_CLI)									\
 					network/utils/get_socket_user.c								\
 					network/utils/get_err_target.c								\
+					network/utils/dup_body.c									\
 					network/reply.c												\
+					network/reply_to_members.c									\
+					network/reply_to_all.c										\
+					network/reply_to_target.c									\
 					network/request_parse.c										\
 					network/response_create.c									\
+					network/response_push.c										\
 					network/body/body_maker_team.c								\
 					network/body/body_maker_channel.c							\
 					network/body/body_maker_user.c								\
