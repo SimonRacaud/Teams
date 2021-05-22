@@ -12,7 +12,7 @@
 
 static int send_result(user_t *user, request_t *request)
 {
-    void *body = body_maker_user(user, false, "print_user");
+    void *body = body_maker_user(user, false, LOG_T_PRT_USER);
 
     if (!body)
         return EXIT_FAILURE;
