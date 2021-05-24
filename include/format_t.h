@@ -9,14 +9,14 @@
 #define FORMAT_T_H
 
 /**
- * "([prefix])[pattern's body][suffix]"
- * prefix   : pattern of the prefix (optional)
- * suffix   : pattern of the suffix
- * suffix_chars : list of chars => suffix
- * exclude  : excluded characters of the pattern's body
- * is_alpha : pattern's body character must be alphabetic
- * is_num   : pattern's body character must be numeric
- */
+** "([prefix])[pattern's body][suffix]"
+** prefix   : pattern of the prefix (optional)
+** suffix   : pattern of the suffix
+** suffix_chars : list of chars => suffix
+** exclude  : excluded characters of the pattern's body
+** is_alpha : pattern's body character must be alphabetic
+** is_num   : pattern's body character must be numeric
+**/
 
 typedef struct format_s {
     char *prefix;
