@@ -35,14 +35,21 @@ static bool fill_user_private_msg(
 {
     private_msg_t **pm_list = deserialize_all_private_msg(db_save, db);
     user_t *user;
+    char user_uuid[UUID_STR];
+    char pm_uuid[UUID_STR];
 
     if (pm_list == NULL)
         return false;
     for (uint i = 0; i < db_save->head->nb_private_msg; i++)
         LIST_FOREACH(user, &db->users, entries)
         {
-            if (!uuid_compare(user->uuid, pm_list[i]->receiver->uuid))
+            if (!uuid_compare(user->uuid, pm_list[i]->receiver->uuid)) {
                 LIST_INSERT_HEAD(&user->messages, pm_list[i], entries);
+                uuid_unparse(user->uuid, user_uuid);
+                uuid_unparse(pm_list[i]->uuid, pm_uuid);
+                printf("Private message (%s) linked to user (%s)\n", pm_uuid,
+                    user_uuid);
+            }
         }
     free(pm_list);
     return true;
@@ -60,6 +67,7 @@ bool deserialize_all_users(const database_save_t *db_save, database_t *db)
         uuid_unparse(user->uuid, uuid);
         server_event_user_loaded(uuid, user->username);
         LIST_INSERT_HEAD(&db->users, user, entries);
+        printf("User loaded: %s\n", uuid);
     }
     if (!fill_user_private_msg(db_save, db))
         return false;
