@@ -46,7 +46,7 @@ static int parse_args(
         ERR_UNKNOWN_TEAM, ERR_UNKNOWN_CHANNEL, ERR_UNKNOWN_THREAD};
 
     for (; request->args && request->args[i];
-         i++, move_ptr += sizeof(uuid_t)) {
+        i++, move_ptr += sizeof(uuid_t)) {
         if (uuid_parse(request->args[i], (unsigned char *) move_ptr) == -1) {
             reply_str(srv, err_tab[i], request, "Invalid argument");
             return EXIT_FAILURE;
