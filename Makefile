@@ -91,9 +91,11 @@ SRC_FILES_DB =	server/database/factories/create_team.c						\
 				server/database/loader/read/read_users.c					\
 				server/database/destroy_database_t.c						\
 
-SRC_UT 			= 	$(SRC_FILES_UTILITY) $(SRC_FILES_NETWORK) $(SRC_FILES_DB)		\
-					tests/tests_project.c											\
-					tests/tests_database.c											\
+SRC_UT 			= 	$(addprefix $(DSRC), $(SRC_FILES_UTILITY))	\
+					$(addprefix $(DSRC), $(SRC_FILES_NETWORK))	\
+					$(addprefix $(DSRC), $(SRC_FILES_DB))		\
+					tests/tests_project.c						\
+					tests/tests_database.c						\
 
 SRC_FILES_CLI	=	client/main.c							\
 					$(SRC_FILES_NETWORK_CLI)				\
