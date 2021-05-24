@@ -207,7 +207,7 @@ tests_run: INCLUDE += -I./include/server
 tests_run: socket
 	$(RM) $(NAME_DB_SAVE)
 	$(CC) -o $(NAME_UT) $(SRC_UT) $(CFLAGS) $(LD_FLAGS) -Wl,-rpath=$(PWD) -lcriterion --coverage && ./$(NAME_UT)
-	$(RM) $(NAME_UT)
+	@$(RM) $(NAME_UT)
 
 coverage:
 	@gcovr -r . --exclude tests/

@@ -44,7 +44,7 @@ static void create_private_messages(database_t *db, const int nbr_private_msg)
     bzero(&selector, sizeof(uuid_selector_t));
     LIST_FOREACH(user, &db->users, entries)
     {
-        uuid_copy(selector.uuid_user, LIST_FIRST(&db->users)->uuid);
+        uuid_copy(selector.uuid_user, user->uuid);
         for (int n = 1; n <= nbr_private_msg; n++) {
             sprintf(message, "%s M%d", user->username, n);
             cr_assert_eq(
