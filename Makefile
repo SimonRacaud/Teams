@@ -193,21 +193,21 @@ socket-debug:
 
 clean:
 	make clean -C libs/socket
-	@$(RM) -f  $(OBJ_CLI) $(OBJ_SRV)
-	@$(RM) -f *.gcda
-	@$(RM) -f *.gcno
+	@$(RM)  $(OBJ_CLI) $(OBJ_SRV)
+	@$(RM) *.gcda
+	@$(RM) *.gcno
 
 fclean:	clean
-	$(RM) -f $(NAME_CLI) $(NAME_SRV) $(NAME_UT)
-	$(RM) -f $(NAME_LIB_TEAMS)
+	@$(RM) $(NAME_CLI) $(NAME_SRV) $(NAME_UT)
+	@$(RM) $(NAME_LIB_TEAMS)
 
 re:	fclean all
 
 tests_run: INCLUDE += -I./include/server
 tests_run: socket
-	$(RM) -f $(NAME_DB_SAVE)
+	$(RM) $(NAME_DB_SAVE)
 	$(CC) -o $(NAME_UT) $(SRC_UT) $(CFLAGS) $(LD_FLAGS) -Wl,-rpath=$(PWD) -lcriterion --coverage && ./$(NAME_UT)
-	$(RM) -f $(NAME_UT)
+	$(RM) $(NAME_UT)
 
 coverage:
 	@gcovr -r . --exclude tests/
