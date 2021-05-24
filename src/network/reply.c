@@ -14,13 +14,13 @@ int reply(
     response_t *response;
     uuid_t uuid;
 
-    if (!request || !body)
-        return EXIT_FAILURE;
-    if (code != SUCCESS) {
+    if (request && code != SUCCESS) {
         free(body);
         get_err_target(&uuid, params, code);
         return reply_error(code, request, &uuid);
     }
+    if (!request || !body)
+        return EXIT_FAILURE;
     response = response_create(code, request, request->receiver, body);
     if (!response) {
         return EXIT_FAILURE;
