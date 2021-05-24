@@ -41,7 +41,7 @@ static bool fill_user_private_msg(
     for (uint i = 0; i < db_save->head->nb_private_msg; i++)
         LIST_FOREACH(user, &db->users, entries)
         {
-            if (!uuid_compare(user->uuid, pm_list[i]->sender->uuid))
+            if (!uuid_compare(user->uuid, pm_list[i]->receiver->uuid))
                 LIST_INSERT_HEAD(&user->messages, pm_list[i], entries);
         }
     free(pm_list);
