@@ -54,8 +54,13 @@ jobs:
         if: always()
         run: (! $NORMEZ_PATH | grep "More than 5 functions in the same file")
 
-      - name: Check snake_case convention
+      - name: Check snake_case convention (in src/)
         if: always()
+        run: (! $NORMEZ_PATH | grep "respect the snake_case naming convention")
+
+      - name: Check snake_case convention (in include/)
+        if: always()
+        working-directory: project/include
         run: (! $NORMEZ_PATH | grep "respect the snake_case naming convention")
 
       - name: Check trailing spaces (in src/)
