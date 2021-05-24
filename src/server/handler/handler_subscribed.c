@@ -17,24 +17,25 @@ static int parametting_manage(
     team_t *team = get_team(&srv->database, params);
 
     if (!team)
-        return EXIT_FAILURE;
+        return reply_error(ERR_UNKNOWN_TEAM, request, &params->uuid_team);
     body = body_maker_user(team->users.lh_first, true, LOG_T_PRT_USER);
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
-static int noparametting_manage(request_t *request, client_t *client)
+static int noparametting_manage(server_t *srv, request_t *request,
+    client_t *client)
 {
     void *body = NULL;
 
     if (LIST_EMPTY(&client->user_ptr->teams))
-        return reply_str(ERROR, request, "No team subscribed");
+        return reply_str(srv, ERROR, request, "No team subscribed");
     body =
     body_maker_team(client->user_ptr->teams.lh_first, true, LOG_T_PRT_TEAM);
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 int handler_subscribed(server_t *srv, request_t *request, client_t *client)
@@ -44,11 +45,11 @@ int handler_subscribed(server_t *srv, request_t *request, client_t *client)
 
     if (size == 1) {
         if (uuid_parse(request->args[0], selector.uuid_team) == -1)
-            return reply_str(ERROR, request, "Bad argument value");
+            return reply_str(srv, ERROR, request, "Bad argument value");
         uuid_copy(selector.uuid_user, client->user_ptr->uuid);
         return parametting_manage(srv, request, &selector);
     } else if (size == 0) {
-        return noparametting_manage(request, client);
+        return noparametting_manage(srv, request, client);
     }
-    return reply_str(ERROR, request, "Invalid argument count");
+    return reply_str(srv, ERROR, request, "Invalid argument count");
 }

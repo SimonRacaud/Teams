@@ -6,12 +6,22 @@
 */
 
 #include "network.h"
+#include "uuid_selector_t.h"
 
-int reply(rcode_e code, request_t *request, void *body)
+int reply(
+    rcode_e code, request_t *request, void *body, uuid_selector_t *params)
 {
-    response_t *response =
-        response_create(code, request, request->receiver, body);
+    response_t *response;
+    uuid_t uuid;
 
+    if (!request || !body)
+        return EXIT_FAILURE;
+    if (code != SUCCESS) {
+        free(body);
+        get_err_target(&uuid, params, code);
+        return reply_error(code, request, &uuid);
+    }
+    response = response_create(code, request, request->receiver, body);
     if (!response) {
         return EXIT_FAILURE;
     }
@@ -23,20 +33,41 @@ int reply(rcode_e code, request_t *request, void *body)
     return EXIT_SUCCESS;
 }
 
-int reply_str(rcode_e code, request_t *request, const char *str)
+int reply_str(
+    server_t *server, rcode_e code, request_t *request, const char *str)
 {
     void *body = body_maker_string(str);
+    response_t *response;
 
     if (!body)
         return EXIT_FAILURE;
-    return reply(code, request, body);
+    response = response_create(code, request, request->receiver, body);
+    if (!response) {
+        return EXIT_FAILURE;
+    }
+    response_push(server, response);
+    return EXIT_SUCCESS;
 }
 
-int reply_error(rcode_e code, request_t *request, uuid_t target)
+int reply_error(rcode_e code, request_t *request, uuid_t *target)
 {
-    void *body = body_maker_uuid(target, "error");
+    response_t *response;
+    void *body;
+    uuid_t arg = {0};
 
+    if (target)
+        uuid_copy(arg, *target);
+    body = body_maker_uuid(arg, LOG_T_ERROR);
     if (!body)
         return EXIT_FAILURE;
-    return reply(code, request, body);
+    response = response_create(code, request, request->receiver, body);
+    if (!response) {
+        return EXIT_FAILURE;
+    }
+    if (response_send(response) == EXIT_FAILURE) {
+        response_destroy(response);
+        return EXIT_FAILURE;
+    }
+    response_destroy(response);
+    return EXIT_SUCCESS;
 }

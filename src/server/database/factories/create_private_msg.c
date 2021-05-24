@@ -37,7 +37,7 @@ static int init_msg_node(
     node->timestamp = time(NULL);
     node->receiver = receiver;
     node->sender = sender;
-    LIST_INSERT_HEAD(&sender->messages, node, entries);
+    LIST_INSERT_HEAD(&receiver->messages, node, entries);
     uuid_copy(params->uuid_private_msg, node->uuid);
     return SUCCESS;
 }

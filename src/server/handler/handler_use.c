@@ -47,13 +47,13 @@ int handler_use(server_t *srv, request_t *request, client_t *client)
     for (; request->args[i]; i++, move_ptr += sizeof(uuid_t)) {
         if (uuid_parse(request->args[i], (unsigned char *) move_ptr) == -1) {
             memcpy(&client->selector, &selector, sizeof(selected_entity_t));
-            return reply_str(err_tab[i], request, "Invalid argument");
+            return reply_str(srv, err_tab[i], request, "Invalid argument");
         }
     }
     return_value = selector_verification(i, &client->selector, &srv->database);
     if (return_value != SUCCESS) {
         memcpy(&client->selector, &selector, sizeof(selected_entity_t));
-        return reply_str(return_value, request, "Argument not found");
+        return reply_str(srv, return_value, request, "Argument not found");
     }
-    return reply_str(SUCCESS, request, "Use correctly executed");
+    return reply_str(srv, SUCCESS, request, "Use correctly executed");
 }

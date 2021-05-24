@@ -5,16 +5,17 @@
 ** handler_unsubscribe function
 */
 
+#include "database.h"
 #include "server.h"
 #include "utility.h"
-#include "database.h"
 #include "request_handler_t.h"
 
 static bool remove_from_user(team_t *team, uuid_t user_uuid)
 {
     user_t *node = NULL;
 
-    LIST_FOREACH(node, &team->users, entries) {
+    LIST_FOREACH(node, &team->users, entries)
+    {
         if (!uuid_compare(node->uuid, user_uuid)) {
             LIST_REMOVE(node, entries);
             return true;
@@ -23,8 +24,8 @@ static bool remove_from_user(team_t *team, uuid_t user_uuid)
     return false;
 }
 
-static int unsubscribe_manage(request_t *request,
-client_t *client, uuid_selector_t *selector)
+static int unsubscribe_manage(
+    request_t *request, client_t *client, uuid_selector_t *selector)
 {
     void *body = NULL;
     bool ret_val = false;
@@ -38,22 +39,21 @@ client_t *client, uuid_selector_t *selector)
         }
     }
     if (!ret_val)
-        return reply_str(ERR_UNKNOWN_TEAM, request, "Bad argument value");
+        return reply_error(ERR_UNKNOWN_TEAM, request, &selector->uuid_team);
     body = body_maker_subscription(client->user_ptr->uuid, node->uuid);
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
-int handler_unsubscribe(UNUSED server_t *srv,
-request_t *request, client_t *client)
+int handler_unsubscribe(server_t *srv, request_t *request, client_t *client)
 {
     uuid_selector_t selector = {0};
 
     if (walen(request->args) != 1)
-        return reply_str(ERROR, request, "Invalid argument count");
+        return reply_str(srv, ERROR, request, "Invalid argument count");
     if (uuid_parse(request->args[0], selector.uuid_team) == -1)
-        return reply_str(ERROR, request, "Bad argument value");
+        return reply_str(srv, ERROR, request, "Bad argument value");
     uuid_copy(selector.uuid_user, client->user_ptr->uuid);
     return unsubscribe_manage(request, client, &selector);
 }

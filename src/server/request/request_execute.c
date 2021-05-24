@@ -30,7 +30,9 @@ static int call_handler(
     request_t *request, server_t *server, handler_t handler, client_t *client)
 {
     if (handler) {
-        return handler(server, request, client);
+        if (handler(server, request, client) == EXIT_FAILURE) {
+            printf("An error occurred during the command execution\n");
+        }
     }
     return EXIT_SUCCESS;
 }
@@ -45,10 +47,10 @@ int request_execute(request_t *request, server_t *server, client_t *client)
         if (cmp == 0 && (!HANDLERS[i].connection || client->user_ptr)) {
             return call_handler(request, server, HANDLERS[i].handler, client);
         } else if (cmp == 0) {
-            return reply_str(ERROR, request, "Conection requirement");
+            return reply_str(server, ERROR, request, "Conection requirement");
         }
     }
-    if (reply_str(ERROR, request, "Command not found") == EXIT_FAILURE)
+    if (reply_str(server, ERROR, request, "Command not found") == EXIT_FAILURE)
         return EXIT_FAILURE;
     return EXIT_SUCCESS;
 }

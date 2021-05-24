@@ -19,13 +19,13 @@ static mp_list_t create_list(user_t *user_alpha, user_t *user_beta)
     LIST_INIT(&head);
     LIST_FOREACH(node, &user_alpha->messages, entries) {
         if (node->sender == user_beta) {
-            ptr = private_msg_copy(ptr);
+            ptr = private_msg_copy(node);
             LIST_INSERT_HEAD(&head, ptr, entries);
         }
     }
     LIST_FOREACH(node, &user_beta->messages, entries) {
         if (node->sender == user_alpha) {
-            ptr = private_msg_copy(ptr);
+            ptr = private_msg_copy(node);
             LIST_INSERT_HEAD(&head, ptr, entries);
         }
     }
@@ -35,11 +35,11 @@ static mp_list_t create_list(user_t *user_alpha, user_t *user_beta)
 static int send_reply(mp_list_t *list, request_t *request)
 {
     void *body =
-        body_maker_private_msg(LIST_FIRST(list), true, "print_private_msg");
+        body_maker_private_msg(LIST_FIRST(list), true, LOG_T_PRT_PRIV_MSG);
 
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 static int process_response(
@@ -70,14 +70,14 @@ int handler_messages(
     char *user_uuid = NULL;
 
     if (walen(request->args) != 1)
-        return reply_str(ERROR, request, "Bad argument count");
+        return reply_str(server, ERROR, request, "Bad argument count");
     if (user_alpha == NULL)
-        return reply_str(ERR_UNAUTHORISED, request, "Not logged");
+        return reply_error(ERR_UNAUTHORISED, request, NULL);
     user_uuid = request->args[0];
     if (uuid_parse(user_uuid, selector.uuid_user) == -1)
-        return reply_str(ERROR, request, "Bad argument value");
+        return reply_str(server, ERROR, request, "Bad argument value");
     user_beta = get_user(&server->database, &selector);
     if (!user_beta)
-        return reply_str(ERR_UNKNOWN_USER, request, "User not found");
+        return reply_error(ERR_UNKNOWN_USER, request, &selector.uuid_user);
     return process_response(user_alpha, user_beta, request);
 }

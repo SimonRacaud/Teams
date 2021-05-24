@@ -14,24 +14,24 @@ static int do_logout(request_t *request, client_t *client)
 {
     char uuid[UUID_STR];
     user_t *user = client->user_ptr;
-    void *body = body_maker_user(user, false, "logging");
+    void *body = body_maker_user(user, false, LOG_T_LOGGING);
 
     if (!body)
         return EXIT_FAILURE;
     uuid_unparse(user->uuid, uuid);
     server_event_user_logged_out(uuid);
     client->user_ptr = NULL;
-    return reply(SUCCESS, request, body);
+    return reply(SUCCESS, request, body, NULL);
 }
 
 int handler_logout(
     UNUSED server_t *server, request_t *request, client_t *client)
 {
     if (walen(request->args) != 0) {
-        return reply_str(ERROR, request, "Bad argument count");
+        return reply_str(server, ERROR, request, "Bad argument count");
     }
     if (client->user_ptr == NULL) {
-        return reply_str(ERROR, request, "User not logged");
+        return reply_str(server, ERROR, request, "User not logged");
     } else {
         return do_logout(request, client);
     }
