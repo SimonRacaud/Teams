@@ -29,7 +29,7 @@ static int create_team_manage(
     }
     body = body_maker_team(
         get_team(&srv->database, &params), false, LOG_T_PRT_TEAM);
-    return reply(err, request, body, &params);
+    return reply((rerr_t){err, &params}, request, body, srv);
 }
 
 static int create_channel_manage(
@@ -54,7 +54,7 @@ static int create_channel_manage(
     }
     body = body_maker_channel(
         get_channel(&srv->database, &params), false, LOG_T_PRT_CHAN);
-    return reply(err, request, body, &params);
+    return reply((rerr_t){err, &params}, request, body, srv);
 }
 
 static int create_thread_manage(
@@ -79,7 +79,7 @@ static int create_thread_manage(
         reply_to_members(srv, request, body, params.uuid_team);
     }
     body = body_maker_thread(thread, false, LOG_T_PRT_THREAD);
-    return reply(err, request, body, &params);
+    return reply((rerr_t){err, &params}, request, body, srv);
 }
 
 static int create_reply_manage(
@@ -104,7 +104,7 @@ static int create_reply_manage(
     if (err == SUCCESS)
         reply_to_target(srv, request, body, ptr->parent_thread->user);
     body = body_maker_reply(ptr, false, LOG_T_PRT_REPLY);
-    return reply(err, request, body, &params);
+    return reply((rerr_t){err, &params}, request, body, srv);
 }
 
 int handler_create(server_t *srv, request_t *request, client_t *client)

@@ -39,11 +39,16 @@ int response_send(response_t *response);
 response_t *response_read(int fd, buffer_t *buffer);
 void response_push(server_t *server, response_t *response);
 
-int reply(
-    rcode_e code, request_t *request, void *body, uuid_selector_t *params);
+typedef struct reply_error_s {
+    rcode_e code;
+    uuid_selector_t *select;
+} rerr_t;
+
+int reply(rerr_t error, request_t *request, void *body, server_t *server);
 int reply_str(
     server_t *server, rcode_e code, request_t *request, const char *str);
-int reply_error(rcode_e code, request_t *request, uuid_t *target);
+int reply_error(
+    server_t *server, rcode_e code, request_t *request, uuid_t *target);
 
 int reply_to_target(
     server_t *server, request_t *request, void *body, user_t *user);

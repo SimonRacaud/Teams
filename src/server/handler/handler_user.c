@@ -10,13 +10,13 @@
 #include "utility.h"
 #include "request_handler_t.h"
 
-static int send_result(user_t *user, request_t *request)
+static int send_result(user_t *user, request_t *request, server_t *srv)
 {
     void *body = body_maker_user(user, false, LOG_T_PRT_USER);
 
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body, NULL);
+    return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
 }
 
 int handler_user(server_t *srv, request_t *request, UNUSED client_t *client)
@@ -34,7 +34,7 @@ int handler_user(server_t *srv, request_t *request, UNUSED client_t *client)
     }
     user = get_user(&srv->database, &select);
     if (!user) {
-        return reply_error(ERR_UNKNOWN_USER, request, &select.uuid_user);
+        return reply_error(srv, ERR_UNKNOWN_USER, request, &select.uuid_user);
     }
-    return send_result(user, request);
+    return send_result(user, request, srv);
 }

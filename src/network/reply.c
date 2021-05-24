@@ -8,28 +8,23 @@
 #include "network.h"
 #include "uuid_selector_t.h"
 
-int reply(
-    rcode_e code, request_t *request, void *body, uuid_selector_t *params)
+int reply(rerr_t error, request_t *request, void *body, server_t *server)
 {
     response_t *response;
     uuid_t uuid;
 
-    if (request && code != SUCCESS) {
+    if (request && error.code != SUCCESS) {
         free(body);
-        get_err_target(&uuid, params, code);
-        return reply_error(code, request, &uuid);
+        get_err_target(&uuid, error.select, error.code);
+        return reply_error(server, error.code, request, &uuid);
     }
     if (!request || !body)
         return EXIT_FAILURE;
-    response = response_create(code, request, request->receiver, body);
+    response = response_create(error.code, request, request->receiver, body);
     if (!response) {
         return EXIT_FAILURE;
     }
-    if (response_send(response) == EXIT_FAILURE) {
-        response_destroy(response);
-        return EXIT_FAILURE;
-    }
-    response_destroy(response);
+    response_push(server, response);
     return EXIT_SUCCESS;
 }
 
@@ -49,7 +44,8 @@ int reply_str(
     return EXIT_SUCCESS;
 }
 
-int reply_error(rcode_e code, request_t *request, uuid_t *target)
+int reply_error(
+    server_t *server, rcode_e code, request_t *request, uuid_t *target)
 {
     response_t *response;
     void *body;
@@ -64,10 +60,6 @@ int reply_error(rcode_e code, request_t *request, uuid_t *target)
     if (!response) {
         return EXIT_FAILURE;
     }
-    if (response_send(response) == EXIT_FAILURE) {
-        response_destroy(response);
-        return EXIT_FAILURE;
-    }
-    response_destroy(response);
+    response_push(server, response);
     return EXIT_SUCCESS;
 }

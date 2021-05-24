@@ -23,9 +23,9 @@ static int list_reply_manage(
     uuid_copy(params.uuid_thread, client->selector.thread);
     thread = get_thread(&srv->database, &params);
     if (!thread)
-        return reply_error(ERR_UNKNOWN_THREAD, request, &params.uuid_thread);
+        return reply_error(srv, ERR_UNKNOWN_THREAD, request, &params.uuid_thread);
     body = body_maker_reply(thread->replies.lh_first, true, LOG_T_PRT_REPLY);
-    return reply(SUCCESS, request, body, NULL);
+    return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
 }
 
 static int list_thread_manage(
@@ -40,10 +40,10 @@ static int list_thread_manage(
     uuid_copy(params.uuid_channel, client->selector.channel);
     channel = get_channel(&srv->database, &params);
     if (!channel)
-        return reply_error(ERR_UNKNOWN_CHANNEL, request, &params.uuid_channel);
+        return reply_error(srv, ERR_UNKNOWN_CHANNEL, request, &params.uuid_channel);
     body =
         body_maker_thread(channel->threads.lh_first, true, LOG_T_PRT_THREAD);
-    return reply(SUCCESS, request, body, NULL);
+    return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
 }
 
 static int list_channel_manage(
@@ -57,9 +57,9 @@ static int list_channel_manage(
     uuid_copy(params.uuid_team, client->selector.team);
     team = get_team(&srv->database, &params);
     if (!team)
-        return reply_error(ERR_UNKNOWN_TEAM, request, &params.uuid_team);
+        return reply_error(srv, ERR_UNKNOWN_TEAM, request, &params.uuid_team);
     body = body_maker_channel(team->channels.lh_first, true, LOG_T_PRT_CHAN);
-    return reply(SUCCESS, request, body, NULL);
+    return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
 }
 
 static int list_team_manage(
@@ -68,7 +68,7 @@ static int list_team_manage(
     void *body =
         body_maker_team(srv->database.teams.lh_first, true, LOG_T_PRT_TEAM);
 
-    return reply(SUCCESS, request, body, NULL);
+    return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
 }
 
 int handler_list(server_t *srv, request_t *request, client_t *client)

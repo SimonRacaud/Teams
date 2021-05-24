@@ -17,7 +17,7 @@ static void *(*const VERIF[]) (const database_t *db,
     (void *(*) (const database_t *, uuid_selector_t *) ) get_thread};
 
 static int selector_verification(size_t args_size, selected_entity_t *selector,
-    database_t *db, request_t *request)
+    server_t *server, request_t *request)
 {
     const rcode_e err_tab[] = {
         ERR_UNKNOWN_TEAM, ERR_UNKNOWN_CHANNEL, ERR_UNKNOWN_THREAD};
@@ -28,9 +28,9 @@ static int selector_verification(size_t args_size, selected_entity_t *selector,
     uuid_copy(params.uuid_channel, selector->channel);
     uuid_copy(params.uuid_thread, selector->thread);
     for (size_t i = 0; i < args_size; i++) {
-        result = VERIF[i](db, &params);
+        result = VERIF[i](&server->database, &params);
         if (!result) {
-            reply(err_tab[i], request, NULL, &params);
+            reply((rerr_t){err_tab[i], &params}, request, NULL, server);
             return EXIT_FAILURE;
         }
     }
@@ -66,7 +66,7 @@ int handler_use(server_t *srv, request_t *request, client_t *client)
     if (parse_args(srv, &selector, request) == EXIT_FAILURE) {
         return EXIT_SUCCESS;
     }
-    if (selector_verification(nb_arg, &selector, &srv->database, request)
+    if (selector_verification(nb_arg, &selector, srv, request)
         == EXIT_FAILURE) {
         return EXIT_SUCCESS;
     }

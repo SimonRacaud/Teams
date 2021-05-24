@@ -35,11 +35,11 @@ int handler_send(server_t *srv, request_t *req, client_t *client)
     ret_value = create_private_msg(
         &srv->database, req->args[1], client->user_ptr, &select);
     if (ret_value == ERR_UNKNOWN_USER)
-        return reply_error(ret_value, req, &select.uuid_user);
+        return reply_error(srv, ret_value, req, &select.uuid_user);
     msg = get_private_msg(&srv->database, &select);
     if (!msg)
         return EXIT_FAILURE;
     event(msg);
     body = body_maker_private_msg(msg, false, LOG_T_PRT_PRIV_MSG);
-    return reply(ret_value, req, body, &select);
+    return reply((rerr_t){ret_value, &select}, req, body, srv);
 }

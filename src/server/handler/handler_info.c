@@ -23,9 +23,9 @@ static int info_thread_manage(
     uuid_copy(params.uuid_thread, client->selector.thread);
     thread = get_thread(&srv->database, &params);
     if (!thread)
-        return reply_error(ERR_UNKNOWN_THREAD, request, &params.uuid_thread);
+        return reply_error(srv, ERR_UNKNOWN_THREAD, request, &params.uuid_thread);
     body = body_maker_thread(thread, false, LOG_T_PRT_THREAD);
-    return reply(SUCCESS, request, body, NULL);
+    return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
 }
 
 static int info_channel_manage(
@@ -40,9 +40,9 @@ static int info_channel_manage(
     uuid_copy(params.uuid_channel, client->selector.channel);
     channel = get_channel(&srv->database, &params);
     if (!channel)
-        return reply_error(ERR_UNKNOWN_CHANNEL, request, &params.uuid_channel);
+        return reply_error(srv, ERR_UNKNOWN_CHANNEL, request, &params.uuid_channel);
     body = body_maker_channel(channel, false, LOG_T_PRT_CHAN);
-    return reply(SUCCESS, request, body, NULL);
+    return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
 }
 
 static int info_team_manage(
@@ -56,9 +56,9 @@ static int info_team_manage(
     uuid_copy(params.uuid_team, client->selector.team);
     team = get_team(&srv->database, &params);
     if (!team)
-        return reply_error(ERR_UNKNOWN_TEAM, request, &params.uuid_team);
+        return reply_error(srv, ERR_UNKNOWN_TEAM, request, &params.uuid_team);
     body = body_maker_team(team, false, LOG_T_PRT_TEAM);
-    return reply(SUCCESS, request, body, NULL);
+    return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
 }
 
 static int info_user_manage(
@@ -66,7 +66,7 @@ static int info_user_manage(
 {
     void *body = body_maker_user(client->user_ptr, false, LOG_T_PRT_USER);
 
-    return reply(SUCCESS, request, body, NULL);
+    return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
 }
 
 int handler_info(server_t *srv, request_t *request, client_t *client)

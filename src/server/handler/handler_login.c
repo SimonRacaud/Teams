@@ -25,7 +25,7 @@ static int do_login(server_t *server, request_t *request, client_t *client,
         return EXIT_FAILURE;
     uuid_unparse(user->uuid, uuid);
     server_event_user_logged_in(uuid);
-    return reply(SUCCESS, request, res_body, NULL);
+    return reply((rerr_t){SUCCESS, NULL}, request, res_body, server);
 }
 
 int handler_login(server_t *server, request_t *request, client_t *client)

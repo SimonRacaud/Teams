@@ -35,7 +35,7 @@ static bool remove_from_user(team_t *team, uuid_t user_uuid)
 }
 
 static int unsubscribe_manage(
-    request_t *request, client_t *client, uuid_selector_t *selector)
+    request_t *request, client_t *client, uuid_selector_t *selector, server_t *srv)
 {
     void *body = NULL;
     bool ret_val = false;
@@ -49,12 +49,12 @@ static int unsubscribe_manage(
         }
     }
     if (!ret_val)
-        return reply_error(ERR_UNKNOWN_TEAM, request, &selector->uuid_team);
+        return reply_error(srv, ERR_UNKNOWN_TEAM, request, &selector->uuid_team);
     body = body_maker_subscription(client->user_ptr->uuid, node->uuid);
     if (!body)
         return EXIT_FAILURE;
     event(node, client->user_ptr);
-    return reply(SUCCESS, request, body, NULL);
+    return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
 }
 
 int handler_unsubscribe(server_t *srv, request_t *request, client_t *client)
@@ -66,5 +66,5 @@ int handler_unsubscribe(server_t *srv, request_t *request, client_t *client)
     if (uuid_parse(request->args[0], selector.uuid_team) == -1)
         return reply_str(srv, ERROR, request, "Bad argument value");
     uuid_copy(selector.uuid_user, client->user_ptr->uuid);
-    return unsubscribe_manage(request, client, &selector);
+    return unsubscribe_manage(request, client, &selector, srv);
 }

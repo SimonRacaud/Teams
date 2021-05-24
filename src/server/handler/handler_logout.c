@@ -10,7 +10,7 @@
 #include "utility.h"
 #include "logging_server.h"
 
-static int do_logout(request_t *request, client_t *client)
+static int do_logout(request_t *request, client_t *client, server_t *srv)
 {
     char uuid[UUID_STR];
     user_t *user = client->user_ptr;
@@ -21,7 +21,7 @@ static int do_logout(request_t *request, client_t *client)
     uuid_unparse(user->uuid, uuid);
     server_event_user_logged_out(uuid);
     client->user_ptr = NULL;
-    return reply(SUCCESS, request, body, NULL);
+    return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
 }
 
 int handler_logout(
@@ -33,6 +33,6 @@ int handler_logout(
     if (client->user_ptr == NULL) {
         return reply_str(server, ERROR, request, "User not logged");
     } else {
-        return do_logout(request, client);
+        return do_logout(request, client, server);
     }
 }

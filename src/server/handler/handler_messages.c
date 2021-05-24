@@ -32,25 +32,25 @@ static mp_list_t create_list(user_t *user_alpha, user_t *user_beta)
     return head;
 }
 
-static int send_reply(mp_list_t *list, request_t *request)
+static int send_reply(mp_list_t *list, request_t *request, server_t *server)
 {
     void *body =
         body_maker_private_msg(LIST_FIRST(list), true, LOG_T_PRT_PRIV_MSG);
 
     if (!body)
         return EXIT_FAILURE;
-    return reply(SUCCESS, request, body, NULL);
+    return reply((rerr_t){SUCCESS, NULL}, request, body, server);
 }
 
 static int process_response(
-    user_t *user_alpha, user_t *user_beta, request_t *request)
+    user_t *user_alpha, user_t *user_beta, request_t *request, server_t *server)
 {
     mp_list_t head = create_list(user_alpha, user_beta);
     private_msg_t *ptr2 = NULL;
     private_msg_t *ptr = NULL;
     int code = EXIT_SUCCESS;
 
-    if (send_reply(&head, request) == EXIT_FAILURE)
+    if (send_reply(&head, request, server) == EXIT_FAILURE)
         code = EXIT_FAILURE;
     ptr = LIST_FIRST(&head);
     while (ptr != NULL) {
@@ -72,12 +72,12 @@ int handler_messages(
     if (walen(request->args) != 1)
         return reply_str(server, ERROR, request, "Bad argument count");
     if (user_alpha == NULL)
-        return reply_error(ERR_UNAUTHORISED, request, NULL);
+        return reply_error(server, ERR_UNAUTHORISED, request, NULL);
     user_uuid = request->args[0];
     if (uuid_parse(user_uuid, selector.uuid_user) == -1)
         return reply_str(server, ERROR, request, "Bad argument value");
     user_beta = get_user(&server->database, &selector);
     if (!user_beta)
-        return reply_error(ERR_UNKNOWN_USER, request, &selector.uuid_user);
-    return process_response(user_alpha, user_beta, request);
+        return reply_error(server, ERR_UNKNOWN_USER, request, &selector.uuid_user);
+    return process_response(user_alpha, user_beta, request, server);
 }
