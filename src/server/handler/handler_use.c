@@ -41,7 +41,7 @@ static int parse_args(
     server_t *srv, selected_entity_t *selector, request_t *request)
 {
     size_t i = 0;
-    selected_entity_t *move_ptr = selector;
+    char *move_ptr = (char *)selector;
     const rcode_e err_tab[] = {
         ERR_UNKNOWN_TEAM, ERR_UNKNOWN_CHANNEL, ERR_UNKNOWN_THREAD};
 
