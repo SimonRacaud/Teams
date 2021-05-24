@@ -37,9 +37,12 @@ void log_print_private_msg(response_t *response)
     size_t size = response->header->elem_size * response->header->list_size;
     bin_private_msg_t *data = (bin_private_msg_t *) response->body;
 
+    if (size == 0) {
+        return;
+    }
     if (size < sizeof(bin_private_msg_t)
         || (size % sizeof(bin_private_msg_t)) != 0) {
-        printf("Warning: logger - bad size\n");
+        printf("Warning: logger prt_priv_msg - bad size\n");
         return;
     }
     if (handle_receipt(response, data)) {
