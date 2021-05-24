@@ -15,6 +15,8 @@ void log_print_user(response_t *response)
     bin_user_t *data = (bin_user_t *) response->body;
     char user_uuid[UUID_STR];
 
+    if (size == 0)
+        return;
     if (size < sizeof(bin_user_t) || (size % sizeof(bin_user_t)) != 0) {
         printf("Warning: logger - bad size\n");
         return;

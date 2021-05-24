@@ -42,6 +42,8 @@ void log_print_reply(response_t *response)
     size_t size = response->header->elem_size * response->header->list_size;
     bin_reply_t *data = (bin_reply_t *) response->body;
 
+    if (size == 0)
+        return;
     if (size < sizeof(bin_reply_t) || (size % sizeof(bin_reply_t)) != 0) {
         printf("Warning: logger - bad size\n");
         return;

@@ -28,6 +28,8 @@ void log_print_team(response_t *response)
     bin_team_t *data = (bin_team_t *) response->body;
     char team_uuid[UUID_STR];
 
+    if (size == 0)
+        return;
     if (size < sizeof(bin_team_t) || (size % sizeof(bin_team_t)) != 0) {
         printf("Warning: logger - bad size\n");
         return;

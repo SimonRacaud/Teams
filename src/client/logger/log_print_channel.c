@@ -22,12 +22,29 @@ static bool handle_creator(response_t *response, bin_channel_t *data)
     return false;
 }
 
+static void handler_print(response_t *response, bin_channel_t *data)
+{
+    char channel_uuid[UUID_STR];
+
+    for (size_t i = 0; i < response->header->list_size; i++) {
+        uuid_unparse(data[i].uuid, channel_uuid);
+        if (response->header->list_size == 1) {
+            client_print_channel(
+                channel_uuid, data[i].name, data->description);
+        } else {
+            client_team_print_channels(
+                channel_uuid, data[i].name, data->description);
+        }
+    }
+}
+
 void log_print_channel(response_t *response)
 {
     size_t size = response->header->elem_size * response->header->list_size;
     bin_channel_t *data = (bin_channel_t *) response->body;
-    char channel_uuid[UUID_STR];
 
+    if (size == 0)
+        return;
     if (size < sizeof(bin_channel_t) || (size % sizeof(bin_channel_t)) != 0) {
         printf("Warning: logger - bad size\n");
         return;
@@ -35,13 +52,5 @@ void log_print_channel(response_t *response)
     if (handle_creator(response, data)) {
         return;
     }
-    for (size_t i = 0; i < response->header->list_size; i++) {
-        uuid_unparse(data[i].uuid, channel_uuid);
-        if (response->header->list_size == 1) {
-            client_print_channel(channel_uuid, data[i].name, data->description);
-        } else {
-            client_team_print_channels(
-                channel_uuid, data[i].name, data->description);
-        }
-    }
+    handler_print(response, data);
 }
