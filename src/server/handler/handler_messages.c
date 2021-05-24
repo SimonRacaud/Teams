@@ -19,13 +19,13 @@ static mp_list_t create_list(user_t *user_alpha, user_t *user_beta)
     LIST_INIT(&head);
     LIST_FOREACH(node, &user_alpha->messages, entries) {
         if (node->sender == user_beta) {
-            ptr = private_msg_copy(ptr);
+            ptr = private_msg_copy(node);
             LIST_INSERT_HEAD(&head, ptr, entries);
         }
     }
     LIST_FOREACH(node, &user_beta->messages, entries) {
         if (node->sender == user_alpha) {
-            ptr = private_msg_copy(ptr);
+            ptr = private_msg_copy(node);
             LIST_INSERT_HEAD(&head, ptr, entries);
         }
     }
