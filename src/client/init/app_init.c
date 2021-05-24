@@ -16,7 +16,7 @@ static void init_stack(client_t *client)
 
 int app_init(client_t *client, int argc, char **argv)
 {
-    client->cli_buffer = NULL;
+    client->cli_buffer.buff = NULL;
     client->loop = false;
     client->response_buffer.buff = NULL;
     uuid_clear(client->selector.team);

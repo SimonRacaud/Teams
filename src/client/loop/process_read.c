@@ -20,7 +20,7 @@ static int process_cli(client_t *client)
         client->loop = false;
         return EXIT_SUCCESS;
     } else if (!input) {
-        return EXIT_FAILURE;
+        return EXIT_SUCCESS;
     }
     request = request_create(input);
     free(input);
@@ -40,7 +40,7 @@ static int process_response(client_t *client)
     if (response == NULL) {
         client->response_buffer.buff = NULL;
         printf("ERROR: fail to read response\n");
-        return EXIT_FAILURE;
+        return EXIT_SUCCESS;
     }
     if (logger(response) == EXIT_FAILURE)
         return EXIT_FAILURE;

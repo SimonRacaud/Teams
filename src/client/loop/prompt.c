@@ -7,7 +7,7 @@
 
 #include "client.h"
 
-char *prompt(char **buffer_ptr, bool *disconnect)
+char *prompt(buffer_t *buffer, bool *disconnect)
 {
-    return fd_getline(STDIN_FILENO, buffer_ptr, disconnect);
+    return fd_getline_delim(STDIN_FILENO, buffer, "\n", disconnect);
 }

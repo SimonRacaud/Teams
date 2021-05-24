@@ -22,9 +22,7 @@ int app_destroy(client_t *client)
 {
     socket_close(&client->socket);
     stack_destroy(&client->stack);
-    if (client->cli_buffer) {
-        free(client->cli_buffer);
-    }
+    free(client->cli_buffer.buff);
     free(client->response_buffer.buff);
     return EXIT_SUCCESS;
 }

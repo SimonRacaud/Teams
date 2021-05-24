@@ -35,6 +35,6 @@ int app_destroy(client_t *client);
 int app_loop(client_t *client);
 int process_write(client_t *client);
 int process_read(client_t *client);
-char *prompt(char **buffer_ptr, bool *disconnect);
+char *prompt(buffer_t *buffer, bool *disconnect);
 
 #endif /* !APP_H_ */

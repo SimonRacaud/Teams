@@ -23,7 +23,7 @@ typedef struct client_s {
     buffer_t response_buffer;
     socket_t socket;
     bool loop;
-    char *cli_buffer;
+    buffer_t cli_buffer;
     SLIST_HEAD(request_stack_s, request_s) stack;
 } client_t;
 
