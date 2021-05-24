@@ -42,13 +42,21 @@ static bool fill_threads_replies(
     const database_save_t *db_save, const database_t *db, thread_t **result)
 {
     reply_t **replies = deserialize_all_replies(db_save, db, result);
+    char reply_uuid[UUID_STR];
+    char thread_uuid[UUID_STR];
 
     if (replies == NULL)
         return false;
     for (uint i = 0; i < db_save->head->nb_thread; i++)
         for (uint k = 0; k < db_save->head->nb_reply; k++)
-            if (!uuid_compare(result[i]->uuid, replies[k]->parent_thread->uuid))
+            if (!uuid_compare(
+                    result[i]->uuid, replies[k]->parent_thread->uuid)) {
                 LIST_INSERT_HEAD(&result[i]->replies, replies[k], entries);
+                uuid_unparse(replies[k]->uuid, reply_uuid);
+                uuid_unparse(result[i]->uuid, thread_uuid);
+                printf("Reply (%s) linked to thread (%s)\n", reply_uuid,
+                    thread_uuid);
+            }
     free(replies);
     return true;
 }
@@ -57,6 +65,7 @@ thread_t **deserialize_all_threads(
     const database_save_t *db_save, const database_t *db, channel_t **channels)
 {
     thread_t **result = calloc(db_save->head->nb_thread, sizeof(thread_t *));
+    char uuid[UUID_STR];
 
     if (result == NULL)
         return NULL;
@@ -67,6 +76,8 @@ thread_t **deserialize_all_threads(
             destroy_created_result(result, i);
             return NULL;
         }
+        uuid_unparse(result[i]->uuid, uuid);
+        printf("Thread loaded: %s\n", uuid);
     }
     if (!fill_threads_replies(db_save, db, result)) {
         destroy_created_result(result, db_save->head->nb_thread);

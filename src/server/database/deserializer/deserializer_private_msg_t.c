@@ -39,6 +39,7 @@ private_msg_t **deserialize_all_private_msg(
 {
     private_msg_t **result =
         calloc(db_save->head->nb_private_msg, sizeof(private_msg_t *));
+    char uuid[UUID_STR];
 
     if (result == NULL)
         return NULL;
@@ -48,6 +49,8 @@ private_msg_t **deserialize_all_private_msg(
             destroy_created_result(result, i);
             return NULL;
         }
+        uuid_unparse(result[i]->uuid, uuid);
+        printf("Private message loaded: %s\n", uuid);
     }
     return result;
 }

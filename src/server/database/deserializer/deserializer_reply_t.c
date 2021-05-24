@@ -40,6 +40,7 @@ reply_t **deserialize_all_replies(
     const database_save_t *db_save, const database_t *db, thread_t **threads)
 {
     reply_t **result = calloc(db_save->head->nb_reply, sizeof(reply_t *));
+    char uuid[UUID_STR];
 
     if (result == NULL)
         return NULL;
@@ -50,6 +51,8 @@ reply_t **deserialize_all_replies(
             destroy_created_result(result, i);
             return NULL;
         }
+        uuid_unparse(result[i]->uuid, uuid);
+        printf("Reply loaded: %s\n", uuid);
     }
     return result;
 }
