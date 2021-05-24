@@ -10,6 +10,16 @@
 #include "utility.h"
 #include "request_handler_t.h"
 
+static void event(team_t *team, user_t *user)
+{
+    char team_uuid[UUID_STR];
+    char user_uuid[UUID_STR];
+
+    uuid_unparse(team->uuid, team_uuid);
+    uuid_unparse(user->uuid, user_uuid);
+    server_event_user_unsubscribed(team_uuid, user_uuid);
+}
+
 static bool remove_from_user(team_t *team, uuid_t user_uuid)
 {
     user_t *node = NULL;
@@ -43,6 +53,7 @@ static int unsubscribe_manage(
     body = body_maker_subscription(client->user_ptr->uuid, node->uuid);
     if (!body)
         return EXIT_FAILURE;
+    event(node, client->user_ptr);
     return reply(SUCCESS, request, body, NULL);
 }
 

@@ -10,11 +10,21 @@
 #include "database.h"
 #include "request_handler_t.h"
 
+static void event(team_t *team, user_t *user)
+{
+    char team_uuid[UUID_STR];
+    char user_uuid[UUID_STR];
+
+    uuid_unparse(team->uuid, team_uuid);
+    uuid_unparse(user->uuid, user_uuid);
+    server_event_user_unsubscribed(team_uuid, user_uuid);
+}
+
 static int subscribe_manage(server_t *srv, request_t *request, client_t *client,
     uuid_selector_t *selector)
 {
-    void *body = NULL;
     team_t *team = get_team(&srv->database, selector);
+    void *body = NULL;
 
     if (!team)
         return reply_error(ERR_UNKNOWN_TEAM, request, &selector->uuid_team);
@@ -23,6 +33,7 @@ static int subscribe_manage(server_t *srv, request_t *request, client_t *client,
     body = body_maker_subscription(client->user_ptr->uuid, team->uuid);
     if (!body)
         return EXIT_FAILURE;
+    event(team, client->user_ptr);
     return reply(SUCCESS, request, body, NULL);
 }
 
