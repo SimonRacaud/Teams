@@ -17,7 +17,7 @@ static void event(team_t *team, user_t *user)
 
     uuid_unparse(team->uuid, team_uuid);
     uuid_unparse(user->uuid, user_uuid);
-    server_event_user_unsubscribed(team_uuid, user_uuid);
+    server_event_user_subscribed(team_uuid, user_uuid);
 }
 
 static int subscribe_manage(server_t *srv, request_t *request, client_t *client,
