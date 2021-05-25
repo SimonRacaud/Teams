@@ -12,10 +12,11 @@
 
 bool is_subscribed(client_t *client, uuid_t uuid_team)
 {
-    team_t *team = NULL;
+    team_ptr_t *team = NULL;
 
-    LIST_FOREACH(team, &client->user_ptr->teams, entries) {
-        if (uuid_compare(team->uuid, uuid_team) == 0)
+    LIST_FOREACH(team, &client->user_ptr->teams, entries)
+    {
+        if (uuid_compare(team->ptr->uuid, uuid_team) == 0)
             return true;
     }
     return false;

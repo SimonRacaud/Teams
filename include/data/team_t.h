@@ -22,8 +22,13 @@ typedef struct team_s {
     char name[SIZE_NAME];
     char description[SIZE_DESC];
     LIST_HEAD(channel_list_header, channel_s) channels;
-    LIST_HEAD(user_list_header, user_s) users;
+    LIST_HEAD(user_list_header, user_ptr_s) users;
     LIST_ENTRY(team_s) entries;
 } team_t;
+
+typedef struct team_ptr_s {
+    team_t *ptr;
+    LIST_ENTRY(team_ptr_s) entries;
+} team_ptr_t;
 
 #endif // TEAM_T_H

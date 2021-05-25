@@ -17,7 +17,8 @@
 typedef struct user_list_header user_list_t;
 typedef struct db_user_list_header db_user_list_t;
 
-typedef enum user_status {
+typedef enum user_status
+{
     CONNECTED = 0,
     DISCONNECTED = 1
 } user_status_e;
@@ -26,9 +27,14 @@ typedef struct user_s {
     uuid_t uuid;
     user_status_e status;
     char username[SIZE_NAME];
-    LIST_HEAD(team_list_header, team_s) teams;
+    LIST_HEAD(team_list_header, team_ptr_s) teams;
     LIST_HEAD(pm_list_header, private_msg_s) messages;
     LIST_ENTRY(user_s) entries;
 } user_t;
+
+typedef struct user_ptr_s {
+    user_t *ptr;
+    LIST_ENTRY(user_ptr_s) entries;
+} user_ptr_t;
 
 #endif // USER_T_H

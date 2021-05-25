@@ -19,16 +19,22 @@ static bool fill_user_teams(const database_save_t *db_save, database_t *db,
     user_t *user, uint user_index)
 {
     team_t *team;
+    user_ptr_t *user_ptr;
+    team_ptr_t *team_ptr;
     uuid_selector_t params = {0};
 
     bzero(&params, sizeof(uuid_selector_t));
     for (uint k = 0; k < db_save->users[user_index]->nb_subscribed_teams; k++) {
         uuid_copy(params.uuid_team, db_save->user_teams_list[user_index][k]);
         team = get_team(db, &params);
-        if (team == NULL)
+        user_ptr = malloc(sizeof(user_ptr_t));
+        team_ptr = malloc(sizeof(team_ptr_t));
+        if (team == NULL || user_ptr == NULL || team_ptr == NULL)
             return false;
-        LIST_INSERT_HEAD(&team->users, user, entries);
-        LIST_INSERT_HEAD(&user->teams, team, entries);
+        user_ptr->ptr = user;
+        team_ptr->ptr = team;
+        LIST_INSERT_HEAD(&team->users, user_ptr, entries);
+        LIST_INSERT_HEAD(&user->teams, team_ptr, entries);
     }
     return true;
 }

@@ -60,8 +60,6 @@ SRC_FILES_DB =	server/database/factories/create_team.c						\
 				server/database/getter/get_thread.c							\
 				server/database/getter/get_channel.c						\
 				server/database/getter/get_private_msg.c					\
-				server/database/updater/user_subscription_add.c				\
-				server/database/updater/user_subscription_remove.c			\
 				server/database/serializer/serializer_channel_t.c			\
 				server/database/serializer/serializer_private_msg_t.c		\
 				server/database/serializer/serializer_reply_t.c				\

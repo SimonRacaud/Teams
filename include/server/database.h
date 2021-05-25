@@ -109,17 +109,6 @@ size_t get_nb_subscribed_teams(const database_t *db);
 
 /*
 **
-** UPDATER
-**
-*/
-
-/// params needs uuid_user and uuid_teams
-int user_subscription_add(database_t *db, uuid_selector_t *params);
-/// params needs uuid_user and uuid_teams
-int user_subscription_remove(database_t *db, uuid_selector_t *params);
-
-/*
-**
 ** SERIALIZER
 **
 */

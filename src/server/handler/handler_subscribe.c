@@ -24,13 +24,17 @@ static int subscribe_manage(server_t *srv, request_t *request, client_t *client,
     uuid_selector_t *selector)
 {
     team_t *team = get_team(&srv->database, selector);
+    user_ptr_t *user_ptr = malloc(sizeof(user_ptr_t));
+    team_ptr_t *team_ptr = malloc(sizeof(team_ptr_t));
     void *body = NULL;
 
-    if (!team)
+    if (!team || !user_ptr || !team_ptr)
         return reply_error(
             srv, ERR_UNKNOWN_TEAM, request, &selector->uuid_team);
-    LIST_INSERT_HEAD(&client->user_ptr->teams, team, entries);
-    LIST_INSERT_HEAD(&team->users, client->user_ptr, entries);
+    user_ptr->ptr = client->user_ptr;
+    team_ptr->ptr = team;
+    LIST_INSERT_HEAD(&client->user_ptr->teams, team_ptr, entries);
+    LIST_INSERT_HEAD(&team->users, user_ptr, entries);
     body = body_maker_subscription(client->user_ptr->uuid, team->uuid);
     if (!body)
         return EXIT_FAILURE;

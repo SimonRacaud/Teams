@@ -13,9 +13,10 @@
 static size_t get_teams_length(const user_t *src)
 {
     size_t i = 0;
-    team_t *node = NULL;
+    team_ptr_t *node = NULL;
 
-    LIST_FOREACH(node, &src->teams, entries) {
+    LIST_FOREACH(node, &src->teams, entries)
+    {
         i++;
     }
     return i;
