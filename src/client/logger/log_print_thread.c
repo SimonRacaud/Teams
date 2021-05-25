@@ -8,6 +8,7 @@
 #include "env.h"
 #include "network.h"
 #include "logging_client.h"
+#include "logger.h"
 
 static bool handle_creator(response_t *response, bin_thread_t *data)
 {
@@ -29,13 +30,15 @@ static void handle_printer(response_t *response, bin_thread_t *data)
     char thread_uuid[UUID_STR];
     char user_uuid[UUID_STR];
 
-    for (size_t i = 0; i < response->header->list_size; i++) {
-        uuid_unparse(data[i].uuid, thread_uuid);
-        uuid_unparse(data[i].user_uuid, user_uuid);
-        if (response->header->list_size == 1) {
-            client_print_thread(thread_uuid, user_uuid, data[i].timestamp,
-                data[i].title, data[i].body);
-        } else {
+    if (PRT_SINGLE(response->req_label)) {
+        uuid_unparse(data->uuid, thread_uuid);
+        uuid_unparse(data->user_uuid, user_uuid);
+        client_print_thread(
+            thread_uuid, user_uuid, data->timestamp, data->title, data->body);
+    } else {
+        for (size_t i = 0; i < response->header->list_size; i++) {
+            uuid_unparse(data[i].uuid, thread_uuid);
+            uuid_unparse(data[i].user_uuid, user_uuid);
             client_channel_print_threads(thread_uuid, user_uuid,
                 data[i].timestamp, data[i].title, data[i].body);
         }

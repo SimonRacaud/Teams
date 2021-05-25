@@ -8,6 +8,7 @@
 #include "env.h"
 #include "network.h"
 #include "logging_client.h"
+#include "logger.h"
 
 static bool handle_creator(response_t *response, bin_channel_t *data)
 {
@@ -26,14 +27,14 @@ static void handler_print(response_t *response, bin_channel_t *data)
 {
     char channel_uuid[UUID_STR];
 
-    for (size_t i = 0; i < response->header->list_size; i++) {
-        uuid_unparse(data[i].uuid, channel_uuid);
-        if (response->header->list_size == 1) {
-            client_print_channel(
-                channel_uuid, data[i].name, data->description);
-        } else {
+    if (PRT_SINGLE(response->req_label)) {
+        uuid_unparse(data->uuid, channel_uuid);
+        client_print_channel(channel_uuid, data->name, data->description);
+    } else {
+        for (size_t i = 0; i < response->header->list_size; i++) {
+            uuid_unparse(data[i].uuid, channel_uuid);
             client_team_print_channels(
-                channel_uuid, data[i].name, data->description);
+                channel_uuid, data[i].name, data[i].description);
         }
     }
 }

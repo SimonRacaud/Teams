@@ -8,6 +8,7 @@
 #include "env.h"
 #include "network.h"
 #include "logging_client.h"
+#include "logger.h"
 
 static bool handle_creator(response_t *response, bin_team_t *data)
 {
@@ -15,18 +16,31 @@ static bool handle_creator(response_t *response, bin_team_t *data)
 
     if (!strcmp(response->req_label, CMD_CREATE)) {
         uuid_unparse(data->uuid, team_uuid);
-        client_print_team_created(
-            team_uuid, data->name, data->description);
+        client_print_team_created(team_uuid, data->name, data->description);
         return true;
     }
     return false;
+}
+
+static void handle_print(response_t *response, bin_team_t *data)
+{
+    char team_uuid[UUID_STR];
+
+    if (PRT_SINGLE(response->req_label)) {
+        uuid_unparse(data->uuid, team_uuid);
+        client_print_team(team_uuid, data->name, data->description);
+    } else {
+        for (size_t i = 0; i < response->header->list_size; i++) {
+            uuid_unparse(data[i].uuid, team_uuid);
+            client_print_teams(team_uuid, data[i].name, data[i].description);
+        }
+    }
 }
 
 void log_print_team(response_t *response)
 {
     size_t size = response->header->elem_size * response->header->list_size;
     bin_team_t *data = (bin_team_t *) response->body;
-    char team_uuid[UUID_STR];
 
     if (size == 0)
         return;
@@ -36,12 +50,5 @@ void log_print_team(response_t *response)
     }
     if (handle_creator(response, data))
         return;
-    for (size_t i = 0; i < response->header->list_size; i++) {
-        uuid_unparse(data[i].uuid, team_uuid);
-        if (response->header->list_size == 1) {
-            client_print_team(team_uuid, data[i].name, data[i].description);
-        } else {
-            client_print_teams(team_uuid, data[i].name, data[i].description);
-        }
-    }
+    handle_print(response, data);
 }
