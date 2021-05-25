@@ -21,12 +21,27 @@ static void event(private_msg_t *msg)
     server_event_private_message_sended(sender_uuid, receiver_uuid, msg->body);
 }
 
+static int send_message(
+    server_t *srv, request_t *req, private_msg_t *msg, user_t *receiver)
+{
+    void *body;
+
+    body = body_maker_private_msg(msg, false, LOG_T_PRT_PRIV_MSG);
+    reply_to_target(srv, req, body, receiver);
+    return reply_str(srv, SUCCESS, req, "Message sent");
+}
+
+static int send_error(server_t *srv, request_t *req)
+{
+    return reply_str(srv, ERROR, req, "An error occured");
+}
+
 int handler_send(server_t *srv, request_t *req, client_t *client)
 {
     uuid_selector_t select = {0};
-    int ret_value = SUCCESS;
+    rcode_e ret_value = SUCCESS;
     private_msg_t *msg;
-    void *body;
+    user_t *receiver = NULL;
 
     if (walen(req->args) != 2)
         return reply_str(srv, ERROR, req, "Invalid argument count");
@@ -37,9 +52,10 @@ int handler_send(server_t *srv, request_t *req, client_t *client)
     if (ret_value == ERR_UNKNOWN_USER)
         return reply_error(srv, ret_value, req, &select.uuid_user);
     msg = get_private_msg(&srv->database, &select);
-    if (!msg)
+    receiver = get_user(&srv->database, &select);
+    if (!msg || !receiver)
         return EXIT_FAILURE;
     event(msg);
-    body = body_maker_private_msg(msg, false, LOG_T_PRT_PRIV_MSG);
-    return reply((rerr_t){ret_value, &select}, req, body, srv);
+    return (ret_value == SUCCESS) ? send_message(srv, req, msg, receiver)
+                                  : send_error(srv, req);
 }
