@@ -57,5 +57,5 @@ int handler_send(server_t *srv, request_t *req, client_t *client)
         return EXIT_FAILURE;
     event(msg);
     return (ret_value == SUCCESS) ? send_message(srv, req, msg, receiver)
-                                  : send_error(srv, req);
+                                : send_error(srv, req);
 }
