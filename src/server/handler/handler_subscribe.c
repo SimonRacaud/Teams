@@ -27,7 +27,8 @@ static int subscribe_manage(server_t *srv, request_t *request, client_t *client,
     void *body = NULL;
 
     if (!team)
-        return reply_error(srv, ERR_UNKNOWN_TEAM, request, &selector->uuid_team);
+        return reply_error(
+            srv, ERR_UNKNOWN_TEAM, request, &selector->uuid_team);
     LIST_INSERT_HEAD(&client->user_ptr->teams, team, entries);
     LIST_INSERT_HEAD(&team->users, client->user_ptr, entries);
     body = body_maker_subscription(client->user_ptr->uuid, team->uuid);
@@ -44,7 +45,7 @@ int handler_subscribe(server_t *srv, request_t *request, client_t *client)
     if (walen(request->args) != 1)
         return reply_str(srv, ERROR, request, "Invalid argument count");
     if (uuid_parse(request->args[0], selector.uuid_team) == -1)
-        return reply_str(srv, ERROR, request, "Bad argument value");
+        return reply_error(srv, ERR_UNKNOWN_TEAM, request, NULL);
     uuid_copy(selector.uuid_user, client->user_ptr->uuid);
     return subscribe_manage(srv, request, client, &selector);
 }

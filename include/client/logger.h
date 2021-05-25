@@ -10,9 +10,13 @@
 
 #include "network.h"
 
+#define PRT_SINGLE(cmd)                                 \
+    (!strcmp(cmd, CMD_CREATE) || !strcmp(cmd, CMD_INFO) \
+        || !strcmp(cmd, CMD_USER))
+
 typedef struct body_handler_s {
     const char *label;
-    void (* handler)(response_t *response);
+    void (*handler)(response_t *response);
 } body_handler_t;
 
 int logger(response_t *response);

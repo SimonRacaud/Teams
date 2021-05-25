@@ -23,7 +23,8 @@ static int list_reply_manage(
     uuid_copy(params.uuid_thread, client->selector.thread);
     thread = get_thread(&srv->database, &params);
     if (!thread)
-        return reply_error(srv, ERR_UNKNOWN_THREAD, request, &params.uuid_thread);
+        return reply_error(
+            srv, ERR_UNKNOWN_THREAD, request, &params.uuid_thread);
     body = body_maker_reply(thread->replies.lh_first, true, LOG_T_PRT_REPLY);
     return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
 }
@@ -40,9 +41,9 @@ static int list_thread_manage(
     uuid_copy(params.uuid_channel, client->selector.channel);
     channel = get_channel(&srv->database, &params);
     if (!channel)
-        return reply_error(srv, ERR_UNKNOWN_CHANNEL, request, &params.uuid_channel);
-    body =
-        body_maker_thread(channel->threads.lh_first, true, LOG_T_PRT_THREAD);
+        return reply_error(
+            srv, ERR_UNKNOWN_CHANNEL, request, &params.uuid_channel);
+    body = body_maker_thread(channel->threads.lh_first, true, LOG_T_PRT_THREAD);
     return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
 }
 

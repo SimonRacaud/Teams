@@ -15,6 +15,8 @@
 #define UUID_STR  37
 
 #define CMD_CREATE "create"
+#define CMD_INFO "info"
+#define CMD_USER "user"
 #define CMD_SEND "send"
 #define CMD_SUBSCRIBE "subscribe"
 #define CMD_UNSUBSCRIBE "unsubscribe"

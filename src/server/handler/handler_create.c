@@ -43,8 +43,6 @@ static int create_channel_manage(
         return reply_str(srv, ERROR, request, "Invalid argument count");
     uuid_copy(params.uuid_user, client->user_ptr->uuid);
     uuid_copy(params.uuid_team, client->selector.team);
-    if (!is_subscribed(client, client->selector.team))
-        return reply_str(srv, ERROR, request, "You need to be subscribed");
     err = create_channel(
         &srv->database, request->args[0], request->args[1], &params);
     if (err == SUCCESS) {
@@ -102,18 +100,27 @@ static int create_reply_manage(
         return EXIT_SUCCESS;
     body = body_maker_reply_event(ptr, params.uuid_team);
     if (err == SUCCESS)
-        reply_to_target(srv, request, body, ptr->parent_thread->user);
+        reply_to_members(srv, request, body, params.uuid_team);
     body = body_maker_reply(ptr, false, LOG_T_PRT_REPLY);
     return reply((rerr_t){err, &params}, request, body, srv);
 }
 
 int handler_create(server_t *srv, request_t *request, client_t *client)
 {
-    if (!uuid_is_null(client->selector.thread))
+    if (!uuid_is_null(client->selector.thread)) {
+        if (!is_subscribed(client, client->selector.team))
+            return reply_error(srv, ERR_UNAUTHORISED, request, NULL);
         return create_reply_manage(srv, request, client);
-    if (!uuid_is_null(client->selector.channel))
+    }
+    if (!uuid_is_null(client->selector.channel)) {
+        if (!is_subscribed(client, client->selector.team))
+            return reply_error(srv, ERR_UNAUTHORISED, request, NULL);
         return create_thread_manage(srv, request, client);
-    if (!uuid_is_null(client->selector.team))
+    }
+    if (!uuid_is_null(client->selector.team)) {
+        if (!is_subscribed(client, client->selector.team))
+            return reply_error(srv, ERR_UNAUTHORISED, request, NULL);
         return create_channel_manage(srv, request, client);
+    }
     return create_team_manage(srv, request, client);
 }

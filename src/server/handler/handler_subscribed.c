@@ -45,7 +45,7 @@ int handler_subscribed(server_t *srv, request_t *request, client_t *client)
 
     if (size == 1) {
         if (uuid_parse(request->args[0], selector.uuid_team) == -1)
-            return reply_str(srv, ERROR, request, "Bad argument value");
+            return reply_error(srv, ERR_UNKNOWN_TEAM, request, NULL);
         uuid_copy(selector.uuid_user, client->user_ptr->uuid);
         return parametting_manage(srv, request, &selector);
     } else if (size == 0) {

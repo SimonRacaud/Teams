@@ -8,6 +8,7 @@
 #include "env.h"
 #include "network.h"
 #include "logging_client.h"
+#include "logger.h"
 
 void log_print_user(response_t *response)
 {
@@ -18,14 +19,15 @@ void log_print_user(response_t *response)
     if (size == 0)
         return;
     if (size < sizeof(bin_user_t) || (size % sizeof(bin_user_t)) != 0) {
-        printf("Warning: logger - bad size\n");
+        printf("Warning: logger - empty || bad size\n");
         return;
     }
-    for (size_t i = 0; i < response->header->list_size; i++) {
-        uuid_unparse(data[i].uuid, user_uuid);
-        if (response->header->list_size == 1) {
-            client_print_user(user_uuid, data[i].name, (int) data[i].status);
-        } else {
+    if (PRT_SINGLE(response->req_label)) {
+        uuid_unparse(data->uuid, user_uuid);
+        client_print_user(user_uuid, data->name, (int) data->status);
+    } else {
+        for (size_t i = 0; i < response->header->list_size; i++) {
+            uuid_unparse(data[i].uuid, user_uuid);
             client_print_users(user_uuid, data[i].name, (int) data[i].status);
         }
     }

@@ -30,7 +30,7 @@ int handler_user(server_t *srv, request_t *request, UNUSED client_t *client)
         return reply_str(srv, ERROR, request, "Invalid argument count");
     }
     if (uuid_parse(request->args[0], select.uuid_user) == -1) {
-        return reply_str(srv, ERROR, request, "Invalid argument");
+        return reply_error(srv, ERR_UNKNOWN_USER, request, NULL);
     }
     user = get_user(&srv->database, &select);
     if (!user) {
