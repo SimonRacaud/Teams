@@ -47,7 +47,7 @@ int request_execute(request_t *request, server_t *server, client_t *client)
         if (cmp == 0 && (!HANDLERS[i].connection || client->user_ptr)) {
             return call_handler(request, server, HANDLERS[i].handler, client);
         } else if (cmp == 0) {
-            return reply_str(server, ERROR, request, "Conection requirement");
+            return reply_error(server, ERR_UNAUTHORISED, request, NULL);
         }
     }
     if (reply_str(server, ERROR, request, "Command not found") == EXIT_FAILURE)
