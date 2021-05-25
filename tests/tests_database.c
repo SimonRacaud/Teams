@@ -83,7 +83,7 @@ static void create_channels(database_t *db, const int nbr_channel_per_team)
     {
         uuid_copy(selector.uuid_team, team->uuid);
         for (int n = 1; n <= nbr_channel_per_team; n++) {
-            sprintf(name, "C%d", n);
+            sprintf(name, "%sC%d", team->name + 1, n);
             sprintf(description, "%s description", name);
             cr_assert_eq(
                 create_channel(db, name, description, &selector), SUCCESS);
@@ -110,7 +110,7 @@ static void create_threads(database_t *db)
         {
             uuid_copy(params.uuid_channel, channel->uuid);
             for (int n = 0; n < nbr_threads_per_channel; n++) {
-                sprintf(title, "H%d", n);
+                sprintf(title, "%s%sH%d", team->name + 1, channel->name + 1, n);
                 sprintf(msg, "%s message", title);
                 cr_assert_eq(create_thread(db, title, msg, &params), SUCCESS);
             }
@@ -297,7 +297,7 @@ static void check_saved_replies(const thread_t *thread)
     cr_assert_eq(replies_size - 1, nbr_replies_per_thread);
 }
 
-static void check_saved_threads(const channel_t *channel)
+static void check_saved_threads(const team_t *team, const channel_t *channel)
 {
     thread_t *thread;
     char title[SIZE_NAME];
@@ -308,7 +308,8 @@ static void check_saved_threads(const channel_t *channel)
     bzero(message, SIZE_BODY);
     LIST_FOREACH(thread, &channel->threads, entries)
     {
-        sprintf(title, "H%d", threads_size++);
+        sprintf(title, "%s%sH%d", team->name + 1, channel->name + 1,
+            threads_size++);
         sprintf(message, "%s message", title);
         cr_assert_str_eq(thread->title, title);
         cr_assert_str_eq(thread->body, message);
@@ -329,11 +330,11 @@ static void check_saved_channels(
     bzero(description, SIZE_DESC);
     LIST_FOREACH(channel, &team->channels, entries)
     {
-        sprintf(name, "C%d", n++);
+        sprintf(name, "%sC%d", team->name + 1, n++);
         sprintf(description, "%s description", name);
         cr_assert_str_eq(channel->name, name);
         cr_assert_str_eq(channel->description, description);
-        check_saved_threads(channel);
+        check_saved_threads(team, channel);
     }
     cr_assert_eq(n - 1, nbr_channels_per_team);
 }
