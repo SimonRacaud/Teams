@@ -25,6 +25,17 @@ static void event(uuid_t team, const char *name, uuid_t user)
     server_event_team_created(team_uuid, name, user_uuid);
 }
 
+static bool team_already_exist(database_t *db, const char *teamname)
+{
+    team_t *node = NULL;
+
+    LIST_FOREACH(node, &db->teams, entries) {
+        if (strcmp(node->name, teamname) == 0)
+            return true;
+    }
+    return false;
+}
+
 rcode_e create_team(database_t *db, const char *teamname,
 const char *desc, uuid_selector_t *params)
 {
@@ -34,6 +45,8 @@ const char *desc, uuid_selector_t *params)
         return ERROR;
     if (strlen(teamname) > SIZE_NAME || strlen(desc) > SIZE_DESC)
         return ERROR;
+    if (team_already_exist(db, teamname))
+        return ERR_ALREADY_EXIST;
     node = malloc(sizeof(team_t));
     if (!node)
         return ERROR;

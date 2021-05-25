@@ -20,13 +20,23 @@ team_t *get_match_team(const database_t *db, uuid_selector_t *params)
 }
 
 static bool is_correct_params(
-    database_t *db, uuid_selector_t *params, int *err_val)
+    database_t *db, uuid_selector_t *params, int *err_val, const char *name)
 {
+    team_t *node = NULL;
+    channel_t *channel = NULL;
     team_t *team = get_match_team(db, params);
 
     if (!team) {
         *err_val = ERR_UNKNOWN_TEAM;
         return false;
+    }
+    LIST_FOREACH(node, &db->teams, entries) {
+        LIST_FOREACH(channel, &node->channels, entries) {
+            if (strcmp(name, channel->name) == 0) {
+                *err_val = ERR_ALREADY_EXIST;
+                return false;
+            }
+        }
     }
     return true;
 }
@@ -71,7 +81,7 @@ rcode_e create_channel(database_t *db, const char *channelname,
         return ERROR;
     if (uuid_is_null(params->uuid_team))
         return ERROR;
-    if (!is_correct_params(db, params, &err_val))
+    if (!is_correct_params(db, params, &err_val, channelname))
         return err_val;
     node = malloc(sizeof(channel_t));
     if (!node)
