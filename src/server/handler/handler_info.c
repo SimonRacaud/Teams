@@ -23,7 +23,8 @@ static int info_thread_manage(
     uuid_copy(params.uuid_thread, client->selector.thread);
     thread = get_thread(&srv->database, &params);
     if (!thread)
-        return reply_error(srv, ERR_UNKNOWN_THREAD, request, &params.uuid_thread);
+        return reply_error(
+            srv, ERR_UNKNOWN_THREAD, request, &params.uuid_thread);
     body = body_maker_thread(thread, false, LOG_T_PRT_THREAD);
     return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
 }
@@ -40,13 +41,13 @@ static int info_channel_manage(
     uuid_copy(params.uuid_channel, client->selector.channel);
     channel = get_channel(&srv->database, &params);
     if (!channel)
-        return reply_error(srv, ERR_UNKNOWN_CHANNEL, request, &params.uuid_channel);
+        return reply_error(
+            srv, ERR_UNKNOWN_CHANNEL, request, &params.uuid_channel);
     body = body_maker_channel(channel, false, LOG_T_PRT_CHAN);
     return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
 }
 
-static int info_team_manage(
-    server_t *srv, request_t *request, client_t *client)
+static int info_team_manage(server_t *srv, request_t *request, client_t *client)
 {
     uuid_selector_t params = {0};
     team_t *team = NULL;

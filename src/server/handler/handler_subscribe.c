@@ -27,7 +27,8 @@ static int subscribe_manage(server_t *srv, request_t *request, client_t *client,
     void *body = NULL;
 
     if (!team)
-        return reply_error(srv, ERR_UNKNOWN_TEAM, request, &selector->uuid_team);
+        return reply_error(
+            srv, ERR_UNKNOWN_TEAM, request, &selector->uuid_team);
     LIST_INSERT_HEAD(&client->user_ptr->teams, team, entries);
     LIST_INSERT_HEAD(&team->users, client->user_ptr, entries);
     body = body_maker_subscription(client->user_ptr->uuid, team->uuid);
