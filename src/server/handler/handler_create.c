@@ -100,7 +100,7 @@ static int create_reply_manage(
         return EXIT_SUCCESS;
     body = body_maker_reply_event(ptr, params.uuid_team);
     if (err == SUCCESS)
-        reply_to_target(srv, request, body, ptr->parent_thread->user);
+        reply_to_members(srv, request, body, params.uuid_team);
     body = body_maker_reply(ptr, false, LOG_T_PRT_REPLY);
     return reply((rerr_t){err, &params}, request, body, srv);
 }
