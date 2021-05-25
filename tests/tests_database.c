@@ -96,18 +96,15 @@ static void create_threads(database_t *db)
     team_t *team;
     channel_t *channel;
     uuid_selector_t params;
-    char title[SIZE_NAME];
-    char msg[SIZE_BODY];
+    char title[SIZE_NAME] = "";
+    char msg[SIZE_BODY] = "";
 
-    bzero(title, SIZE_NAME);
     bzero(msg, SIZE_BODY);
     bzero(&params, sizeof(uuid_selector_t));
     uuid_copy(params.uuid_user, LIST_FIRST(&db->users)->uuid);
-    LIST_FOREACH(team, &db->teams, entries)
-    {
+    LIST_FOREACH(team, &db->teams, entries) {
         uuid_copy(params.uuid_team, team->uuid);
-        LIST_FOREACH(channel, &team->channels, entries)
-        {
+        LIST_FOREACH(channel, &team->channels, entries) {
             uuid_copy(params.uuid_channel, channel->uuid);
             for (int n = 0; n < nbr_threads_per_channel; n++) {
                 sprintf(title, "%s%sH%d", team->name + 1, channel->name + 1, n);
@@ -437,7 +434,6 @@ Test(save_load_db, t04)
     destroy_database_t(&db);
     check_saved_users(nbr_users, 0);
     check_saved_teams(nbr_teams, nbr_channels);
-    remove(DB_FILEPATH);
 }
 
 // Test save db with users & pv msg & teams & channels & threads & load them
