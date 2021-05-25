@@ -89,6 +89,7 @@ SRC_FILES_DB =	server/database/factories/create_team.c						\
 				server/database/loader/read/read_teams.c					\
 				server/database/loader/read/read_threads.c					\
 				server/database/loader/read/read_users.c					\
+				server/database/tools/is_unique_thread.c					\
 				server/database/destroy_database_t.c						\
 
 SRC_UT 			= 	$(addprefix $(DSRC), $(SRC_FILES_UTILITY))	\

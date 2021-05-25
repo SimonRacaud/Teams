@@ -83,6 +83,8 @@ rcode_e create_thread(database_t *db, const char *title, const char *body,
         return ERROR;
     if (uuid_is_null(params->uuid_team) || uuid_is_null(params->uuid_channel))
         return ERROR;
+    if (!is_unique_thread(db, title))
+        return ERR_ALREADY_EXIST;
     node = init_thread_node(db, title, body, params);
     if (node == NULL)
         return ERROR;
