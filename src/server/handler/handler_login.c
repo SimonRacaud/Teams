@@ -19,7 +19,10 @@ static int do_login(server_t *server, request_t *request, client_t *client,
 
     if (!user)
         return EXIT_FAILURE;
+    if (client->user_ptr != NULL)
+        client->user_ptr->status = DISCONNECTED;
     client->user_ptr = user;
+    user->status = CONNECTED;
     res_body = body_maker_user(user, false, LOG_T_LOGGING);
     if (!res_body)
         return EXIT_FAILURE;

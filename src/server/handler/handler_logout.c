@@ -20,6 +20,7 @@ static int do_logout(request_t *request, client_t *client, server_t *srv)
         return EXIT_FAILURE;
     uuid_unparse(user->uuid, uuid);
     server_event_user_logged_out(uuid);
+    client->user_ptr->status = DISCONNECTED;
     client->user_ptr = NULL;
     return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
 }
