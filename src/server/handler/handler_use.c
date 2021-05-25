@@ -48,7 +48,7 @@ static int parse_args(
     for (; request->args && request->args[i];
         i++, move_ptr += sizeof(uuid_t)) {
         if (uuid_parse(request->args[i], (unsigned char *) move_ptr) == -1) {
-            reply_str(srv, err_tab[i], request, "Invalid argument");
+            reply_error(srv, err_tab[i], request, NULL);
             return EXIT_FAILURE;
         }
     }

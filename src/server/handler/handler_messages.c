@@ -42,8 +42,8 @@ static int send_reply(mp_list_t *list, request_t *request, server_t *server)
     return reply((rerr_t){SUCCESS, NULL}, request, body, server);
 }
 
-static int process_response(
-    user_t *user_alpha, user_t *user_beta, request_t *request, server_t *server)
+static int process_response(user_t *user_alpha, user_t *user_beta,
+    request_t *request, server_t *server)
 {
     mp_list_t head = create_list(user_alpha, user_beta);
     private_msg_t *ptr2 = NULL;
@@ -75,9 +75,10 @@ int handler_messages(
         return reply_error(server, ERR_UNAUTHORISED, request, NULL);
     user_uuid = request->args[0];
     if (uuid_parse(user_uuid, selector.uuid_user) == -1)
-        return reply_str(server, ERROR, request, "Bad argument value");
+        return reply_error(server, ERR_UNKNOWN_USER, request, NULL);
     user_beta = get_user(&server->database, &selector);
     if (!user_beta)
-        return reply_error(server, ERR_UNKNOWN_USER, request, &selector.uuid_user);
+        return reply_error(
+            server, ERR_UNKNOWN_USER, request, &selector.uuid_user);
     return process_response(user_alpha, user_beta, request, server);
 }

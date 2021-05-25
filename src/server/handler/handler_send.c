@@ -31,7 +31,7 @@ int handler_send(server_t *srv, request_t *req, client_t *client)
     if (walen(req->args) != 2)
         return reply_str(srv, ERROR, req, "Invalid argument count");
     if (uuid_parse(req->args[0], select.uuid_user) == -1)
-        return reply_str(srv, ERROR, req, "Invalid argument");
+        return reply_error(srv, ERR_UNKNOWN_USER, req, NULL);
     ret_value = create_private_msg(
         &srv->database, req->args[1], client->user_ptr, &select);
     if (ret_value == ERR_UNKNOWN_USER)

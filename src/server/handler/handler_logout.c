@@ -32,7 +32,7 @@ int handler_logout(
         return reply_str(server, ERROR, request, "Bad argument count");
     }
     if (client->user_ptr == NULL) {
-        return reply_str(server, ERROR, request, "User not logged");
+        return reply_error(server, ERR_UNAUTHORISED, request, NULL);
     } else {
         return do_logout(request, client, server);
     }
