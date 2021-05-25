@@ -74,12 +74,10 @@ void destroy_team_t(team_t *team)
     LIST_FOREACH(channel, &team->channels, entries)
     {
         destroy_all_threads(channel);
-        if (last_channel)
-            LIST_REMOVE(last_channel, entries);
         free_zero(last_channel, sizeof(channel_t));
         last_channel = channel;
     }
-    LIST_REMOVE(team, entries);
+    free_zero(last_channel, sizeof(channel_t));
     free_zero(team, sizeof(team_t));
 }
 
