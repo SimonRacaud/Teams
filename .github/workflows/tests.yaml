@@ -9,7 +9,7 @@ on:
 
 
 jobs:
-  tests:
+  unit-tests:
     runs-on: ubuntu-20.04
     container: epitechcontent/epitest-docker:devel
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -24,3 +24,28 @@ jobs:
 
       - name: Show coverage
         run: make coverage
+
+  functional-tests:
+    runs-on: ubuntu-20.04
+    container: epitechcontent/epitest-docker:devel
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    env:
+      OUTPUT: /tmp/output
+    steps:
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Build
+      - name: Run make
+        run: make
+
+      # Run
+      - name: Run tests
+        run: ./myteams_server 8080 & ./test_myteams.sh 2> $OUTPUT | ./myteams_cli 127.0.0.1 8080 > /dev/null 2> /tmp/myteams_tests
+
+      - name: Show result
+        run: cat $OUTPUT
+
+      - name: Check result
+        run: tail -n 1 $OUTPUT | grep "OK"
