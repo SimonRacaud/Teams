@@ -24,6 +24,7 @@ void destroy_user_t(user_t *user)
     if (last_msg)
         LIST_REMOVE(last_msg, entries);
     free_zero(last_msg, sizeof(private_msg_t));
+    destroy_user_team_list(user);
 
     LIST_REMOVE(user, entries);
     free_zero(user, sizeof(user_t));
@@ -78,6 +79,7 @@ void destroy_team_t(team_t *team)
         last_channel = channel;
     }
     free_zero(last_channel, sizeof(channel_t));
+    destroy_team_user_list(team);
     free_zero(team, sizeof(team_t));
 }
 

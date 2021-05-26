@@ -28,34 +28,47 @@ static bool remove_from_user(team_t *team, uuid_t user_uuid)
     {
         if (!uuid_compare(node->ptr->uuid, user_uuid)) {
             LIST_REMOVE(node, entries);
+            free_zero(node, sizeof(user_ptr_t));
             return true;
         }
     }
     return false;
 }
 
-static int unsubscribe_manage(request_t *request, client_t *client,
-    uuid_selector_t *selector, server_t *srv)
+static team_t *remove_from_team(client_t *client, uuid_selector_t *selector)
 {
-    void *body = NULL;
     bool ret_val = false;
     team_ptr_t *node = NULL;
+    team_t *team;
 
     LIST_FOREACH(node, &client->user_ptr->teams, entries)
     {
         if (!uuid_compare(node->ptr->uuid, selector->uuid_team)) {
             ret_val = remove_from_user(node->ptr, client->user_ptr->uuid);
             LIST_REMOVE(node, entries);
+            team = node->ptr;
+            free_zero(node, sizeof(team_ptr_t));
             break;
         }
     }
     if (!ret_val)
+        return NULL;
+    return team;
+}
+
+static int unsubscribe_manage(request_t *request, client_t *client,
+    uuid_selector_t *selector, server_t *srv)
+{
+    void *body = NULL;
+    team_t *team = remove_from_team(client, selector);
+
+    if (!team)
         return reply_error(
             srv, ERR_UNKNOWN_TEAM, request, &selector->uuid_team);
-    body = body_maker_subscription(client->user_ptr->uuid, node->ptr->uuid);
+    body = body_maker_subscription(client->user_ptr->uuid, team->uuid);
     if (!body)
         return EXIT_FAILURE;
-    event(node->ptr, client->user_ptr);
+    event(team, client->user_ptr);
     return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
 }
 

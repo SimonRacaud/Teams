@@ -167,4 +167,13 @@ bool read_replies(bin_header_t *header, database_save_t *db, size_t *offset);
 bool read_private_msg(
     bin_header_t *header, database_save_t *db, size_t *offset);
 
+/*
+**
+** DESTROY
+**
+*/
+
+void destroy_user_team_list(user_t *user);
+void destroy_team_user_list(team_t *team);
+
 #endif
