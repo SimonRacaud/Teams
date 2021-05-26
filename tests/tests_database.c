@@ -270,6 +270,7 @@ static void check_saved_users(const int nbr_users, const int nbr_private_msgs)
 
     LIST_FOREACH(user, &db.users, entries)
     {
+        cr_assert_eq(user->status, DISCONNECTED);
         users_size++;
         sprintf(username, "U%d", users_size);
         cr_assert_str_eq(user->username, username);

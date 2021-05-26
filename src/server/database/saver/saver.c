@@ -22,6 +22,7 @@ static bool write_list(int fd, const void **list, uint n, int size)
 static bool write_users(int fd, const database_save_t *db)
 {
     for (uint i = 0; i < db->head->nb_user; i++) {
+        db->users[i]->status = DISCONNECTED;
         if (write(fd, db->users[i], sizeof(bin_user_t)) == -1)
             return false;
         for (uint k = 0; k < db->users[i]->nb_subscribed_teams; k++)
