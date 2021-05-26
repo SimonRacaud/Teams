@@ -13,11 +13,15 @@ int reply_to_all(server_t *server, request_t *request, void *body)
     client_t *client;
     void *res_body;
 
+    if (!body)
+        return EXIT_FAILURE;
     LIST_FOREACH(client, &server->clients, entries) {
-        res_body = dup_body(body);
-        response =
-            response_create(SUCCESS, request, &client->socket, res_body);
-        response_push(server, response);
+        if (client->user_ptr != NULL) {
+            res_body = dup_body(body);
+            response =
+                response_create(SUCCESS, request, &client->socket, res_body);
+            response_push(server, response);
+        }
     }
     free(body);
     return EXIT_SUCCESS;
