@@ -18,10 +18,11 @@ static int do_logout(request_t *request, client_t *client, server_t *srv)
 
     uuid_unparse(user->uuid, uuid);
     server_event_user_logged_out(uuid);
+    body = body_maker_user(user, false, LOG_T_LOGGING);
+    reply_to_all(srv, request, body);
     client->user_ptr->status = DISCONNECTED;
     client->user_ptr = NULL;
-    body = body_maker_user(user, false, LOG_T_LOGGING);
-    return reply_to_all(srv, request, body);
+    return EXIT_SUCCESS;
 }
 
 int handler_logout(
