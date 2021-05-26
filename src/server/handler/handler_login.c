@@ -24,11 +24,9 @@ static int do_login(server_t *server, request_t *request, client_t *client,
     client->user_ptr = user;
     user->status = CONNECTED;
     res_body = body_maker_user(user, false, LOG_T_LOGGING);
-    if (!res_body)
-        return EXIT_FAILURE;
     uuid_unparse(user->uuid, uuid);
     server_event_user_logged_in(uuid);
-    return reply((rerr_t){SUCCESS, NULL}, request, res_body, server);
+    return reply_to_all(server, request, res_body);
 }
 
 int handler_login(server_t *server, request_t *request, client_t *client)
