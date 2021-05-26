@@ -19,8 +19,8 @@ typedef struct db_user_list_header db_user_list_t;
 
 typedef enum user_status
 {
-    CONNECTED = 0,
-    DISCONNECTED = 1
+    CONNECTED = 1,
+    DISCONNECTED = 0
 } user_status_e;
 
 typedef struct user_s {
