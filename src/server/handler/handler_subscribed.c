@@ -18,7 +18,7 @@ static int parametting_manage(
 
     if (!team)
         return reply_error(srv, ERR_UNKNOWN_TEAM, request, &params->uuid_team);
-    body = body_maker_user(team->users.lh_first->ptr, true, LOG_T_PRT_USER);
+    body = body_maker_user_ptr(team->users.lh_first, true, LOG_T_PRT_USER);
     if (!body)
         return EXIT_FAILURE;
     return reply((rerr_t){SUCCESS, NULL}, request, body, srv);
@@ -31,8 +31,8 @@ static int noparametting_manage(
 
     if (LIST_EMPTY(&client->user_ptr->teams))
         return reply_str(srv, ERROR, request, "No team subscribed");
-    body = body_maker_team(
-        client->user_ptr->teams.lh_first->ptr, true, LOG_T_PRT_TEAM);
+    body = body_maker_team_ptr(
+        client->user_ptr->teams.lh_first, true, LOG_T_PRT_TEAM);
     if (!body)
         return EXIT_FAILURE;
     return reply((rerr_t){SUCCESS, NULL}, request, body, srv);

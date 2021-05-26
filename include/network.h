@@ -58,9 +58,13 @@ int reply_to_all(server_t *server, request_t *request, void *body);
 
 /// BODY
 void *body_maker_team(team_t *team, bool is_list, const char *logger);
+void *body_maker_team_ptr(
+    team_ptr_t *team_ptr, bool is_list, const char *logger);
 void *body_maker_reply(reply_t *reply, bool is_list, const char *logger);
 void *body_maker_thread(thread_t *thread, bool is_list, const char *logger);
 void *body_maker_user(user_t *user, bool is_list, const char *logger);
+void *body_maker_user_ptr(
+    user_ptr_t *user_ptr, bool is_list, const char *logger);
 void *body_maker_private_msg(
     private_msg_t *private_msg, bool is_list, const char *logger);
 void *body_maker_channel(channel_t *channel, bool is_list, const char *logger);

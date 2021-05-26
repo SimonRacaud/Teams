@@ -38,8 +38,10 @@ SRC_FILES_NETWORK =	$(SRC_FILES_NETWORK_CLI)									\
 					network/response_create.c									\
 					network/response_push.c										\
 					network/body/body_maker_team.c								\
+					network/body/body_maker_team_ptr.c							\
 					network/body/body_maker_channel.c							\
 					network/body/body_maker_user.c								\
+					network/body/body_maker_user_ptr.c							\
 					network/body/body_maker_private_msg.c						\
 					network/body/body_maker_reply.c								\
 					network/body/body_maker_thread.c							\
