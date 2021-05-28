@@ -36,6 +36,7 @@ Andrieu                                                                 May 2021
     \r  : Carriage return
     \n  : New line
 
+
 2.1 Request
 
     Format :
@@ -44,6 +45,7 @@ Andrieu                                                                 May 2021
 
     LABEL       : Command name
     ARGUMENTn   : Arguments of the command
+
 
 2.2 Response
 
