@@ -39,6 +39,9 @@ Andrieu                                                                 May 2021
 
 2.1 Request
 
+    The request is the object send to the server after a command input by the
+    user.
+
     Format :
         |    FIELD   |      FIELD     |     FIELDS     | CRLF
         | LABEL \r\r | ARGUMENT1 \r\r | ARGUMENTn \r\r | \r\n
@@ -48,6 +51,9 @@ Andrieu                                                                 May 2021
 
 
 2.2 Response
+
+    The response is the answer from the server to the client after a request by
+    the client.
 
     Format :
         |   STATUS  |      FIELD     | ARGUMENT SIZE |     FIELD     | BODY |
