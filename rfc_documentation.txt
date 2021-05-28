@@ -1,0 +1,79 @@
+myTeams                                                                S. Racaud
+May 2021                                                               S. Geslot
+                                                                      V. Andrieu
+
+                        The myTeams communication protocol
+
+Table of content
+
+    1. Introduction .......................................................... 0
+    2. Communication format .................................................. 1
+        2.1 Request .......................................................... 1
+        2.2 Response ......................................................... 1
+
+
+1. Introduction
+    This document describes the myTeams different communication protocols.
+    It explain explain the communication format between client and server.
+
+
+
+
+
+
+
+
+Racaud                  myTeams communication protocol                  [Page 1]
+Geslot
+Andrieu                                                                 May 2021
+
+
+2. Communication format
+
+    The project use different communication format. The data format is in ascii
+    and fields can contain any ascii character except null character.
+
+    \r  : Carriage return
+    \n  : New line
+
+2.1 Request
+
+    Format :
+        |    FIELD   |      FIELD     |     FIELDS     | CRLF
+        | LABEL \r\r | ARGUMENT1 \r\r | ARGUMENTn \r\r | \r\n
+
+    LABEL       : Command name
+    ARGUMENTn   : Arguments of the command
+
+2.2 Response
+
+    Format :
+        |   STATUS  |      FIELD     | ARGUMENT SIZE |     FIELD     | BODY |
+        | CODE \n\n | REQ_LABEL \n\n | ARG_SIZE \n\n | REQ_ARGn \n\n | BODY |
+
+    STATUS      : 3 octets
+    CODE        : 1 digit
+                    SUCCESS = 0
+                    ERROR = 1
+                    ERR_UNAUTHORISED = 2
+                    ERR_ALREADY_EXIST = 3
+                    ERR_UNKNOWN_USER = 4
+                    ERR_UNKNOWN_THREAD = 5
+                    ERR_UNKNOWN_CHANNEL = 6
+                    ERR_UNKNOWN_TEAM = 7
+
+    REQ_LABEL   : Request label
+    ARG_SIZE    : Number of arguments on 2 digits
+    REQ_ARGn    : Request arguments (follow by 2 new lines)
+    BODY        :
+        Format :
+            | HEADER |     ENTITIES      |
+            | HEADER | ENTITY1 | ENTITYn |
+
+        HEADER  : struct body_header_s {
+                uint elem_size;         // Size of the entity
+                uint list_size;         // Number of entities
+                char entity[SIZE_NAME]; // Name of the entity
+                char logger[SIZE_NAME]; // Event name
+            }
+        ENTITYn : Element to send. Often a structure (user, team, channel...).
