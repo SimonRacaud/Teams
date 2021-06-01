@@ -26,7 +26,7 @@ private_msg_t *deserializer_private_msg_t(
     return dest;
 }
 
-static inline void destroy_created_result(
+static void destroy_created_result(
     private_msg_t **result, uint max_index)
 {
     for (uint i = 0; i < max_index; i++)
