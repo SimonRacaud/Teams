@@ -10,11 +10,12 @@
 #include "utility.h"
 #include "request_handler_t.h"
 
-static void *(*const VERIF[]) (const database_t *db,
-    uuid_selector_t *params) = {
+static void *(*const VERIF[]) (const database_t *db, uuid_selector_t *params) =
+{
     (void *(*) (const database_t *, uuid_selector_t *) ) get_team,
     (void *(*) (const database_t *, uuid_selector_t *) ) get_channel,
-    (void *(*) (const database_t *, uuid_selector_t *) ) get_thread};
+    (void *(*) (const database_t *, uuid_selector_t *) ) get_thread
+};
 
 static int selector_verification(size_t args_size, selected_entity_t *selector,
     server_t *server, request_t *request)
