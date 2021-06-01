@@ -8,11 +8,11 @@
 #include "socket.h"
 
 static int connect_to_server(
-    socket_t *sock, uint port, struct hostent *hostinfo)
+    socket_t *sock, uint port, struct hostent *host_info)
 {
     sock->conf.sin_family = AF_INET;
     sock->conf.sin_port = htons(port);
-    sock->conf.sin_addr = *(struct in_addr *) hostinfo->h_addr;
+    sock->conf.sin_addr = *(struct in_addr *) host_info->h_addr;
     if (connect(sock->fd, (struct sockaddr *) &sock->conf, sizeof(sock->conf))
         == -1) {
         perror("connect");
@@ -24,9 +24,9 @@ static int connect_to_server(
 int socket_client_hostname_connect(
     socket_t *sock, uint port, const char *hostname)
 {
-    struct hostent *hostinfo = gethostbyname(hostname);
+    struct hostent *host_info = gethostbyname(hostname);
 
-    if (hostinfo == NULL) {
+    if (host_info == NULL) {
         perror("gethostbyname");
         return EXIT_FAILURE;
     }
@@ -35,7 +35,7 @@ int socket_client_hostname_connect(
         perror("socket");
         return EXIT_FAILURE;
     }
-    if (connect_to_server(sock, port, hostinfo) == EXIT_FAILURE)
+    if (connect_to_server(sock, port, host_info) == EXIT_FAILURE)
         return EXIT_FAILURE;
 #ifdef DEBUG
     debug_socket(sock, "Client connected");
