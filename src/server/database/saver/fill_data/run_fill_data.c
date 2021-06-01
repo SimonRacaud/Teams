@@ -92,8 +92,7 @@ bool run_fill_data(
     team_t *team = NULL;
     user_t *user = NULL;
 
-    LIST_FOREACH(team, &db->teams, entries)
-    {
+    LIST_FOREACH(team, &db->teams, entries) {
         if (!run_fill_channel(team, dest, db_save))
             return false;
         db_save->teams[dest->nb_team] = serializer_team_t(team);
@@ -101,8 +100,7 @@ bool run_fill_data(
             return false;
         dest->nb_team++;
     }
-    LIST_FOREACH(user, &db->users, entries)
-    {
+    LIST_FOREACH(user, &db->users, entries) {
         if (!run_fill_private_msg(user, dest, db_save))
             return false;
         db_save->users[dest->nb_user] = serializer_user_t(user);
