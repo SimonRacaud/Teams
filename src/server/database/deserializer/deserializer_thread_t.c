@@ -31,7 +31,7 @@ thread_t *deserializer_thread_t(const bin_thread_t *src, const database_t *db,
     return dest;
 }
 
-static inline void destroy_created_result(thread_t **result, uint max_index)
+static void destroy_created_result(thread_t **result, uint max_index)
 {
     for (uint i = 0; i < max_index; i++)
         free(result[i]);

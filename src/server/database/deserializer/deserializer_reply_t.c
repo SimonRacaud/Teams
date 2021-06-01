@@ -29,7 +29,7 @@ reply_t *deserializer_reply_t(const bin_reply_t *src, const database_t *db,
     return dest;
 }
 
-static inline void destroy_created_result(reply_t **result, uint max_index)
+static void destroy_created_result(reply_t **result, uint max_index)
 {
     for (uint i = 0; i < max_index; i++)
         free(result[i]);

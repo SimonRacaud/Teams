@@ -36,7 +36,7 @@ channel_t *deserializer_channel_t(
     return dest;
 }
 
-static inline void destroy_created_result(channel_t **result, uint max_index)
+static void destroy_created_result(channel_t **result, uint max_index)
 {
     for (uint i = 0; i < max_index; i++)
         free(result[i]);

@@ -52,7 +52,7 @@ void destroy_thread_t(thread_t *thread)
     free_zero(thread, sizeof(thread_t));
 }
 
-static inline void destroy_all_threads(channel_t *channel)
+static void destroy_all_threads(channel_t *channel)
 {
     thread_t *thread = NULL;
     thread_t *last_thread = NULL;
